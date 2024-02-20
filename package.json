@@ -6,9 +6,17 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "async-mutex": "^0.4.1",
+    "charwise": "^3.0.1",
+    "level": "^8.0.1",
+    "node-cache": "^5.1.2",
     "react": "^18.2.0",
     "react-browser-extension-scripts": "4.0.10",
     "react-dom": "^18.2.0",
+    "react-redux": "^9.1.0",
+    "redux": "^5.0.1",
+    "tlsn-js": "^0.1.0-alpha.4",
+    "typescript": "^5.3.3",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
@@ -34,5 +42,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.23.9",
+    "@babel/preset-react": "^7.23.3",
+    "@types/react": "^18.2.57",
+    "@types/webextension-polyfill": "^0.10.7",
+    "webextension-polyfill": "^0.10.0"
   }
 }
