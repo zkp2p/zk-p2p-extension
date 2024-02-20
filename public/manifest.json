@@ -1,28 +1,34 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "version": "0.0.1",
-  "short_name": "React App",
-  "name": "Create React App Sample",
-  "description": "Sample application showing how to create an extension with Create React App",
-  "browser_action": {
-    "default_title": "CRE",
-    "default_popup": "popup.html"
+  "short_name": "ZKP2P",
+  "name": "ZKP2P Extension",
+  "description": "ZKP2P extension for connecting payment platforms",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "img/icon-16.png"
   },
-  "background": {
-    "scripts": ["background.bundle.js"]
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["contentScript.bundle.js"]
-    }
-  ],
+  "background": { "service_worker": "background.bundle.js" },
   "icons": {
     "16": "img/icon-16.png",
     "48": "img/icon-48.png",
     "128": "img/icon-128.png"
   },
   "options_page": "options.html",
-  "permissions": ["activeTab"],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "offscreen",
+    "storage",
+    "webRequest",
+    "activeTab"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+      "js": ["contentScript.bundle.js"]
+    }
+  ]
 }
