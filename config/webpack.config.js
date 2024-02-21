@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const resolve = require('resolve');
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
@@ -507,6 +508,54 @@ module.exports = function (webpackEnv) {
       ],
     },
     plugins: [
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: "public/manifest.json",
+            to: isEnvProduction ? paths.appBuild : paths.devAppBuild,
+            force: true,
+            transform: function (content, path) {
+              // generates the manifest file using the package.json informations
+              return Buffer.from(
+                JSON.stringify({
+                  description: process.env.npm_package_description,
+                  version: process.env.npm_package_version,
+                  ...JSON.parse(content.toString()),
+                })
+              );
+            },
+          },
+        ],
+      }),
+      new CopyWebpackPlugin({
+        patterns: [
+          // {
+          //   from: "node_modules/tlsn-js/build/7.js",
+          //   to: path.join(__dirname, "build"),
+          //   force: true,
+          // },
+          // {
+          //   from: "node_modules/tlsn-js/build/250.js",
+          //   to: path.join(__dirname, "build"),
+          //   force: true,
+          // },
+          // {
+          //   from: "node_modules/tlsn-js/build/278.js",
+          //   to: path.join(__dirname, "build"),
+          //   force: true,
+          // },
+          // {
+          //   from: "node_modules/tlsn-js/build/349.js",
+          //   to: path.join(__dirname, "build"),
+          //   force: true,
+          // },
+          {
+            from: "node_modules/tlsn-js/build",
+            to: isEnvProduction ? paths.appBuild : paths.devAppBuild,
+            force: true,
+          },
+        ],
+      }),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(

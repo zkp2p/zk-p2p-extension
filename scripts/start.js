@@ -173,8 +173,8 @@ checkBrowsers(paths.appPath, isInteractive)
     process.exit(1);
   });
 
-function copyPublicFolder() {
-  fs.copySync(paths.appPublic, paths.appBuild, {
+function copyPublicFolder(devAppBuild) {
+  fs.copySync(paths.appPublic, devAppBuild, {
     dereference: true,
     filter: file => file !== paths.appHtml,
   });

@@ -1,20 +1,17 @@
-import { applyMiddleware, Middleware } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import rootReducer from '../reducers';
 
-const createStoreWithMiddleware =
-  process.env.NODE_ENV === 'development'
-    ? applyMiddleware(
-        thunk,
-        createLogger({
-          collapsed: true,
-        }),
-      )(createStore)
-    : applyMiddleware(thunk)(createStore);
-
 function configureAppStore() {
-  return createStoreWithMiddleware(rootReducer);
+  const middleware = (getDefaultMiddleware: any) => getDefaultMiddleware().concat(
+    process.env.NODE_ENV === 'development' && createLogger({ collapsed: true })
+  );
+
+  return configureStore({
+    reducer: rootReducer,
+    middleware,
+  });
 }
 
 const store = configureAppStore();
