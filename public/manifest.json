@@ -10,9 +10,9 @@
   },
   "background": { "service_worker": "background.bundle.js" },
   "icons": {
-    "16": "img/icon-16.png",
+    "16": "img/icon-32.png",
     "48": "img/icon-48.png",
-    "128": "img/icon-128.png"
+    "128": "img/icon-48.png"
   },
   "options_page": "options.html",
   "host_permissions": ["<all_urls>"],
