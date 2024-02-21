@@ -176,6 +176,7 @@ checkBrowsers(paths.appPath, isInteractive)
 function copyPublicFolder(devAppBuild) {
   fs.copySync(paths.appPublic, devAppBuild, {
     dereference: true,
-    filter: file => file !== paths.appHtml,
+    filter: file =>
+      file !== paths.appPopupHtml && file !== paths.appOptionsHtml,
   });
 }
