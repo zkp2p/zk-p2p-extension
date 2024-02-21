@@ -1,4 +1,4 @@
-import { RequestLog } from '../entries/Background/rpc';
+import { RequestLog } from '../background/rpc';
 
 export function urlify(
   text: string,
