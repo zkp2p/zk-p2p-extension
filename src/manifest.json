@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "version": "0.0.1",
+  "short_name": "ZKP2P",
+  "name": "ZKP2P Extension",
+  "description": "ZKP2P extension for connecting payment platforms",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "logo192.png"
+  },
+  "background": { "service_worker": "background.bundle.js" },
+  "icons": {
+    "16": "img/icon-32.png",
+    "48": "img/icon-48.png",
+    "128": "img/icon-48.png"
+  },
+  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "offscreen",
+    "storage",
+    "webRequest",
+    "activeTab"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+      "js": ["contentScript.bundle.js"]
+    }
+  ]
+}
