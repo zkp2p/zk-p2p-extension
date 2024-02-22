@@ -7,7 +7,7 @@ import {
   useActiveTab,
   useActiveTabUrl,
 } from '../../reducers/requests';
-import logo from '../../assets/img/logo192.png';
+import logo from '../../assets/img/icon-48.png';
 import { BackgroundActiontype } from '../Background/rpc';
 import browser from 'webextension-polyfill';
 
