@@ -11,8 +11,8 @@
 
 1. Check if your [Node.js](https://nodejs.org/) version is >= **18**.
 2. Clone this repository.
-3. Run `npm install` to install the dependencies.
-4. Run `npm run dev`
+3. Run `yarn` to install the dependencies.
+4. Run `yarn start`
 5. Load your extension on Chrome following:
    1. Access `chrome://extensions/`
    2. Check `Developer mode`
@@ -20,17 +20,17 @@
    4. Select the `build` folder.
 6. Happy hacking.
 
-## Building Websockify Docker Image
+## TODO: Building Websockify Docker Image
 ```
 $ git clone https://github.com/novnc/websockify && cd websockify
 $ ./docker/build.sh
 $ docker run -it --rm -p 55688:80 novnc/websockify 80 api.twitter.com:443
 ```
 
-## Running Websockify Docker Image
+## TODO: Running Websockify Docker Image
 ```
-$ cd tlsn-extension
-$ docker run -it --rm -p 55688:80 novnc/websockify 80 api.twitter.com:443
+$ cd zk-p2p-extension
+$ docker run -it --rm -p 55688:80 novnc/websockify 80 wise.com:443
 ```
 
 ## Packing
@@ -38,7 +38,7 @@ $ docker run -it --rm -p 55688:80 novnc/websockify 80 api.twitter.com:443
 After the development of your extension run the command
 
 ```
-$ NODE_ENV=production npm run build
+$ NODE_ENV=production yarn build
 ```
 
 Now, the content of `build` folder will be the extension ready to be submitted to the Chrome Web Store. Just take a look at the [official guide](https://developer.chrome.com/webstore/publish) to more infos about publishing.
