@@ -1,22 +1,28 @@
 [
   {
-    "url": "https://api.twitter.com/1.1/account/settings.json",
-    "targetUrl": "https://www.twitter.com",
+    "url": "https://wise\\.com/gateway/v1/profiles/\\d+/identifiers/profile-link",
+    "targetUrl": "https://wise.com/account/payments",
     "method": "GET",
     "type": "xmlhttprequest",
-    "title": "Twitter Profile",
-    "description": "Notarize ownership of a twitter profile. To start, go to your own profile",
-    "responseSelector": "(?<=\"screen_name\":)\"(.*?)\"",
-    "valueTransform": "\"screen_name\":%s"
+    "title": "ZKP2P Wise Registration",
+    "description": "Notarize ownership of a wise tag. To start, click the button",
+    "responseSelector": ["(?<=\"nickname\":\")@[^\"]+"],
+    "valueTransform": ["\"nickname\":\"%s\""] 
   },
   {
-    "url": "https://gateway.reddit.com/desktopapi/v1/prefs",
-    "targetUrl": "https://www.reddit.com/settings",
+    "url": "https://wise.com/gateway/v3/profiles/\\d+/transfers/\\d+",
+    "targetUrl": "https://wise.com/all-transactions?direction=OUTGOING",
     "method": "GET",
     "type": "xmlhttprequest",
-    "title": "Reddit Profile",
-    "description": "Notarize ownership of a reddit profile. To start, go to reddit.com/settings",
-    "responseSelector": "(?<=\"displayText\": )\"(.*?)\"",
-    "valueTransform": "\"displayText\": %s"
+    "title": "ZKP2P Wise Onramp",
+    "description": "Notarize your payment transaction. To start, click the button",
+    "responseSelector": [
+      "(?<=\"id\":)\\d+",
+      "(?<=\"targetAmount\":\\s*)[\\d.]+"
+    ],
+    "valueTransform": [
+      "\"id\":%s",
+      "\"targetAmount\":%s"
+    ]
   }
 ]

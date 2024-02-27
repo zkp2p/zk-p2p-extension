@@ -64,8 +64,9 @@ export default function Home(): ReactElement {
       <div className="flex flex-col px-4 gap-4">
         {bookmarks.map((bm, i) => {
           try {
+            const regex = new RegExp(bm.url); // Assuming bm.url contains a regex pattern
             const reqs = requests.filter((req) => {
-              return req?.url?.includes(bm.url);
+              return regex.test(req?.url);
             });
 
             const bmHost = urlify(bm.targetUrl)?.host;
@@ -101,57 +102,98 @@ export default function Home(): ReactElement {
                           );
                         })
                         .filter((d) => !!d);
-                      const selectedValue = res.match(
-                        new RegExp(bm.responseSelector, 'g'),
+
+                      // Add response headers to secretHeaders
+                      // console.log('res headers', res.response.headers.keys())  // this is largely empty
+                      // Object.keys(res.response.headers).forEach((headerName) => {
+                      //   const headerValue = res.response.headers.get(headerName);
+                      //   console.log('headerName', headerName, 'headerValue', headerValue);
+                      //   secretHeaders.push(`${headerName.toLowerCase()}: ${headerValue}`);
+                      // });
+                      // const selectedValue = res.text.match(
+                      //   new RegExp(bm.responseSelector, 'g'),
+                      // );
+
+                      // if (selectedValue) {
+                      //   const revealed = bm.valueTransform.replace(
+                      //     '%s',
+                      //     selectedValue[0],
+                      //   );
+                      //   const selectionStart = res.text.indexOf(revealed);
+                      //   const selectionEnd =
+                      //     selectionStart + revealed.length - 1;
+                      //   const secretResps = [
+                      //     res.text.substring(0, selectionStart),
+                      //     res.text.substring(selectionEnd, res.text.length),
+                      //   ].filter((d) => !!d);                        
+                      // }
+
+
+                      let selectedValues = [];
+                      let secretResps = [res.text];
+                      console.log('secretResps', secretResps)
+
+                      bm.responseSelector.forEach((responseSelector, index) => {
+                          const regex = new RegExp(responseSelector, 'g');
+                          const matches = res.text.match(regex);
+                          console.log('responseSelector', responseSelector)
+                          
+                          if (matches) {
+                              selectedValues.push(matches[0]);
+                              console.log('matches', matches[0])
+                              const revealed = bm.valueTransform[index].replace('%s', matches[0]);
+                              console.log('revealed', revealed)
+                              const selectionStart = res.text.indexOf(revealed);
+                              const selectionEnd = selectionStart + revealed.length;
+                              console.log('selectionStart', selectionStart, 'selectionEnd', selectionEnd)
+                              if (selectionStart !== -1) {
+                                console.log('selectionStart', selectionStart, 'selectionEnd', selectionEnd)
+                                secretResps = [
+                                  res.text.substring(0, selectionStart),
+                                  res.text.substring(selectionEnd, res.text.length)
+                                ];
+                              }
+                              console.log('secretResps', secretResps);
+                          }
+                      });
+                      // Filter out any empty strings
+                      const filteredSecretResps = secretResps.filter((d) => !!d);
+
+                      const hostname = urlify(req.url)?.hostname;
+                      const notaryUrl = await get(NOTARY_API_LS_KEY);
+                      const websocketProxyUrl = await get(PROXY_API_LS_KEY);
+                      
+                      const headers: { [k: string]: string } =
+                      req.requestHeaders.reduce(
+                        (acc: any, h) => {
+                          acc[h.name] = h.value;
+                          return acc;
+                        },
+                        { Host: hostname },
                       );
 
-                      if (selectedValue) {
-                        const revealed = bm.valueTransform.replace(
-                          '%s',
-                          selectedValue[0],
-                        );
-                        const selectionStart = res.indexOf(revealed);
-                        const selectionEnd =
-                          selectionStart + revealed.length - 1;
-                        const secretResps = [
-                          res.substring(0, selectionStart),
-                          res.substring(selectionEnd, res.length),
-                        ].filter((d) => !!d);
+                      //TODO: for some reason, these needs to be override to work
+                      headers['Accept-Encoding'] = 'identity';
+                      headers['Connection'] = 'close';
 
-                        const hostname = urlify(req.url)?.hostname;
-                        const notaryUrl = await get(NOTARY_API_LS_KEY);
-                        const websocketProxyUrl = await get(PROXY_API_LS_KEY);
 
-                        const headers: { [k: string]: string } =
-                          req.requestHeaders.reduce(
-                            (acc: any, h) => {
-                              acc[h.name] = h.value;
-                              return acc;
-                            },
-                            { Host: hostname },
-                          );
+                      dispatch(
+                        // @ts-ignore
+                        notarizeRequest({
+                          url: req.url,
+                          method: req.method,
+                          headers: headers,
+                          body: req.requestBody,
+                          maxTranscriptSize: 16384,
+                          notaryUrl,
+                          websocketProxyUrl,
+                          secretHeaders,
+                          secretResps: filteredSecretResps,
+                        }),
+                      );
 
-                        //TODO: for some reason, these needs to be override to work
-                        headers['Accept-Encoding'] = 'identity';
-                        headers['Connection'] = 'close';
+                      navigate(`/history`);
 
-                        dispatch(
-                          // @ts-ignore
-                          notarizeRequest({
-                            url: req.url,
-                            method: req.method,
-                            headers: headers,
-                            body: req.requestBody,
-                            maxTranscriptSize: 16384,
-                            notaryUrl,
-                            websocketProxyUrl,
-                            secretHeaders,
-                            secretResps,
-                          }),
-                        );
-
-                        navigate(`/history`);
-                      }
                     }}
                   >
                     Notarize

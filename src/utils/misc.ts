@@ -41,7 +41,7 @@ export function download(filename: string, content: string) {
   document.body.removeChild(element);
 }
 
-export async function replayRequest(req: RequestLog): Promise<string> {
+export async function replayRequest(req: RequestLog): Promise<{ response: Response, text: string }> {
   const options = {
     method: req.method,
     headers: req.requestHeaders.reduce(
@@ -70,13 +70,17 @@ export async function replayRequest(req: RequestLog): Promise<string> {
   const contentType =
     resp?.headers.get('content-type') || resp?.headers.get('Content-Type');
 
-  if (contentType?.includes('application/json')) {
-    return resp.text();
-  } else if (contentType?.includes('text')) {
-    return resp.text();
-  } else if (contentType?.includes('image')) {
-    return resp.blob().then((blob) => blob.text());
-  } else {
-    return resp.blob().then((blob) => blob.text());
-  }
+  // if (contentType?.includes('application/json')) {
+  //   return {response: resp, text: resp.text();
+  // } else if (contentType?.includes('text')) {
+  //   return resp.text();
+  // } else if (contentType?.includes('image')) {
+  //   return resp.blob().then((blob) => blob.text());
+  // } else {
+  //   return resp.blob().then((blob) => blob.text());
+  // }
+
+  const text = await (contentType?.includes('image') ? resp.blob().then(blob => blob.text()) : resp.text());
+
+  return { response: resp, text: text };
 }

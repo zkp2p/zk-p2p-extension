@@ -1,4 +1,4 @@
-<img src="src/assets/img/icon-128.png" width="64"/>
+<img src="src/assets/img/icon-48.png" width="64"/>
 
 # Chrome Extension (MV3) for ZKP2P
 
