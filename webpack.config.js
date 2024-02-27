@@ -1,7 +1,7 @@
 var webpack = require("webpack"),
   path = require("path"),
   fileSystem = require("fs-extra"),
-  env = require("./scripts/env"),
+  env = require("./utils/env"),
   CopyWebpackPlugin = require("copy-webpack-plugin"),
   HtmlWebpackPlugin = require("html-webpack-plugin"),
   TerserPlugin = require("terser-webpack-plugin");

@@ -26,7 +26,6 @@ type State = {
   map: {
     [requestId: string]: RequestLog;
   };
-  // @ts-ignore
   activeTab: chrome.tabs.Tab | null;
 };
 
@@ -41,13 +40,12 @@ export const setRequests = (requests: RequestLog[]): Action<RequestLog[]> => ({
 });
 
 export const notarizeRequest = (options: RequestHistory) => async () => {
-  const notaryUrl = await get(NOTARY_API_LS_KEY, 'https://notary.pse.dev');
+  const notaryUrl = await get(NOTARY_API_LS_KEY, 'https://3.110.31.245:7047');
   const websocketProxyUrl = await get(
     PROXY_API_LS_KEY,
     'wss://notary.pse.dev/proxy',
   );
 
-  // @ts-ignore
   chrome.runtime.sendMessage<any, string>({
     type: BackgroundActiontype.prove_request_start,
     data: {
@@ -126,7 +124,6 @@ export const useRequest = (requestId?: string): RequestLog | null => {
   }, deepEqual);
 };
 
-// @ts-ignore
 export const useActiveTab = (): chrome.tabs.Tab | null => {
   return useSelector((state: AppRootState) => {
     return state.requests.activeTab;

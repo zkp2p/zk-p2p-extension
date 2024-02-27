@@ -7,8 +7,17 @@ import {
   useActiveTab,
   useActiveTabUrl,
 } from '../../reducers/requests';
-import logo from '../../assets/img/icon-48.png';
 import { BackgroundActiontype } from '../Background/rpc';
+import Requests from '../../pages/Requests';
+import Options from '../../pages/Options';
+import Request from '../../pages/Requests/Request';
+import Home from '../../pages/Home';
+import logo from '../../assets/img/icon-48.png';
+import RequestBuilder from '../../pages/RequestBuilder';
+import Notarize from '../../pages/Notarize';
+import ProofViewer from '../../pages/ProofViewer';
+import History from '../../pages/History';
+import ProofUploader from '../../pages/ProofUploader';
 import browser from 'webextension-polyfill';
 
 const Popup = () => {
@@ -61,6 +70,15 @@ const Popup = () => {
         </div>
       </div>
       <Routes>
+        <Route path="/requests/:requestId/*" element={<Request />} />
+        <Route path="/notary/:requestId" element={<Notarize />} />
+        <Route path="/verify/:requestId/*" element={<ProofViewer />} />
+        <Route path="/verify" element={<ProofUploader />} />
+        <Route path="/history" element={<History />} />
+        <Route path="/requests" element={<Requests />} />
+        <Route path="/custom/*" element={<RequestBuilder />} />
+        <Route path="/options" element={<Options />} />
+        <Route path="/home" element={<Home />} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </div>

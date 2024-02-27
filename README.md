@@ -1,4 +1,4 @@
-<img src="src/assets/img/icon-128.png" width="64"/>
+<img src="src/assets/img/icon-48.png" width="64"/>
 
 # Chrome Extension (MV3) for ZKP2P
 
@@ -12,7 +12,7 @@
 1. Check if your [Node.js](https://nodejs.org/) version is >= **18**.
 2. Clone this repository.
 3. Run `yarn` to install the dependencies.
-4. Run `yarn start`
+4. Run `yarn dev`
 5. Load your extension on Chrome following:
    1. Access `chrome://extensions/`
    2. Check `Developer mode`
@@ -20,14 +20,14 @@
    4. Select the `build` folder.
 6. Happy hacking.
 
-## TODO: Building Websockify Docker Image
+## Building Websockify Docker Image
 ```
 $ git clone https://github.com/novnc/websockify && cd websockify
 $ ./docker/build.sh
-$ docker run -it --rm -p 55688:80 novnc/websockify 80 api.twitter.com:443
+$ docker run -it --rm -p 55688:80 novnc/websockify 80 wise.com:443
 ```
 
-## TODO: Running Websockify Docker Image
+## Running Websockify Docker Image
 ```
 $ cd zk-p2p-extension
 $ docker run -it --rm -p 55688:80 novnc/websockify 80 wise.com:443

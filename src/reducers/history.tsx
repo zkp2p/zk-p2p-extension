@@ -38,7 +38,6 @@ export const addRequestHistory = (request?: RequestHistory | null) => {
 };
 
 export const deleteRequestHistory = (id: string) => {
-  // @ts-ignore
   chrome.runtime.sendMessage<any, string>({
     type: BackgroundActiontype.delete_prove_request,
     data: id,
