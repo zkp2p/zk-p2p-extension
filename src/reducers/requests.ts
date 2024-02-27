@@ -26,7 +26,6 @@ type State = {
   map: {
     [requestId: string]: RequestLog;
   };
-  // @ts-ignore
   activeTab: chrome.tabs.Tab | null;
 };
 
@@ -47,7 +46,6 @@ export const notarizeRequest = (options: RequestHistory) => async () => {
     'wss://notary.pse.dev/proxy',
   );
 
-  // @ts-ignore
   chrome.runtime.sendMessage<any, string>({
     type: BackgroundActiontype.prove_request_start,
     data: {
@@ -126,7 +124,6 @@ export const useRequest = (requestId?: string): RequestLog | null => {
   }, deepEqual);
 };
 
-// @ts-ignore
 export const useActiveTab = (): chrome.tabs.Tab | null => {
   return useSelector((state: AppRootState) => {
     return state.requests.activeTab;
