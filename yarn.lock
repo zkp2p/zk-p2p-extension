@@ -9680,14 +9680,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tlsn-js@npm:0.1.0-alpha.4.1":
-  version: 0.1.0-alpha.4.1
-  resolution: "tlsn-js@npm:0.1.0-alpha.4.1"
+"tlsn-js@portal:/Users/richardliang/Documents/zk/forks/tlsn-js::locator=zk-p2p-extension%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "tlsn-js@portal:/Users/richardliang/Documents/zk/forks/tlsn-js::locator=zk-p2p-extension%40workspace%3A."
   dependencies:
     comlink: ^4.4.1
-  checksum: 1d44293418f83d95c21258e2a80dc6c21172705e8b3c9b2d492b23bd484e333c70bd89321e378c32a209e36378fc21a7d3ec63856be0bd5477e3a6f782915ca1
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "to-fast-properties@npm:^2.0.0":
   version: 2.0.0
