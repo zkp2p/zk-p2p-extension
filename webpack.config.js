@@ -176,7 +176,7 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/assets/img/icon-16.png",
+          from: "src/assets/img/icon-48.png",
           to: path.join(__dirname, "build"),
           force: true,
         },
@@ -194,41 +194,41 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/assets/img/icon-48.png",
+          from: "src/assets/img/icon-16.png",
           to: path.join(__dirname, "build"),
           force: true,
         },
       ],
     }),
-    new CopyWebpackPlugin({
-      patterns: [
-        // {
-        //   from: "node_modules/tlsn-js/build/7.js",
-        //   to: path.join(__dirname, "build"),
-        //   force: true,
-        // },
-        // {
-        //   from: "node_modules/tlsn-js/build/250.js",
-        //   to: path.join(__dirname, "build"),
-        //   force: true,
-        // },
-        // {
-        //   from: "node_modules/tlsn-js/build/278.js",
-        //   to: path.join(__dirname, "build"),
-        //   force: true,
-        // },
-        // {
-        //   from: "node_modules/tlsn-js/build/349.js",
-        //   to: path.join(__dirname, "build"),
-        //   force: true,
-        // },
-        {
-          from: "node_modules/tlsn-js/build",
-          to: path.join(__dirname, "build"),
-          force: true,
-        },
-      ],
-    }),
+    // new CopyWebpackPlugin({
+    //   patterns: [
+    //     // {
+    //     //   from: "node_modules/tlsn-js/build/7.js",
+    //     //   to: path.join(__dirname, "build"),
+    //     //   force: true,
+    //     // },
+    //     // {
+    //     //   from: "node_modules/tlsn-js/build/250.js",
+    //     //   to: path.join(__dirname, "build"),
+    //     //   force: true,
+    //     // },
+    //     // {
+    //     //   from: "node_modules/tlsn-js/build/278.js",
+    //     //   to: path.join(__dirname, "build"),
+    //     //   force: true,
+    //     // },
+    //     // {
+    //     //   from: "node_modules/tlsn-js/build/349.js",
+    //     //   to: path.join(__dirname, "build"),
+    //     //   force: true,
+    //     // },
+    //     {
+    //       from: "src/wasm/prover/pkg",
+    //       to: path.join(__dirname, "build"),
+    //       force: true,
+    //     },
+    //   ],
+    // }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "entries", "Options", "index.html"),
       filename: "options.html",
