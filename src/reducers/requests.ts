@@ -40,7 +40,7 @@ export const setRequests = (requests: RequestLog[]): Action<RequestLog[]> => ({
 });
 
 export const notarizeRequest = (options: RequestHistory) => async () => {
-  const notaryUrl = await get(NOTARY_API_LS_KEY, 'https://3.110.31.245:7047');
+  const notaryUrl = await get(NOTARY_API_LS_KEY, 'https://52.71.111.129:7047');
   const websocketProxyUrl = await get(
     PROXY_API_LS_KEY,
     'wss://notary.pse.dev/proxy',
@@ -120,6 +120,7 @@ export const useRequests = (): RequestLog[] => {
 
 export const useRequest = (requestId?: string): RequestLog | null => {
   return useSelector((state: AppRootState) => {
+    console.log('state.requests.map', state.requests.map);
     return requestId ? state.requests.map[requestId] : null;
   }, deepEqual);
 };
