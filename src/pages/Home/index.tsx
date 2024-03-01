@@ -111,7 +111,7 @@ export default function Home(): ReactElement {
                       //   secretHeaders.push(`${headerName.toLowerCase()}: ${headerValue}`);
                       // });
                       // const selectedValue = res.text.match(
-                      //   new RegExp(bm.responseSelector, 'g'),
+                      //   new RegExp(bm.secretResponseSelector, 'g'),
                       // );
 
                       // if (selectedValue) {
@@ -130,28 +130,27 @@ export default function Home(): ReactElement {
 
 
                       let selectedValues = [];
-                      let secretResps = [res.text];
+                      let secretResps = [] as string[];
                       console.log('secretResps', secretResps)
 
-                      bm.responseSelector.forEach((responseSelector, index) => {
-                          const regex = new RegExp(responseSelector, 'g');
+                      bm.secretResponseSelector.forEach((secretResponseSelector, index) => {
+                          const regex = new RegExp(secretResponseSelector, 'g');
+
+                          console.log(res.text)
                           const matches = res.text.match(regex);
-                          console.log('responseSelector', responseSelector)
+                          console.log('secretResponseSelector', secretResponseSelector)
                           
                           if (matches) {
                               selectedValues.push(matches[0]);
                               console.log('matches', matches[0])
-                              const revealed = bm.valueTransform[index].replace('%s', matches[0]);
-                              console.log('revealed', revealed)
-                              const selectionStart = res.text.indexOf(revealed);
-                              const selectionEnd = selectionStart + revealed.length;
+                              const hidden = matches[0];
+                              console.log('hidden', hidden)
+                              const selectionStart = res.text.indexOf(hidden);
+                              const selectionEnd = selectionStart + hidden.length;
                               console.log('selectionStart', selectionStart, 'selectionEnd', selectionEnd)
                               if (selectionStart !== -1) {
                                 console.log('selectionStart', selectionStart, 'selectionEnd', selectionEnd)
-                                secretResps = [
-                                  res.text.substring(0, selectionStart),
-                                  res.text.substring(selectionEnd, res.text.length)
-                                ];
+                                secretResps.push(res.text.substring(selectionStart, selectionEnd));
                               }
                               console.log('secretResps', secretResps);
                           }
