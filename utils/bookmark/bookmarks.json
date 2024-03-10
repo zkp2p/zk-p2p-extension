@@ -19,12 +19,20 @@
     "title": "ZKP2P Wise Onramp + Registration for Offramper",
     "description": "Notarize your payment transaction. To start, click the button",
     "secretResponseSelector": [
-      "(?<=\"userId\":)\\d+",
-      "(?<=\"profileId\":\\s*)[\\d.]+"
+      "(?<=\"userId\":)\\d+"
     ],
     "valueTransform": [
-      "\"userId\":%s",
-      "\"profileId\":%s"
+      "\"userId\":%s"
     ]
+  },
+  {
+    "url": "https://api.twitter.com/1.1/account/settings.json",
+    "targetUrl": "https://www.twitter.com",
+    "method": "GET",
+    "type": "xmlhttprequest",
+    "title": "Twitter Profile",
+    "description": "Notarize ownership of a twitter profile. To start, go to your own profile",
+    "responseSelector": ["(?<=\"screen_name\":)\"(.*?)\""],
+    "valueTransform": ["\"screen_name\":%s"]
   }
 ]
