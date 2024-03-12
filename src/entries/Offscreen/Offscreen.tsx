@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BackgroundActiontype } from '../Background/rpc';
-import { prove, verify } from 'tlsn-js';
+import { prove, verify } from 'tlsn-js-zkp2p';
 import { urlify } from '../../utils/misc';
 import browser from 'webextension-polyfill';
 
