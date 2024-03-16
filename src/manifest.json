@@ -1,17 +1,23 @@
 {
   "manifest_version": 3,
   "name": "ZKP2P Extension",
+  "version": "0.0.1",
   "description": "Extension for connecting off-chain platforms to ZKP2P",
-  "options_page": "options.html",
-  "background": { "service_worker": "background.bundle.js" },
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": "icon-32.png"
-  },
   "icons": {
     "16": "icon-16.png",
     "32": "icon-32.png",
     "48": "icon-48.png"
+  },
+  "action": {
+    "default_icon": "icon-32.png",
+    "default_title": "Toggle ZKP2P Sidebar"
+  },
+  "options_page": "options.html", 
+  "background": {
+    "service_worker": "background.bundle.js"
+  },
+  "side_panel": {
+    "default_path": "sidePanel.html"
   },
   "content_security_policy": {
     "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
@@ -34,6 +40,7 @@
     "offscreen",
     "storage",
     "webRequest",
-    "activeTab"
+    "activeTab",
+    "sidePanel"
   ]
 }

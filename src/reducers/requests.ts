@@ -1,13 +1,11 @@
-import {
-  type RequestLog,
-  type RequestHistory,
-} from '../entries/Background/rpc';
-import { useSelector } from 'react-redux';
-import { AppRootState } from './index';
+import browser from 'webextension-polyfill';
 import deepEqual from 'fast-deep-equal';
+import { useSelector } from 'react-redux';
+
+import { type RequestLog, type RequestHistory } from '../entries/Background/rpc';
+import { AppRootState } from './index';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../utils/storage';
 import { BackgroundActiontype } from '../entries/Background/rpc';
-import browser from 'webextension-polyfill';
 
 enum ActionType {
   '/requests/setRequests' = '/requests/setRequests',
@@ -41,10 +39,7 @@ export const setRequests = (requests: RequestLog[]): Action<RequestLog[]> => ({
 
 export const notarizeRequest = (options: RequestHistory) => async () => {
   const notaryUrl = await get(NOTARY_API_LS_KEY, 'https://52.71.111.129:7047');
-  const websocketProxyUrl = await get(
-    PROXY_API_LS_KEY,
-    'wss://notary.pse.dev/proxy',
-  );
+  const websocketProxyUrl = await get(PROXY_API_LS_KEY, 'wss://notary.pse.dev/proxy');
 
   chrome.runtime.sendMessage<any, string>({
     type: BackgroundActiontype.prove_request_start,
