@@ -5,19 +5,17 @@ import React, {
   useCallback,
   useState,
 } from 'react';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
 import Icon from '../../components/Icon';
 import classNames from 'classnames';
-import { useNavigate } from 'react-router';
-import {
-  notarizeRequest,
-  useActiveTabUrl,
-  useRequests,
-} from '../../reducers/requests';
-import { Link } from 'react-router-dom';
+import { notarizeRequest, useActiveTabUrl, useRequests } from '../../reducers/requests';
 import bookmarks from '../../../utils/bookmark/bookmarks.json';
 import { replayRequest, urlify } from '../../utils/misc';
-import { useDispatch } from 'react-redux';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
+
 
 export default function Home(): ReactElement {
   const requests = useRequests();

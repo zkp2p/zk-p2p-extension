@@ -44,14 +44,14 @@ var options = {
 
   entry: {
     options: path.join(__dirname, "src", "entries", "Options", "index.tsx"),
-    popup: path.join(__dirname, "src", "entries", "Popup", "index.tsx"),
     background: path.join(__dirname, "src", "entries", "Background", "index.ts"),
     contentScript: path.join(__dirname, "src", "entries", "Content", "index.ts"),
     offscreen: path.join(__dirname, "src", "entries", "Offscreen", "index.tsx"),
+    sidePanel: path.join(__dirname, "src", "entries", "SidePanel", "index.tsx"),
   },
-  // chromeExtensionBoilerplate: {
-  //   notHotReload: ["background", "contentScript", "devtools"],
-  // },
+  chromeExtensionBoilerplate: {
+    notHotReload: ["background", "contentScript", "devtools"],
+  },
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "build"),
@@ -236,9 +236,9 @@ var options = {
       cache: false,
     }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "entries", "Popup", "index.html"),
-      filename: "popup.html",
-      chunks: ["popup"],
+      template: path.join(__dirname, "src", "entries", "SidePanel", "index.html"),
+      filename: "sidePanel.html",
+      chunks: ["sidePanel"],
       cache: false,
     }),
     new HtmlWebpackPlugin({

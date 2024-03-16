@@ -1,12 +1,9 @@
 import React, { useEffect } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
-import {
-  setActiveTab,
-  setRequests,
-  useActiveTab,
-  useActiveTabUrl,
-} from '../../reducers/requests';
+import browser from 'webextension-polyfill';
+
+import { setActiveTab, setRequests, useActiveTab, useActiveTabUrl } from '../../reducers/requests';
 import { BackgroundActiontype } from '../Background/rpc';
 import Requests from '../../pages/Requests';
 import Options from '../../pages/Options';
@@ -18,9 +15,9 @@ import Notarize from '../../pages/Notarize';
 import ProofViewer from '../../pages/ProofViewer';
 import History from '../../pages/History';
 import ProofUploader from '../../pages/ProofUploader';
-import browser from 'webextension-polyfill';
 
-const Popup = () => {
+
+const SidePanel = () => {
   const dispatch = useDispatch();
   const activeTab = useActiveTab();
   const url = useActiveTabUrl();
@@ -85,4 +82,4 @@ const Popup = () => {
   );
 };
 
-export default Popup;
+export default SidePanel;

@@ -8,9 +8,11 @@ import React, {
   useState,
 } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+
 import NavigateWithParams from '../../components/NavigateWithParams';
 import ResponseDetail from '../../components/ResponseDetail';
 import { urlify } from '../../utils/misc';
+
 
 enum TabType {
   Params = 'Params',

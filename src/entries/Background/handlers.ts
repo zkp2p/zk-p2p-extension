@@ -1,8 +1,10 @@
-import { getCacheByTabId } from './cache';
-import { BackgroundActiontype, RequestLog } from './rpc';
-import mutex from './mutex';
 import browser from 'webextension-polyfill';
+
+import { getCacheByTabId } from './cache';
+import mutex from './mutex';
+import { BackgroundActiontype, RequestLog } from './rpc';
 import { addRequest } from '../../reducers/requests';
+
 
 export const onSendHeaders = (
   details: browser.WebRequest.OnSendHeadersDetailsType,
