@@ -27,16 +27,36 @@
   },
   {
     "url": "https://secure.chase.com/svc/rr/payments/secure/v1/quickpay/payment/activity/detail/list",
-    "targetUrl": "https://secure.chase.com/web/auth/dashboard#/dashboard/quickPay/paymentsActivity/index;params=qp,sentactivity",
+    "targetUrl": "https://secure.chase.com/web/auth/dashboard#/dashboard/singleDoor/payments/activity;params=qp,sentactivity",
     "method": "POST",
     "type": "xmlhttprequest",
     "title": "ZKP2P Chase Zelle Onramp",
     "description": "Notarize your payment transaction. To start, click the button and identify the correct payment transaction",
     "secretResponseSelector": [
-      "(?<=\"recipientName\":)\\[^\"]+"
+      "(?<=\"recipientName\":\")[^\"]+"
     ],
     "valueTransform": [
       "\"recipientName\":%s"
+    ]
+  },
+  {
+    "url": "https://secure.chase.com/svc/rr/payments/secure/gateway/quick-pay/customer/profile/digital-social-aliases/v1/social-aliases-profiles",
+    "targetUrl": "https://secure.chase.com/web/auth/dashboard#/dashboard/singleDoor/quickPaySettings/index",
+    "method": "POST",
+    "type": "xmlhttprequest",
+    "title": "ZKP2P Chase Zelle Onramper Registration",
+    "description": "Notarize ownership of a Chase Zelle display name. To start, click the button to view your account page",
+    "secretResponseSelector": [
+      "(?<=\"enterprisePartyIdentifier\":\")\\d+",
+      "(?<=\"legalEntityName\":\")[^\"]+",
+      "(?<=\"displayName\":\")[^\"]+",
+      "(?<=\"socialAliasDetail\":\\[)[^\\]]+"
+    ],
+    "valueTransform": [
+      "\"enterprisePartyIdentifier\":%s",
+      "\"legalEntityName\":%s",
+      "\"displayName\":%s",
+      "\"socialAliasDetail\":%s"
     ]
   }
 ]
