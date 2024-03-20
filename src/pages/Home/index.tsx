@@ -172,7 +172,17 @@ export default function Home(): ReactElement {
                       //TODO: for some reason, these needs to be override to work
                       headers['Accept-Encoding'] = 'identity';
                       headers['Connection'] = 'close';
-
+                      
+                      // Select form data or request body
+                      let body = req.requestBody;
+                      if (req.formData) {
+                        const formData = new URLSearchParams();
+                        Object.entries(req.formData).forEach(([key, values]) => {
+                          values.forEach((v) => formData.append(key, v));
+                        });
+                        body = formData.toString();
+                      }
+                      console.log("request body:", body);
 
                       dispatch(
                         // @ts-ignore
@@ -180,7 +190,7 @@ export default function Home(): ReactElement {
                           url: req.url,
                           method: req.method,
                           headers: headers,
-                          body: req.requestBody,
+                          body: body,
                           maxTranscriptSize: 16384,
                           notaryUrl,
                           websocketProxyUrl,
