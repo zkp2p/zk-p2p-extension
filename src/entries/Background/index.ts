@@ -1,6 +1,8 @@
+import browser from 'webextension-polyfill';
+
 import { onBeforeRequest, onResponseStarted, onSendHeaders } from './handlers';
 import { deleteCacheByTabId } from './cache';
-import browser from 'webextension-polyfill';
+
 
 (async () => {
   browser.webRequest.onSendHeaders.addListener(
@@ -36,6 +38,11 @@ import browser from 'webextension-polyfill';
   initRPC();
 })();
 
+
+/*
+ * Create offscreen document for background processing and multi-threading
+ */
+
 let creatingOffscreen: any;
 async function createOffscreenDocument() {
   const offscreenUrl = browser.runtime.getURL('offscreen.html');
@@ -60,4 +67,13 @@ async function createOffscreenDocument() {
     await creatingOffscreen;
     creatingOffscreen = null;
   }
-}
+};
+
+
+/*
+ * Set panel behavior on action bar item click: https://developer.chrome.com/docs/extensions/reference/api/sidePanel
+ */
+
+chrome.sidePanel
+  .setPanelBehavior({ openPanelOnActionClick: true })
+  .catch((error) => console.error(error));

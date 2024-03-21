@@ -32,6 +32,7 @@ var server = new WebpackDevServer(
     liveReload: false,
     client: {
       webSocketTransport: 'ws',
+      overlay: false,
     },
     webSocketServer: 'ws',
     host: 'localhost',
