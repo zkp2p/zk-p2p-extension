@@ -6,9 +6,7 @@ import { BackgroundActiontype, RequestLog } from './rpc';
 import { addRequest } from '../../reducers/requests';
 
 
-export const onSendHeaders = (
-  details: browser.WebRequest.OnSendHeadersDetailsType,
-) => {
+export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsType) => {
   return mutex.runExclusive(async () => {
     const { method, tabId, requestId } = details;
 
@@ -29,9 +27,7 @@ export const onSendHeaders = (
   });
 };
 
-export const onBeforeRequest = (
-  details: browser.WebRequest.OnBeforeRequestDetailsType,
-) => {
+export const onBeforeRequest = (details: browser.WebRequest.OnBeforeRequestDetailsType) => {
   mutex.runExclusive(async () => {
     const { method, requestBody, tabId, requestId } = details;
 
@@ -45,9 +41,7 @@ export const onBeforeRequest = (
         try {
           cache.set(requestId, {
             ...existing,
-            requestBody: Buffer.from(requestBody.raw[0].bytes).toString(
-              'utf-8',
-            ),
+            requestBody: Buffer.from(requestBody.raw[0].bytes).toString('utf-8'),
           });
         } catch (e) {
           console.error(e);
@@ -62,9 +56,7 @@ export const onBeforeRequest = (
   });
 };
 
-export const onResponseStarted = (
-  details: browser.WebRequest.OnResponseStartedDetailsType,
-) => {
+export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedDetailsType) => {
   mutex.runExclusive(async () => {
     const { method, responseHeaders, tabId, requestId } = details;
 

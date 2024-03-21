@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
+
 import requests from './requests';
 import history from './history';
+
 
 const rootReducer = combineReducers({
   requests,

@@ -1,9 +1,6 @@
 import { RequestLog } from '../entries/Background/rpc';
 
-export function urlify(
-  text: string,
-  params?: [string, string, boolean?][],
-): URL | null {
+export function urlify(text: string, params?: [string, string, boolean?][]): URL | null {
   try {
     const url = new URL(text);
 
@@ -27,10 +24,7 @@ export function devlog(...args: any[]) {
 
 export function download(filename: string, content: string) {
   const element = document.createElement('a');
-  element.setAttribute(
-    'href',
-    'data:text/plain;charset=utf-8,' + encodeURIComponent(content),
-  );
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
   element.setAttribute('download', filename);
 
   element.style.display = 'none';
@@ -41,7 +35,9 @@ export function download(filename: string, content: string) {
   document.body.removeChild(element);
 }
 
-export async function replayRequest(req: RequestLog): Promise<{ response: Response, text: string }> {
+export async function replayRequest(
+  req: RequestLog,
+): Promise<{ response: Response; text: string }> {
   const options = {
     method: req.method,
     headers: req.requestHeaders.reduce(
@@ -67,8 +63,7 @@ export async function replayRequest(req: RequestLog): Promise<{ response: Respon
 
   // @ts-ignore
   const resp = await fetch(req.url, options);
-  const contentType =
-    resp?.headers.get('content-type') || resp?.headers.get('Content-Type');
+  const contentType = resp?.headers.get('content-type') || resp?.headers.get('Content-Type');
 
   // if (contentType?.includes('application/json')) {
   //   return {response: resp, text: resp.text();
@@ -80,7 +75,9 @@ export async function replayRequest(req: RequestLog): Promise<{ response: Respon
   //   return resp.blob().then((blob) => blob.text());
   // }
 
-  const text = await (contentType?.includes('image') ? resp.blob().then(blob => blob.text()) : resp.text());
+  const text = await (contentType?.includes('image')
+    ? resp.blob().then((blob) => blob.text())
+    : resp.text());
 
   return { response: resp, text: text };
 }

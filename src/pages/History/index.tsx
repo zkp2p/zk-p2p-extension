@@ -1,20 +1,14 @@
 import React, { ReactElement, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
-import {
-  useHistoryOrder,
-  useRequestHistory,
-  deleteRequestHistory,
-} from '../../reducers/history';
+
+import { useHistoryOrder, useRequestHistory, deleteRequestHistory } from '../../reducers/history';
 import Icon from '../../components/Icon';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
 import { urlify, download } from '../../utils/misc';
 import { BackgroundActiontype } from '../../entries/Background/rpc';
-import Modal, {
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from '../../components/Modal/Modal';
+import Modal, { ModalContent } from '../../components/Modal/Modal';
+
 
 export default function History(): ReactElement {
   const history = useHistoryOrder();
@@ -124,9 +118,7 @@ function OneRequestHistory(props: { requestId: string }): ReactElement {
         </div>
         <div className="flex flex-row">
           <div className="font-bold text-slate-400">TLS Proxy API: </div>
-          <div className="ml-2 text-slate-800">
-            {request?.websocketProxyUrl}
-          </div>
+          <div className="ml-2 text-slate-800">{request?.websocketProxyUrl}</div>
         </div>
       </div>
       <div className="flex flex-col gap-1">
@@ -141,9 +133,7 @@ function OneRequestHistory(props: { requestId: string }): ReactElement {
             </button>
             <button
               className="flex flex-row flex-grow-0 gap-2 self-end items-center justify-end px-2 py-1 bg-slate-100 text-slate-300 hover:bg-slate-200 hover:text-slate-500 hover:font-bold"
-              onClick={() =>
-                download(`${request?.id}.json`, JSON.stringify(request?.proof))
-              }
+              onClick={() => download(`${request?.id}.json`, JSON.stringify(request?.proof))}
             >
               <Icon className="" fa="fa-solid fa-download" size={1} />
               <span className="text-xs font-bold">Download</span>

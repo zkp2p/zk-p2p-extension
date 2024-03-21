@@ -1,10 +1,9 @@
-import {
-  BackgroundActiontype,
-  RequestHistory,
-} from '../entries/Background/rpc';
 import { useSelector } from 'react-redux';
-import { AppRootState } from './index';
 import deepEqual from 'fast-deep-equal';
+
+import { BackgroundActiontype, RequestHistory } from '../entries/Background/rpc';
+import { AppRootState } from './index';
+
 
 enum ActionType {
   '/history/addRequest' = '/history/addRequest',
@@ -49,10 +48,7 @@ export const deleteRequestHistory = (id: string) => {
   };
 };
 
-export default function history(
-  state = initialState,
-  action: Action<any>,
-): State {
+export default function history(state = initialState, action: Action<any>): State {
   switch (action.type) {
     case ActionType['/history/addRequest']: {
       const payload: RequestHistory = action.payload;

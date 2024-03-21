@@ -69,10 +69,7 @@ export const addRequest = (request: RequestLog): Action<RequestLog> => ({
   payload: request,
 });
 
-export default function requests(
-  state = initialState,
-  action: Action<any>,
-): State {
+export default function requests(state = initialState, action: Action<any>): State {
   switch (action.type) {
     case ActionType['/requests/setRequests']:
       return {
