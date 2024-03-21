@@ -223,7 +223,7 @@ var options = {
         //   force: true,
         // },
         {
-          from: "node_modules/tlsn-js/build",
+          from: "node_modules/tlsn-js-zkp2p/build",
           to: path.join(__dirname, "build"),
           force: true,
         },
