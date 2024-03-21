@@ -24,5 +24,29 @@
     "valueTransform": [
       "\"userId\":%s"
     ]
+  },
+  {
+    "url": "https://app.revolut.com/api/retail/transaction/.*",
+    "targetUrl": "https://app.revolut.com/home",
+    "method": "GET",
+    "type": "xmlhttprequest",
+    "title": "ZKP2P Revolut Onramp",
+    "description": "Notarize your payment transaction. To start, click the button and identify the correct payment transaction",
+    "secretResponseSelector": [
+      "(?<=\"balance\":)\\d+",
+      "(?<=\"description\":\")[^\"]+",
+      "(?<=\"firstName\":\")[^\"]+",
+      "(?<=\"lastName\":\")[^\"]+",
+      "(?<=\"country\":\")[^\"]+",
+      "(?<=\"params\":\\[)[^\\]]+"
+    ],
+    "valueTransform": [
+      "\"balance\":%s",
+      "\"description\":%s",
+      "\"firstName\":%s",
+      "\"lastName\":%s",
+      "\"country\":%s",
+      "\"params\":%s"
+    ]
   }
 ]
