@@ -26,6 +26,36 @@
     ]
   },
   {
+    "url": "https://app.revolut.com/api/retail/user/current",
+    "targetUrl": "https://app.revolut.com/home",
+    "method": "GET",
+    "type": "xmlhttprequest",
+    "title": "ZKP2P Revolut Offramper Registration",
+    "description": "Notarize ownership of a Revtag. To start, click the button to view your account page",
+    "secretResponseSelector": [
+      "(?<=\"address\":{)[^}]+",
+      "(?<=\"birthDate\":\\[)[^\\]]+",
+      "(?<=\"firstName\":)[^,]+",
+      "(?<=\"lastName\":)[^,]+",
+      "(?<=\"middleName\":)[^,]+",
+      "(?<=\"phone\":)[^,]+",
+      "(?<=\"email\":)[^,]+",
+      "(?<=\"ssn\":)[^,]+",
+      "(?<=\"taxResidencies\":\\[)[^\\]]+",
+      "(?<=\"identificationNumbers\":\\[)[^\\]]+"
+    ],
+    "valueTransform": [
+      "\"address\":%s",
+      "\"birthDate\":%s",
+      "\"firstName\":%s",
+      "\"lastName\":%s",
+      "\"middleName\":%s",
+      "\"phone\":%s",
+      "\"email\":%s",
+      "\"identityDetails\":%s"
+    ]
+  },
+  {
     "url": "https://app.revolut.com/api/retail/transaction/.*",
     "targetUrl": "https://app.revolut.com/home",
     "method": "GET",
@@ -34,10 +64,10 @@
     "description": "Notarize your payment transaction. To start, click the button and identify the correct payment transaction",
     "secretResponseSelector": [
       "(?<=\"balance\":)\\d+",
-      "(?<=\"description\":\")[^\"]+",
-      "(?<=\"firstName\":\")[^\"]+",
-      "(?<=\"lastName\":\")[^\"]+",
-      "(?<=\"country\":\")[^\"]+",
+      "(?<=\"description\":)[^,]+",
+      "(?<=\"firstName\":)[^,]+",
+      "(?<=\"lastName\":)[^,]+",
+      "(?<=\"country\":)[^,]+",
       "(?<=\"params\":\\[)[^\\]]+"
     ],
     "valueTransform": [
