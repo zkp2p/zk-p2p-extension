@@ -35,7 +35,7 @@
       "matches": []
     }
   ],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": ["https://wise.com/*"],
   "permissions": [
     "offscreen",
     "storage",
