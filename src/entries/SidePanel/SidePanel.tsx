@@ -57,11 +57,7 @@ const SidePanel = () => {
         />
         <div className="absolute right-2 flex flex-nowrap flex-row items-center gap-1 justify-center w-fit">
           {!!activeTab?.favIconUrl && (
-            <img
-              src={activeTab?.favIconUrl}
-              className="h-5 rounded-full"
-              alt="logo"
-            />
+            <img src={activeTab?.favIconUrl} className="h-5 rounded-full" alt="logo" />
           )}
           <div className="text-xs">{url?.hostname}</div>
         </div>

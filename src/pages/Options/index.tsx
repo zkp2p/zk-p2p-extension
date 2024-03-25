@@ -1,13 +1,13 @@
 import React, { ReactElement, useState, useEffect, useCallback } from 'react';
 
-import {
-  set,
-  get,
-  NOTARY_API_LS_KEY,
-  PROXY_API_LS_KEY,
-} from '../../utils/storage';
+import { set, get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
 
 const API_CONFIGURATIONS = [
+  {
+    name: 'Local',
+    notary: 'http://0.0.0.0:7047',
+    proxy: 'ws://localhost:55688',
+  },
   {
     name: 'Mumbai',
     notary: 'https://notary-mumbai.zkp2p.xyz',
@@ -27,7 +27,7 @@ const API_CONFIGURATIONS = [
     name: 'California',
     notary: 'https://notary-california.zkp2p.xyz',
     proxy: 'wss://proxy-california.zkp2p.xyz',
-  },
+  }
 ];
 
 

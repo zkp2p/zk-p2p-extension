@@ -1,6 +1,8 @@
 import { Level } from 'level';
-import type { RequestHistory } from './rpc';
 const charwise = require('charwise');
+
+import type { RequestHistory } from './rpc';
+
 
 const db = new Level('./ext-db', {
   valueEncoding: 'json',
@@ -97,9 +99,7 @@ export async function setNotaryRequestVerification(
   return newReq;
 }
 
-export async function removeNotaryRequest(
-  id: string,
-): Promise<RequestHistory | null> {
+export async function removeNotaryRequest(id: string): Promise<RequestHistory | null> {
   const existing = await historyDb.get(id);
 
   if (!existing) return null;
@@ -117,8 +117,6 @@ export async function getNotaryRequests(): Promise<RequestHistory[]> {
   return retVal;
 }
 
-export async function getNotaryRequest(
-  id: string,
-): Promise<RequestHistory | null> {
+export async function getNotaryRequest(id: string): Promise<RequestHistory | null> {
   return historyDb.get(id);
 }

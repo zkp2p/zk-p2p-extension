@@ -1,7 +1,9 @@
 import browser from 'webextension-polyfill';
 
-import { onBeforeRequest, onResponseStarted, onSendHeaders } from './handlers';
 import { deleteCacheByTabId } from './cache';
+import { onBeforeRequest, onResponseStarted, onSendHeaders } from './handlers';
+import { getNotaryRequests } from './db';
+import store from '../../utils/store';
 
 
 (async () => {
@@ -38,7 +40,6 @@ import { deleteCacheByTabId } from './cache';
   initRPC();
 })();
 
-
 /*
  * Create offscreen document for background processing and multi-threading
  */
@@ -69,11 +70,24 @@ async function createOffscreenDocument() {
   }
 };
 
-
 /*
  * Set panel behavior on action bar item click: https://developer.chrome.com/docs/extensions/reference/api/sidePanel
  */
 
 chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })
-  .catch((error) => console.error(error));
+  .catch((error: any) => console.error(error));
+
+chrome.runtime.onMessage.addListener(async function (message, sender, sendResponse) {
+  if (message.action === 'REQUEST_HISTORY_BACKGROUND') {
+    const notaryRequests = await getNotaryRequests();
+    console.log('notaryRequests: ', notaryRequests);
+
+    // const currentState = store.getState();
+    // const order = currentState.history.order; // null
+    // const map = currentState.history.map;
+    // const history = order.map((id) => map[id]);
+
+    sendResponse({ notaryRequests, test: 'hello' });
+  }
+});

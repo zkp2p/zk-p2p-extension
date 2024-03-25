@@ -12,6 +12,7 @@ import {
   removeNotaryRequest,
 } from './db';
 
+
 export enum BackgroundActiontype {
   get_requests = 'get_requests',
   clear_requests = 'clear_requests',
