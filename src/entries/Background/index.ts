@@ -79,20 +79,22 @@ chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })
   .catch((error: any) => console.error(error));
 
+let globalNotaryRequests: any = null;
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'REQUEST_HISTORY_BACKGROUND') {
-    (async () => {
-      console.log('attempting to fetch notary requests');
-      const notaryRequests = await getNotaryRequests();
-      console.log('notaryRequests: ', notaryRequests);
-
-      // const currentState = store.getState();
-      // const order = currentState.history.order; // null
-      // const map = currentState.history.map;
-      // const history = order.map((id) => map[id]);
-
-      sendResponse({ test: 'test', notaryRequests });
-    })();
+    if (globalNotaryRequests) {
+      sendResponse({ test: 'test', notaryRequests: globalNotaryRequests });
+    } else {
+      getNotaryRequests()
+        .then(notaryRequests => {
+          globalNotaryRequests = notaryRequests;
+          sendResponse({ test: 'test', notaryRequests });
+        })
+        .catch(error => {
+          console.error('Error fetching notary requests:', error);
+          sendResponse({ error: 'Error occurred' });
+        });
+    }
 
     return true;
   }
