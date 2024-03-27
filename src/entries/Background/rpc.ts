@@ -71,36 +71,38 @@ export type RequestHistory = {
 };
 
 export const initRPC = () => {
-  browser.runtime.onMessage.addListener(
-    async (request, sender, sendResponse) => {
-      switch (request.type) {
-        case BackgroundActiontype.get_requests:
-          return handleGetRequests(request, sendResponse);
-        case BackgroundActiontype.clear_requests:
-          clearCache();
-          return sendResponse();
-        case BackgroundActiontype.get_prove_requests:
-          return handleGetProveRequests(request, sendResponse);
-        case BackgroundActiontype.finish_prove_request:
-          return handleFinishProveRequest(request, sendResponse);
-        case BackgroundActiontype.delete_prove_request:
-          await removeNotaryRequest(request.data);
-          return sendResponse();
-        case BackgroundActiontype.retry_prove_request:
-          return handleRetryProveReqest(request, sendResponse);
-        case BackgroundActiontype.prove_request_start:
-          return handleProveRequestStart(request, sendResponse);
-        default:
-          break;
-      }
-    },
-  );
+  browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+    switch (request.type) {
+      case BackgroundActiontype.get_requests:
+        return handleGetRequests(request, sendResponse);
+
+      case BackgroundActiontype.clear_requests:
+        clearCache();
+        return sendResponse();
+
+      case BackgroundActiontype.get_prove_requests:
+        return handleGetProveRequests(request, sendResponse);
+
+      case BackgroundActiontype.finish_prove_request:
+        return handleFinishProveRequest(request, sendResponse);
+
+      case BackgroundActiontype.delete_prove_request:
+        await removeNotaryRequest(request.data);
+        return sendResponse();
+
+      case BackgroundActiontype.retry_prove_request:
+        return handleRetryProveReqest(request, sendResponse);
+
+      case BackgroundActiontype.prove_request_start:
+        return handleProveRequestStart(request, sendResponse);
+
+      default:
+        break;
+    }
+  });
 };
 
-function handleGetRequests(
-  request: BackgroundAction,
-  sendResponse: (data?: any) => void,
-) {
+function handleGetRequests(request: BackgroundAction, sendResponse: (data?: any) => void) {
   const cache = getCacheByTabId(request.data);
   const keys = cache.keys() || [];
   const data = keys.map((key) => cache.get(key));

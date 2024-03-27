@@ -4,6 +4,7 @@ import { deleteCacheByTabId } from './cache';
 import { onBeforeRequest, onResponseStarted, onSendHeaders } from './handlers';
 import { getNotaryRequests } from './db';
 import store from '../../utils/store';
+import { get } from 'http';
 
 
 (async () => {
@@ -78,16 +79,37 @@ chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })
   .catch((error: any) => console.error(error));
 
-chrome.runtime.onMessage.addListener(async function (message, sender, sendResponse) {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'REQUEST_HISTORY_BACKGROUND') {
-    const notaryRequests = await getNotaryRequests();
-    console.log('notaryRequests: ', notaryRequests);
+    (async () => {
+      console.log('attempting to fetch notary requests');
+      const notaryRequests = await getNotaryRequests();
+      console.log('notaryRequests: ', notaryRequests);
 
-    // const currentState = store.getState();
-    // const order = currentState.history.order; // null
-    // const map = currentState.history.map;
-    // const history = order.map((id) => map[id]);
+      // const currentState = store.getState();
+      // const order = currentState.history.order; // null
+      // const map = currentState.history.map;
+      // const history = order.map((id) => map[id]);
 
-    sendResponse({ notaryRequests, test: 'hello' });
+      sendResponse({ test: 'test', notaryRequests });
+    })();
+
+    return true;
   }
 });
+
+// async function fetchNotaryRequests() {
+//   return await getNotaryRequests();
+// }
+
+// async function sendFoo(sendResponse) {
+//   const foo = await fetchNotaryRequests();
+//   sendResponse({ foo });
+// }
+
+// chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+//   if (request.type === 'REQUEST_HISTORY_BACKGROUND') {
+//     sendFoo(sendResponse);
+//     return true;
+//   }
+// });

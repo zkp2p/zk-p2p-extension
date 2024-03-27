@@ -1,6 +1,3 @@
-import { fetchRequestHistory } from './history';
-
-
 window.onerror = (error) => {
   // console.log('error');
   // console.log(error);
@@ -14,14 +11,18 @@ window.addEventListener('message', function (event) {
   if (event.data.type && event.data.type == 'FETCH_REQUEST_HISTORY') {
     console.log('Content received FETCH_REQUEST_HISTORY');
 
-    const requestHistory = fetchRequestHistory();
+    chrome.runtime.sendMessage({ action: 'REQUEST_HISTORY_BACKGROUND' }, (response) => {
+      console.log('Content received REQUEST_HISTORY_BACKGROUND', response);
 
-    // window.postMessage(
-    //   { type: 'REQUEST_HISTORY_RESPONSE', text: 'Hello from the extension!' },
-    //   '*',
-    // );
-
-    // console.log('Content posted REQUEST_HISTORY_RESPONSE');
+      window.postMessage(
+        {
+          type: 'REQUEST_HISTORY_RESPONSE',
+          status: 'loaded',
+          requestHistory: response,
+        },
+        '*',
+      );
+    });
   }
 });
 
