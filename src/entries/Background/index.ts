@@ -79,19 +79,28 @@ chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })
   .catch((error: any) => console.error(error));
 
-let globalNotaryRequests: any = null;
+/*
+ * To use the setInterval method to keep your service worker awake in a Chrome Extension (Manifest V3)
+ * you should place it at the root level of your service worker's JavaScript file. This ensures that the
+ * interval starts running as soon as the service worker is activated, and continues to run for as long
+ * as the service worker remains active.
+ */
+
+let globalNotaryRequests: unknown = null;
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'REQUEST_HISTORY_BACKGROUND') {
     if (globalNotaryRequests) {
-      sendResponse({ test: 'test', notaryRequests: globalNotaryRequests });
+      sendResponse({ notaryRequests: globalNotaryRequests });
     } else {
       getNotaryRequests()
-        .then(notaryRequests => {
+        .then((notaryRequests) => {
           globalNotaryRequests = notaryRequests;
-          sendResponse({ test: 'test', notaryRequests });
+
+          sendResponse({ notaryRequests });
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Error fetching notary requests:', error);
+
           sendResponse({ error: 'Error occurred' });
         });
     }
@@ -99,19 +108,3 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 });
-
-// async function fetchNotaryRequests() {
-//   return await getNotaryRequests();
-// }
-
-// async function sendFoo(sendResponse) {
-//   const foo = await fetchNotaryRequests();
-//   sendResponse({ foo });
-// }
-
-// chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-//   if (request.type === 'REQUEST_HISTORY_BACKGROUND') {
-//     sendFoo(sendResponse);
-//     return true;
-//   }
-// });
