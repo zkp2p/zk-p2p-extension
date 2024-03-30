@@ -47,16 +47,18 @@
     "title": "ZKP2P Chase Zelle Onramper Registration",
     "description": "Notarize ownership of a Chase Zelle display name. To start, click the button to view your account page",
     "secretResponseSelector": [
-      "(?<=\"enterprisePartyIdentifier\":\")\\d+",
-      "(?<=\"legalEntityName\":\")[^\"]+",
-      "(?<=\"displayName\":\")[^\"]+",
-      "(?<=\"socialAliasDetail\":\\[)[^\\]]+"
+      "(?<=\"enterprisePartyIdentifier\":)\\d+",
+      "(?<=\"legalEntityName\":)[^,]+",
+      "(?<=\"displayName\":)[^,]+",
+      "(?<=\"socialAliasDetail\":\\[)[^\\]]+",
+      "(?<=\"accountDetail\":\\[)[^\\]]+"
     ],
     "valueTransform": [
       "\"enterprisePartyIdentifier\":%s",
       "\"legalEntityName\":%s",
       "\"displayName\":%s",
-      "\"socialAliasDetail\":%s"
+      "\"socialAliasDetail\":%s",
+      "\"accountDetail\":%s"
     ]
   }
 ]
