@@ -26,11 +26,29 @@
     ]
   },
   {
-    "url": "https://secure.chase.com/svc/rr/payments/secure/v1/quickpay/payment/activity/detail/list",
-    "targetUrl": "https://secure.chase.com/web/auth/dashboard#/dashboard/singleDoor/payments/activity;params=qp,sentactivity",
+    "url": "https://secure.chase.com/svc/rr/payments/secure/v1/quickpay/payment/activity/list",
+    "targetUrl": "https://secure.chase.com/web/auth/dashboard#/dashboard/paymentsAdmin/manageRecipient/updateContacts",
     "method": "POST",
     "type": "xmlhttprequest",
-    "title": "ZKP2P Chase Zelle Onramp",
+    "title": "ZKP2P Chase Zelle Onramp (Part 1)",
+    "description": "Notarize your payment transaction. To start, click the button and identify the correct payment transaction",
+    "secretResponseSelector": [
+      "(?<=\"accountName\":\")[^\"]+",
+      "(?<=\"recipientName\":\")[^\"]+",
+      "(?<=\"recipientId\":)\\d+"
+    ],
+    "valueTransform": [
+      "\"accountName\":%s",
+      "\"recipientName\":%s",
+      "\"userId\":%s"
+    ]
+  },
+  {
+    "url": "https://secure.chase.com/svc/rr/payments/secure/v1/quickpay/payment/activity/detail/list",
+    "targetUrl": "https://secure.chase.com/web/auth/dashboard#/dashboard/paymentsAdmin/manageRecipient/updateContacts",
+    "method": "POST",
+    "type": "xmlhttprequest",
+    "title": "ZKP2P Chase Zelle Onramp (Part 2)",
     "description": "Notarize your payment transaction. To start, click the button and identify the correct payment transaction",
     "secretResponseSelector": [
       "(?<=\"recipientName\":\")[^\"]+"
@@ -47,14 +65,12 @@
     "title": "ZKP2P Chase Zelle Onramper Registration",
     "description": "Notarize ownership of a Chase Zelle display name. To start, click the button to view your account page",
     "secretResponseSelector": [
-      "(?<=\"enterprisePartyIdentifier\":)\\d+",
       "(?<=\"legalEntityName\":)[^,]+",
       "(?<=\"displayName\":)[^,]+",
       "(?<=\"socialAliasDetail\":\\[)[^\\]]+",
       "(?<=\"accountDetail\":\\[)[^\\]]+"
     ],
     "valueTransform": [
-      "\"enterprisePartyIdentifier\":%s",
       "\"legalEntityName\":%s",
       "\"displayName\":%s",
       "\"socialAliasDetail\":%s",
