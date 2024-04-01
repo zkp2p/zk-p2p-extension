@@ -51,9 +51,11 @@
     "title": "ZKP2P Chase Zelle Onramp (Part 2)",
     "description": "Notarize your payment transaction. To start, click the button and identify the correct payment transaction",
     "secretResponseSelector": [
+      "(?<=\"fundingAccountName\":\")[^\"]+",
       "(?<=\"recipientName\":\")[^\"]+"
     ],
     "valueTransform": [
+      "\"fundingAccountName\":%s",
       "\"recipientName\":%s"
     ]
   },
