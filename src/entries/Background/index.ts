@@ -6,7 +6,6 @@ import { getNotaryRequests } from './db';
 import store from '../../utils/store';
 import { get } from 'http';
 
-
 (async () => {
   browser.webRequest.onSendHeaders.addListener(
     onSendHeaders,
@@ -69,7 +68,7 @@ async function createOffscreenDocument() {
     await creatingOffscreen;
     creatingOffscreen = null;
   }
-};
+}
 
 /*
  * Set panel behavior on action bar item click: https://developer.chrome.com/docs/extensions/reference/api/sidePanel

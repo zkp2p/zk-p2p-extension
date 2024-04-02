@@ -98,13 +98,8 @@ export default function Notarize(): ReactElement {
           onClick={() => navigate(-1)}
         />
         <div className="flex flex-col flex-shrink flex-grow mr-20 w-0 select-none">
-          <span className="font-bold text-slate-700">
-            {`Notarizing a ${req.method} request`}
-          </span>
-          <span
-            className="text-ellipsis whitespace-nowrap overflow-hidden"
-            title={req.url}
-          >
+          <span className="font-bold text-slate-700">{`Notarizing a ${req.method} request`}</span>
+          <span className="text-ellipsis whitespace-nowrap overflow-hidden" title={req.url}>
             {req.url}
           </span>
         </div>
@@ -318,8 +313,7 @@ function HideResponseStep(props: {
 
 const replay = async (url: string, options: any) => {
   const resp = await fetch(url, options);
-  const contentType =
-    resp?.headers.get('content-type') || resp?.headers.get('Content-Type');
+  const contentType = resp?.headers.get('content-type') || resp?.headers.get('Content-Type');
 
   if (contentType?.includes('application/json')) {
     return resp.text();

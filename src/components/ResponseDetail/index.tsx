@@ -15,8 +15,7 @@ export default function ResponseDetail(props: {
 
     if (!resp) return;
 
-    const contentType =
-      resp.headers.get('content-type') || resp.headers.get('Content-Type');
+    const contentType = resp.headers.get('content-type') || resp.headers.get('Content-Type');
 
     if (contentType?.includes('application/json')) {
       resp
@@ -59,12 +58,7 @@ export default function ResponseDetail(props: {
   }, [props.response]);
 
   return (
-    <div
-      className={classNames(
-        'flex flex-col flex-nowrap overflow-y-auto',
-        props.className,
-      )}
-    >
+    <div className={classNames('flex flex-col flex-nowrap overflow-y-auto', props.className)}>
       <table className="border border-slate-300 border-collapse table-fixed w-full">
         {!!json && (
           <>
@@ -132,20 +126,18 @@ export default function ResponseDetail(props: {
               </tr>
             </thead>
             <tbody>
-              {Array.from(props.response.headers.entries()).map(
-                ([name, value]) => {
-                  return (
-                    <tr className="border-b border-slate-200">
-                      <td className="border border-slate-300 font-bold align-top py-1 px-2 whitespace-nowrap">
-                        {name}
-                      </td>
-                      <td className="border border-slate-300 break-all align-top py-1 px-2">
-                        {value}
-                      </td>
-                    </tr>
-                  );
-                },
-              )}
+              {Array.from(props.response.headers.entries()).map(([name, value]) => {
+                return (
+                  <tr className="border-b border-slate-200">
+                    <td className="border border-slate-300 font-bold align-top py-1 px-2 whitespace-nowrap">
+                      {name}
+                    </td>
+                    <td className="border border-slate-300 break-all align-top py-1 px-2">
+                      {value}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </>
         )}

@@ -5,7 +5,6 @@ import mutex from './mutex';
 import { BackgroundActiontype, RequestLog } from './rpc';
 import { addRequest } from '../../reducers/requests';
 
-
 export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsType) => {
   return mutex.runExclusive(async () => {
     const { method, tabId, requestId } = details;

@@ -27,9 +27,8 @@ const API_CONFIGURATIONS = [
     name: 'California',
     notary: 'https://notary-california.zkp2p.xyz',
     proxy: 'wss://proxy-california.zkp2p.xyz',
-  }
+  },
 ];
-
 
 export default function Options(): ReactElement {
   const [notary, setNotary] = useState('https://notary-california.zkp2p.xyz');
@@ -57,9 +56,7 @@ export default function Options(): ReactElement {
 
   return (
     <div className="flex flex-col flex-nowrap flex-grow">
-      <div className="flex flex-row flex-nowrap py-1 px-2 gap-2 font-bold text-base">
-        Settings
-      </div>
+      <div className="flex flex-row flex-nowrap py-1 px-2 gap-2 font-bold text-base">Settings</div>
 
       <div className="flex flex-col flex-nowrap py-1 px-2 gap-2">
         <div className="font-semibold">Notary API</div>

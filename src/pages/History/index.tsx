@@ -9,7 +9,6 @@ import { urlify, download } from '../../utils/misc';
 import { BackgroundActiontype } from '../../entries/Background/rpc';
 import Modal, { ModalContent } from '../../components/Modal/Modal';
 
-
 export default function History(): ReactElement {
   const history = useHistoryOrder();
 

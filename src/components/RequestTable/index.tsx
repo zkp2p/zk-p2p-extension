@@ -55,19 +55,13 @@ export default function RequestTable(props: Props): ReactElement {
           onChange={(e) => setQuery(e.target.value)}
           value={query}
         ></input>
-        <Icon
-          className="text-slate-400"
-          fa="fa-solid fa-trash"
-          onClick={reset}
-        />
+        <Icon className="text-slate-400" fa="fa-solid fa-trash" onClick={reset} />
       </div>
       <div className="flex-grow overflow-y-auto h-0">
         <table className="border border-slate-300 border-collapse table-fixed w-full">
           <thead className="bg-slate-200">
             <tr>
-              <td className="border border-slate-300 py-1 px-2 w-2/12">
-                Method
-              </td>
+              <td className="border border-slate-300 py-1 px-2 w-2/12">Method</td>
               <td className="border border-slate-300 py-1 px-2 w-3/12">Type</td>
               <td className="border border-slate-300 py-1 px-2">Name</td>
             </tr>

@@ -1,9 +1,4 @@
-import React, {
-  ReactElement,
-  useState,
-  useCallback,
-  ChangeEventHandler,
-} from 'react';
+import React, { ReactElement, useState, useCallback, ChangeEventHandler } from 'react';
 import Icon from '../../components/Icon';
 import { BackgroundActiontype } from '../../entries/Background/rpc';
 import ProofViewer from '../ProofViewer';
@@ -14,32 +9,26 @@ export default function ProofUploader(): ReactElement {
     sent: string;
   } | null>(null);
 
-  const onFileUpload: ChangeEventHandler<HTMLInputElement> = useCallback(
-    async (e) => {
-      // @ts-ignore
-      const [file] = e.target.files || [];
+  const onFileUpload: ChangeEventHandler<HTMLInputElement> = useCallback(async (e) => {
+    // @ts-ignore
+    const [file] = e.target.files || [];
 
-      if (file) {
-        const reader = new FileReader();
-        reader.addEventListener('load', async (event) => {
-          const result = event.target?.result;
-          if (result) {
-            const proof = JSON.parse(result as string);
-            const res = await chrome.runtime.sendMessage<
-              any,
-              { recv: string; sent: string }
-            >({
-              type: BackgroundActiontype.verify_proof,
-              data: proof,
-            });
-            setProof(res);
-          }
-        });
-        reader.readAsText(file);
-      }
-    },
-    [],
-  );
+    if (file) {
+      const reader = new FileReader();
+      reader.addEventListener('load', async (event) => {
+        const result = event.target?.result;
+        if (result) {
+          const proof = JSON.parse(result as string);
+          const res = await chrome.runtime.sendMessage<any, { recv: string; sent: string }>({
+            type: BackgroundActiontype.verify_proof,
+            data: proof,
+          });
+          setProof(res);
+        }
+      });
+      reader.readAsText(file);
+    }
+  }, []);
 
   if (proof) {
     return <ProofViewer recv={proof.recv} sent={proof.sent} />;

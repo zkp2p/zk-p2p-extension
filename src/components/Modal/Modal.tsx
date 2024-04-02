@@ -68,11 +68,7 @@ type ContentProps = {
 };
 
 export function ModalContent(props: ContentProps): ReactElement {
-  return (
-    <div className={classNames('modal__content', props.className)}>
-      {props.children}
-    </div>
-  );
+  return <div className={classNames('modal__content', props.className)}>{props.children}</div>;
 }
 
 type FooterProps = {
@@ -82,12 +78,7 @@ type FooterProps = {
 
 export function ModalFooter(props: FooterProps): ReactElement {
   return (
-    <div
-      className={classNames(
-        'border-t modal__footer border-gray-100',
-        props.className,
-      )}
-    >
+    <div className={classNames('border-t modal__footer border-gray-100', props.className)}>
       {props.children}
     </div>
   );

@@ -3,7 +3,6 @@ const charwise = require('charwise');
 
 import type { RequestHistory } from './rpc';
 
-
 const db = new Level('./ext-db', {
   valueEncoding: 'json',
 });

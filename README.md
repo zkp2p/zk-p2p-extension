@@ -3,6 +3,7 @@
 # Chrome Extension (MV3) for ZKP2P
 
 ### ⚠️ Notice
+
 - When running the extension against a local [notary server](https://github.com/tlsnotary/tlsn/releases), please ensure that the server's version is the same as the version of this extension
 
 ## Installing and Running
@@ -21,6 +22,7 @@
 6. Happy hacking.
 
 ## Building Websockify Docker Image
+
 ```
 $ git clone https://github.com/novnc/websockify && cd websockify
 $ ./docker/build.sh
@@ -28,6 +30,7 @@ $ docker run -it --rm -p 55688:80 novnc/websockify 80 wise.com:443
 ```
 
 ## Running Websockify Docker Image
+
 ```
 $ cd zk-p2p-extension
 $ docker run -it --rm -p 55688:80 novnc/websockify 80 wise.com:443

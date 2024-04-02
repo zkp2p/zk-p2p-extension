@@ -1,20 +1,8 @@
-import React, {
-  ReactElement,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ReactElement, ReactNode, useCallback, useEffect, useState } from 'react';
 import { notarizeRequest, useRequest } from '../../reducers/requests';
 import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
-import {
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-  useParams,
-} from 'react-router';
+import { Route, Routes, useLocation, useNavigate, useParams } from 'react-router';
 import Icon from '../Icon';
 import NavigateWithParams from '../NavigateWithParams';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
@@ -45,15 +33,9 @@ export default function RequestDetail(props: Props): ReactElement {
           fa="fa-solid fa-xmark"
           onClick={() => navigate('/requests')}
         />
-        <RequestDetailsHeaderTab path="/headers">
-          Headers
-        </RequestDetailsHeaderTab>
-        <RequestDetailsHeaderTab path="/payloads">
-          Payload
-        </RequestDetailsHeaderTab>
-        <RequestDetailsHeaderTab path="/response">
-          Response
-        </RequestDetailsHeaderTab>
+        <RequestDetailsHeaderTab path="/headers">Headers</RequestDetailsHeaderTab>
+        <RequestDetailsHeaderTab path="/payloads">Payload</RequestDetailsHeaderTab>
+        <RequestDetailsHeaderTab path="/response">Response</RequestDetailsHeaderTab>
         <button
           className="absolute right-2 bg-primary/[0.9] text-white font-bold px-2 py-0.5 hover:bg-primary/[0.8] active:bg-primary"
           onClick={notarize}
@@ -62,28 +44,16 @@ export default function RequestDetail(props: Props): ReactElement {
         </button>
       </div>
       <Routes>
-        <Route
-          path="headers"
-          element={<RequestHeaders requestId={props.requestId} />}
-        />
-        <Route
-          path="payloads"
-          element={<RequestPayload requestId={props.requestId} />}
-        />
-        <Route
-          path="response"
-          element={<WebResponse requestId={props.requestId} />}
-        />
+        <Route path="headers" element={<RequestHeaders requestId={props.requestId} />} />
+        <Route path="payloads" element={<RequestPayload requestId={props.requestId} />} />
+        <Route path="response" element={<WebResponse requestId={props.requestId} />} />
         <Route path="/" element={<NavigateWithParams to="/headers" />} />
       </Routes>
     </>
   );
 }
 
-function RequestDetailsHeaderTab(props: {
-  children: ReactNode;
-  path: string;
-}): ReactElement {
+function RequestDetailsHeaderTab(props: { children: ReactNode; path: string }): ReactElement {
   const loc = useLocation();
   const params = useParams<{ requestId: string }>();
   const navigate = useNavigate();
@@ -269,8 +239,7 @@ function WebResponse(props: Props): ReactElement {
     const resp = await fetch(data.url, options);
     setResponse(resp);
 
-    const contentType =
-      resp?.headers.get('content-type') || resp?.headers.get('Content-Type');
+    const contentType = resp?.headers.get('content-type') || resp?.headers.get('Content-Type');
 
     if (contentType?.includes('application/json')) {
       resp.json().then((json) => {
@@ -424,17 +393,13 @@ function RequestHeaders(props: Props): ReactElement {
             <td className="border border-slate-300 font-bold align-top py-1 px-2 whitespace-nowrap">
               Type
             </td>
-            <td className="border border-slate-300 break-all align-top py-1 px-2">
-              {data?.type}
-            </td>
+            <td className="border border-slate-300 break-all align-top py-1 px-2">{data?.type}</td>
           </tr>
           <tr className="border-b border-slate-200">
             <td className="border border-slate-300 font-bold align-top py-1 px-2 whitespace-nowrap">
               URL
             </td>
-            <td className="border border-slate-300 break-all align-top py-1 px-2">
-              {data?.url}
-            </td>
+            <td className="border border-slate-300 break-all align-top py-1 px-2">{data?.url}</td>
           </tr>
         </tbody>
         <thead className="bg-slate-200">
@@ -450,9 +415,7 @@ function RequestHeaders(props: Props): ReactElement {
               <td className="border border-slate-300 font-bold align-top py-1 px-2 whitespace-nowrap">
                 {h.name}
               </td>
-              <td className="border border-slate-300 break-all align-top py-1 px-2">
-                {h.value}
-              </td>
+              <td className="border border-slate-300 break-all align-top py-1 px-2">{h.value}</td>
             </tr>
           ))}
         </tbody>

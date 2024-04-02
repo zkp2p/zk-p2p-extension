@@ -4,7 +4,6 @@ import deepEqual from 'fast-deep-equal';
 import { BackgroundActiontype, RequestHistory } from '../entries/Background/rpc';
 import { AppRootState } from './index';
 
-
 enum ActionType {
   '/history/addRequest' = '/history/addRequest',
   '/history/deleteRequest' = '/history/deleteRequest',

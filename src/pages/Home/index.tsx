@@ -1,10 +1,4 @@
-import React, {
-  MouseEventHandler,
-  ReactElement,
-  ReactNode,
-  useCallback,
-  useState,
-} from 'react';
+import React, { MouseEventHandler, ReactElement, ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -15,7 +9,6 @@ import { notarizeRequest, useActiveTabUrl, useRequests } from '../../reducers/re
 import bookmarks from '../../../utils/bookmark/bookmarks.json';
 import { replayRequest, urlify } from '../../utils/misc';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
-
 
 export default function Home(): ReactElement {
   const requests = useRequests();
@@ -30,16 +23,10 @@ export default function Home(): ReactElement {
           <span>Requests</span>
           <span>{`(${requests.length})`}</span>
         </NavButton>
-        <NavButton
-          fa="fa-solid fa-magnifying-glass"
-          onClick={() => navigate('/custom')}
-        >
+        <NavButton fa="fa-solid fa-magnifying-glass" onClick={() => navigate('/custom')}>
           Custom
         </NavButton>
-        <NavButton
-          fa="fa-solid fa-magnifying-glass"
-          onClick={() => navigate('/verify')}
-        >
+        <NavButton fa="fa-solid fa-magnifying-glass" onClick={() => navigate('/verify')}>
           Verify
         </NavButton>
         <NavButton fa="fa-solid fa-list" onClick={() => navigate('/history')}>
@@ -79,9 +66,7 @@ export default function Home(): ReactElement {
                   <div className="bg-slate-200 text-slate-400 px-1 py-0.5 rounded-sm">
                     {bm.method}
                   </div>
-                  <div className="text-slate-400 px-2 py-1 rounded-md">
-                    {bm.type}
-                  </div>
+                  <div className="text-slate-400 px-2 py-1 rounded-md">{bm.type}</div>
                 </div>
                 <div className="font-bold">{bm.title}</div>
                 <div className="italic">{bm.description}</div>
@@ -95,9 +80,7 @@ export default function Home(): ReactElement {
                       const res = await replayRequest(req);
                       const secretHeaders = req.requestHeaders
                         .map((h) => {
-                          return (
-                            `${h.name.toLowerCase()}: ${h.value || ''}` || ''
-                          );
+                          return `${h.name.toLowerCase()}: ${h.value || ''}` || '';
                         })
                         .filter((d) => !!d);
 
@@ -123,35 +106,37 @@ export default function Home(): ReactElement {
                       //   const secretResps = [
                       //     res.text.substring(0, selectionStart),
                       //     res.text.substring(selectionEnd, res.text.length),
-                      //   ].filter((d) => !!d);                        
+                      //   ].filter((d) => !!d);
                       // }
 
+                      const selectedValues = [];
+                      const secretResps = [] as string[];
+                      console.log('secretResps', secretResps);
 
-                      let selectedValues = [];
-                      let secretResps = [] as string[];
-                      console.log('secretResps', secretResps)
+                      bm.secretResponseSelector.forEach((secretResponseSelector) => {
+                        const regex = new RegExp(secretResponseSelector, 'g');
 
-                      bm.secretResponseSelector.forEach((secretResponseSelector, index) => {
-                          const regex = new RegExp(secretResponseSelector, 'g');
+                        console.log(res.text);
+                        const matches = res.text.match(regex);
+                        console.log('secretResponseSelector', secretResponseSelector);
 
-                          console.log(res.text)
-                          const matches = res.text.match(regex);
-                          console.log('secretResponseSelector', secretResponseSelector)
-                          
-                          if (matches) {
-                              selectedValues.push(matches[0]);
-                              console.log('matches', matches[0])
-                              const hidden = matches[0];
-                              console.log('hidden', hidden)
-                              const selectionStart = res.text.indexOf(hidden);
-                              const selectionEnd = selectionStart + hidden.length;
-                              console.log('selectionStart', selectionStart, 'selectionEnd', selectionEnd)
-                              if (selectionStart !== -1) {
-                                console.log('selectionStart', selectionStart, 'selectionEnd', selectionEnd)
-                                secretResps.push(res.text.substring(selectionStart, selectionEnd));
-                              }
-                              console.log('secretResps', secretResps);
+                        if (matches) {
+                          selectedValues.push(matches[0]);
+                          // console.log('matches', matches[0])
+
+                          const hidden = matches[0];
+                          // console.log('hidden', hidden);
+
+                          const selectionStart = res.text.indexOf(hidden);
+                          const selectionEnd = selectionStart + hidden.length;
+                          // console.log('selectionStart', selectionStart, 'selectionEnd', selectionEnd);
+
+                          if (selectionStart !== -1) {
+                            secretResps.push(res.text.substring(selectionStart, selectionEnd));
+                            // console.log('selectionStart', selectionStart, 'selectionEnd', selectionEnd);
                           }
+                          console.log('secretResps', secretResps);
+                        }
                       });
                       // Filter out any empty strings
                       const filteredSecretResps = secretResps.filter((d) => !!d);
@@ -159,9 +144,8 @@ export default function Home(): ReactElement {
                       const hostname = urlify(req.url)?.hostname;
                       const notaryUrl = await get(NOTARY_API_LS_KEY);
                       const websocketProxyUrl = await get(PROXY_API_LS_KEY);
-                      
-                      const headers: { [k: string]: string } =
-                      req.requestHeaders.reduce(
+
+                      const headers: { [k: string]: string } = req.requestHeaders.reduce(
                         (acc: any, h) => {
                           acc[h.name] = h.value;
                           return acc;
@@ -172,7 +156,6 @@ export default function Home(): ReactElement {
                       //TODO: for some reason, these needs to be override to work
                       headers['Accept-Encoding'] = 'identity';
                       headers['Connection'] = 'close';
-
 
                       dispatch(
                         // @ts-ignore
@@ -190,7 +173,6 @@ export default function Home(): ReactElement {
                       );
 
                       navigate(`/history`);
-
                     }}
                   >
                     Notarize
@@ -199,7 +181,7 @@ export default function Home(): ReactElement {
                 {!isReady && (
                   <button
                     className="button w-fit self-end mt-2"
-                    onClick={() => chrome.tabs.update({ url: bm.targetUrl })}
+                    onClick={() => chrome.tabs.create({ url: bm.targetUrl })}
                   >
                     {`Go to ${bmHost}`}
                   </button>
@@ -228,8 +210,7 @@ function NavButton(props: {
         'flex flex-row flex-nowrap items-center justify-center',
         'text-white rounded px-2 py-1 gap-1',
         {
-          'bg-primary/[.8] hover:bg-primary/[.7] active:bg-primary':
-            !props.disabled,
+          'bg-primary/[.8] hover:bg-primary/[.7] active:bg-primary': !props.disabled,
           'bg-primary/[.5]': props.disabled,
         },
         props.className,
@@ -238,9 +219,7 @@ function NavButton(props: {
       disabled={props.disabled}
     >
       <Icon className="flex-grow-0 flex-shrink-0" fa={props.fa} size={1} />
-      <span className="flex-grow flex-shrink w-0 flex-grow font-bold">
-        {props.children}
-      </span>
+      <span className="flex-shrink w-0 flex-grow font-bold">{props.children}</span>
     </button>
   );
 }

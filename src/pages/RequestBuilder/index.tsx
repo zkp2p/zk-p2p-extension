@@ -13,7 +13,6 @@ import NavigateWithParams from '../../components/NavigateWithParams';
 import ResponseDetail from '../../components/ResponseDetail';
 import { urlify } from '../../utils/misc';
 
-
 enum TabType {
   Params = 'Params',
   Headers = 'Headers',
@@ -34,17 +33,11 @@ export default function RequestBuilder(props?: {
 
   const subpath = props?.subpath || '/custom';
   const [_url, setUrl] = useState(props?.url || '');
-  const [params, setParams] = useState<[string, string, boolean?][]>(
-    props?.params || [],
-  );
-  const [headers, setHeaders] = useState<[string, string, boolean?][]>(
-    props?.headers || [],
-  );
+  const [params, setParams] = useState<[string, string, boolean?][]>(props?.params || []);
+  const [headers, setHeaders] = useState<[string, string, boolean?][]>(props?.headers || []);
   const [body, setBody] = useState<string | undefined>(props?.body);
   const [method, setMethod] = useState<string>(props?.method || 'GET');
-  const [response, setResponse] = useState<Response | null>(
-    props?.response || null,
-  );
+  const [response, setResponse] = useState<Response | null>(props?.response || null);
 
   const url = urlify(_url);
 
@@ -178,22 +171,13 @@ export default function RequestBuilder(props?: {
           <Route
             path="params"
             element={
-              <ParamTable
-                url={url}
-                toggleParam={toggleParam}
-                setParam={setParam}
-                params={params}
-              />
+              <ParamTable url={url} toggleParam={toggleParam} setParam={setParam} params={params} />
             }
           />
           <Route
             path="headers"
             element={
-              <HeaderTable
-                toggleHeader={toggleHeader}
-                setHeader={setHeader}
-                headers={headers}
-              />
+              <HeaderTable toggleHeader={toggleHeader} setHeader={setHeader} headers={headers} />
             }
           />
           <Route
@@ -206,10 +190,7 @@ export default function RequestBuilder(props?: {
               />
             }
           />
-          <Route
-            path="response"
-            element={<ResponseDetail response={response} />}
-          />
+          <Route path="response" element={<ResponseDetail response={response} />} />
           <Route path="/" element={<NavigateWithParams to="/params" />} />
         </Routes>
       </div>
@@ -223,10 +204,7 @@ function ParamTable(props: {
   setParam: (index: number, key: string, value: string) => void;
   params: [string, string, boolean?][];
 }): ReactElement {
-  const params: [string, string, boolean?][] = [
-    ...props.params,
-    ['', '', true],
-  ];
+  const params: [string, string, boolean?][] = [...props.params, ['', '', true]];
   const last = props.params.length;
 
   return (
@@ -241,11 +219,7 @@ function ParamTable(props: {
           >
             <td className="w-8 text-center pt-2">
               {last !== i && (
-                <input
-                  type="checkbox"
-                  onChange={() => props.toggleParam(i)}
-                  checked={!silent}
-                />
+                <input type="checkbox" onChange={() => props.toggleParam(i)} checked={!silent} />
               )}
             </td>
             <td className="border border-slate-300 font-bold align-top break-all w-fit">
@@ -282,10 +256,7 @@ function HeaderTable(props: {
   setHeader: (index: number, key: string, value: string) => void;
   headers: [string, string, boolean?][];
 }): ReactElement {
-  const headers: [string, string, boolean?][] = [
-    ...props.headers,
-    ['', '', true],
-  ];
+  const headers: [string, string, boolean?][] = [...props.headers, ['', '', true]];
   const last = props.headers.length;
 
   return (
@@ -300,11 +271,7 @@ function HeaderTable(props: {
           >
             <td className="w-8 text-center pt-2">
               {last !== i && (
-                <input
-                  type="checkbox"
-                  onChange={() => props.toggleHeader(i)}
-                  checked={!silent}
-                />
+                <input type="checkbox" onChange={() => props.toggleHeader(i)} checked={!silent} />
               )}
             </td>
             <td className="border border-slate-300 font-bold align-top break-all w-fit">

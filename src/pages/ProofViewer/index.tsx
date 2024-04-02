@@ -1,19 +1,11 @@
-import React, {
-  ReactNode,
-  ReactElement,
-  useState,
-  MouseEventHandler,
-} from 'react';
+import React, { ReactNode, ReactElement, useState, MouseEventHandler } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router';
 import c from 'classnames';
 import { useRequestHistory } from '../../reducers/history';
 import Icon from '../../components/Icon';
 import { download } from '../../utils/misc';
 
-export default function ProofViewer(props?: {
-  recv?: string;
-  sent?: string;
-}): ReactElement {
+export default function ProofViewer(props?: { recv?: string; sent?: string }): ReactElement {
   const { requestId } = useParams<{ requestId: string }>();
   const request = useRequestHistory(requestId);
   const navigate = useNavigate();
@@ -79,8 +71,7 @@ function TabLabel(props: {
     <button
       className={c('px-1 select-none cursor-pointer font-bold', {
         'text-slate-800 border-b-2 border-green-500': props.active,
-        'text-slate-400 border-b-2 border-transparent hover:text-slate-500':
-          !props.active,
+        'text-slate-400 border-b-2 border-transparent hover:text-slate-500': !props.active,
       })}
       onClick={props.onClick}
     >

@@ -16,7 +16,6 @@ import ProofViewer from '../../pages/ProofViewer';
 import History from '../../pages/History';
 import ProofUploader from '../../pages/ProofUploader';
 
-
 const SidePanel = () => {
   const dispatch = useDispatch();
   const activeTab = useActiveTab();

@@ -5,7 +5,6 @@ import { prove, verify } from 'tlsn-js-zkp2p';
 import { BackgroundActiontype } from '../Background/rpc';
 import { urlify } from '../../utils/misc';
 
-
 const Offscreen = () => {
   useEffect(() => {
     // @ts-ignore

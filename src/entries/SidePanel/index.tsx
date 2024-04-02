@@ -8,7 +8,6 @@ import { BackgroundActiontype } from '../Background/rpc';
 import './index.scss';
 import store from '../../utils/store';
 
-
 const container = document.getElementById('app-container');
 const root = createRoot(container!); // createRoot(container!) if you use TypeScript
 
