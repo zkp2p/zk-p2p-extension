@@ -9,6 +9,7 @@ var { CleanWebpackPlugin } = require("clean-webpack-plugin");
 var ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 var ReactRefreshTypeScript = require("react-refresh-typescript");
 const ExtReloader = require('webpack-ext-reloader');
+const Dotenv = require('dotenv-webpack');
 
 const ASSET_PATH = process.env.ASSET_PATH || "/";
 
@@ -135,6 +136,24 @@ var options = {
     ],
   },
   resolve: {
+    fallback: {
+      "assert": require.resolve("assert"),
+      "buffer": require.resolve("buffer"),
+      "process/browser": require.resolve("process/browser"),
+      "stream": require.resolve("stream-browserify"),
+      "url": require.resolve("url"),
+      "os": false,
+      "fs": false,
+      "dns": false,
+      "timers": false,
+      "tls": false,
+      "net": false,
+      "path": false,
+      "zlib": false,
+      "http": false,
+      "https": false,
+      "crypto": require.resolve("crypto-browserify"),
+    },
     alias: alias,
     extensions: fileExtensions
       .map((extension) => "." + extension)
@@ -149,6 +168,7 @@ var options = {
     new ExtReloader({
       manifest: path.resolve(__dirname, "src/manifest.json")
     }),
+    new Dotenv(),
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -253,6 +273,11 @@ var options = {
     }),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
+    }),
+    new webpack.DefinePlugin({
+      'process.env.ALCHEMY_API_KEY': JSON.stringify(process.env.ALCHEMY_API_KEY),
+      'process.env.PRIVY_APP_ID': JSON.stringify(process.env.PRIVY_APP_ID),
+      'process.env.ZERODEV_APP_ID': JSON.stringify(process.env.ZERODEV_APP_ID),
     }),
   ].filter(Boolean),
   infrastructureLogging: {

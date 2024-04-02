@@ -8,6 +8,7 @@ import React, {
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { usePrivy } from '@privy-io/react-auth';
 
 import Icon from '../../components/Icon';
 import classNames from 'classnames';
@@ -22,6 +23,13 @@ export default function Home(): ReactElement {
   const url = useActiveTabUrl();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {
+    authenticated,
+    logout: authenticatedLogout,
+    user,
+    login: authenticatedLogin,
+    exportWallet: exportAuthenticatedWallet
+  } = usePrivy();
 
   return (
     <div className="flex flex-col gap-4 py-4 overflow-y-auto">
@@ -48,6 +56,15 @@ export default function Home(): ReactElement {
         <NavButton fa="fa-solid fa-gear" onClick={() => navigate('/options')}>
           Options
         </NavButton>
+      </div>
+      <div>
+        { !authenticated &&
+          <button onClick={authenticatedLogin}>Login</button>
+        }
+        { authenticated &&
+          <button onClick={authenticatedLogout}>Logout</button>
+        }
+
       </div>
       {!bookmarks.length && (
         <div className="flex flex-col flex-nowrap">
