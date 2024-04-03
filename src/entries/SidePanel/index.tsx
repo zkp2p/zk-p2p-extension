@@ -49,16 +49,12 @@ chrome.runtime.onMessage.addListener((request) => {
   }
 });
 
-console.log('process.env.ALCHEMY_API_KEY', process.env.ALCHEMY_API_KEY);
-console.log('process.env.PRIVY_APP_ID', process.env.PRIVY_APP_ID);
-console.log('process.env.ZERODEV_APP_ID', process.env.ZERODEV_APP_ID);
-
 root.render(
     <PrivyProvider
       appId={process.env.PRIVY_APP_ID || ''}
       config={{
         embeddedWallets: {
-          createOnLogin: 'users-without-wallets',
+          createOnLogin: 'all-users',
           noPromptOnSignature: true
         },
         appearance: {
@@ -69,12 +65,12 @@ root.render(
         supportedChains: [sepolia]
       }}
     >
-      <ZeroDevPrivyWagmiProvider wagmiChainsConfig={configureChainsConfig} options={zeroDevOptions}>
+      {/* <ZeroDevPrivyWagmiProvider wagmiChainsConfig={configureChainsConfig} options={zeroDevOptions}> */}
         <Provider store={store}>
           <HashRouter>
             <SidePanel />
           </HashRouter>
-        </Provider>,
-      </ZeroDevPrivyWagmiProvider>
+        </Provider>
+      {/* </ZeroDevPrivyWagmiProvider> */}
     </PrivyProvider>
 );

@@ -4,11 +4,15 @@ import React, {
   ReactNode,
   useCallback,
   useState,
+  useEffect
 } from 'react';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { usePrivy } from '@privy-io/react-auth';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
+import { createEcdsaKernelAccountClient } from '@kerneljs/presets/zerodev';
+import { providerToSmartAccountSigner, KernelAccountClient } from '@kerneljs/core';
+import { sepolia } from 'wagmi/chains';
 
 import Icon from '../../components/Icon';
 import classNames from 'classnames';
@@ -17,6 +21,7 @@ import bookmarks from '../../../utils/bookmark/bookmarks.json';
 import { replayRequest, urlify } from '../../utils/misc';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
 
+type KernelClientType =  Awaited<ReturnType<typeof createEcdsaKernelAccountClient>>;
 
 export default function Home(): ReactElement {
   const requests = useRequests();
@@ -24,12 +29,50 @@ export default function Home(): ReactElement {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
+    ready,
     authenticated,
     logout: authenticatedLogout,
     user,
     login: authenticatedLogin,
     exportWallet: exportAuthenticatedWallet
   } = usePrivy();
+  const { wallets } = useWallets();
+
+  const [kernelClient, setKernelClient] = useState<KernelClientType | undefined>();
+
+  console.log('user', user);
+
+  const embeddedWallet = wallets.find(
+    (wallet) => wallet.walletClientType === "privy"
+  );
+
+  console.log('embeddedWallet', embeddedWallet);
+  // if (!embeddedWallet) throw new Error("User does not have an embedded wallet");
+
+  useEffect(() => {
+    const getKernelClient = async () => {
+      if (!embeddedWallet) return;
+      const privyProvider = await embeddedWallet.getEthereumProvider();
+  
+      // // Use the Provider from Privy to create a SmartAccountSigner
+      const signer = await providerToSmartAccountSigner(privyProvider);
+  
+      // Set up your Kernel client
+      const kernelClient = await createEcdsaKernelAccountClient({
+        chain: sepolia,
+        projectId: process.env.ZERODEV_APP_ID || '',
+        signer,
+      });
+      console.log(`Kernel Address: ${kernelClient.account.address}`);
+      setKernelClient(kernelClient);
+    }
+    if (!kernelClient) {
+      getKernelClient();
+    }
+  }, [embeddedWallet]);
+
+  const eoa =
+    wallets.find((wallet) => wallet.walletClientType === "privy") || wallets[0];
 
   return (
     <div className="flex flex-col gap-4 py-4 overflow-y-auto">
@@ -64,7 +107,16 @@ export default function Home(): ReactElement {
         { authenticated &&
           <button onClick={authenticatedLogout}>Logout</button>
         }
-
+        {
+          ready && authenticated && (
+            <>
+              <div>EOA Signer: {eoa?.address}</div>
+              <p>
+                Your Smart Wallet Address: {kernelClient?.account?.address}
+              </p>
+            </>
+          )
+        }
       </div>
       {!bookmarks.length && (
         <div className="flex flex-col flex-nowrap">
