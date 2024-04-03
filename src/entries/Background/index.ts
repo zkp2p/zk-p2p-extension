@@ -88,12 +88,18 @@ chrome.sidePanel
 let globalNotaryRequests: unknown = null;
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'REQUEST_HISTORY_BACKGROUND') {
+    // console.log('Background received REQUEST_HISTORY_BACKGROUND');
+
     if (globalNotaryRequests) {
       sendResponse({ notaryRequests: globalNotaryRequests });
+
+      globalNotaryRequests = null;
     } else {
       getNotaryRequests()
         .then((notaryRequests) => {
           globalNotaryRequests = notaryRequests;
+
+          // console.log('Responding with: ', notaryRequests);
 
           sendResponse({ notaryRequests });
         })

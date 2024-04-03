@@ -9,7 +9,7 @@ window.addEventListener('message', function (event) {
   }
 
   if (event.data.type && event.data.type == 'fetch_extension_version') {
-    console.log('Content received fetch_extension_version');
+    // console.log('Content received fetch_extension_version');
 
     window.postMessage(
       {
@@ -22,18 +22,24 @@ window.addEventListener('message', function (event) {
   }
 
   if (event.data.type && event.data.type == 'fetch_profile_request_history') {
-    console.log('Content received fetch_profile_request_history');
+    // console.log('Content received fetch_profile_request_history');
 
     chrome.runtime.sendMessage({ action: 'REQUEST_HISTORY_BACKGROUND' }, (response) => {
-      console.log('Content received REQUEST_HISTORY_BACKGROUND', response);
+      // console.log('Content received fetch_profile_request_history', response);
 
-      // filter out the profile requests
+      let filteredResponse = [];
+      if (response.notaryRequests.length > 0) {
+        filteredResponse = response.notaryRequests.filter(
+          (item: { status: string; url: string }) =>
+            item.status === 'success' && item.url === 'https://wise.com/gateway/v1/payments',
+        );
+      }
 
       window.postMessage(
         {
           type: 'profile_request_history_response',
           status: 'loaded',
-          requestHistory: response,
+          requestHistory: { notaryRequests: filteredResponse },
         },
         '*',
       );
@@ -41,18 +47,26 @@ window.addEventListener('message', function (event) {
   }
 
   if (event.data.type && event.data.type == 'fetch_transfer_request_history') {
-    console.log('Content received fetch_transfer_request_history');
+    // console.log('Content received fetch_transfer_request_history');
 
     chrome.runtime.sendMessage({ action: 'REQUEST_HISTORY_BACKGROUND' }, (response) => {
-      console.log('Content received REQUEST_HISTORY_BACKGROUND', response);
+      console.log('Content received fetch_transfer_request_history', response);
 
-      // filter out the transfer requests
+      let filteredResponse = [];
+      if (response.notaryRequests.length > 0) {
+        const transferRequestPattern =
+          /^https:\/\/wise\.com\/gateway\/v3\/profiles\/\d+\/transfers\/\d+$/;
+        filteredResponse = response.notaryRequests.filter(
+          (item: { status: string; url: string }) =>
+            item.status === 'success' && transferRequestPattern.test(item.url),
+        );
+      }
 
       window.postMessage(
         {
           type: 'transfer_request_history_response',
           status: 'loaded',
-          requestHistory: response,
+          requestHistory: { notaryRequests: filteredResponse },
         },
         '*',
       );
