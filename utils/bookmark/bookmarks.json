@@ -24,5 +24,39 @@
     "valueTransform": [
       "\"userId\":%s"
     ]
+  },
+  {
+    "url": "https://api.venmo.com/graphql",
+    "targetUrl": "https://account.venmo.com/?feed=mine",
+    "method": "GET",
+    "type": "xmlhttprequest",
+    "title": "ZKP2P Venmo Registration",
+    "description": "Notarize ownership of a Venmo ID. To start, click the button",
+    "secretResponseSelector": [
+      "(?<=\"shippingAddresses\":\\[)[^\\]]+",
+      "(?<=\"userBalance\":{\"value\":)\\d+.\\d+"
+    ],
+    "valueTransform": [
+      "\"shippingAddresses\":\"%s\"",
+      "\"value\":\"%s\""
+    ]
+  },
+  {
+    "url": "https://account.venmo.com/api/stories\\?feedType=me&externalId=\\d+",
+    "targetUrl": "https://account.venmo.com/?feed=mine",
+    "method": "GET",
+    "type": "xmlhttprequest",
+    "title": "ZKP2P Venmo Transfer",
+    "description": "Notarize your payment transaction. To start, click the button",
+    "secretResponseSelector": [
+      "(?<=\"amount\":\"\\+ \\$)\\d+.\\d+\"",
+      "(?<=\"avatar\":\")[^\"]+",
+      "(?<=\"sender\":{)[^}]+"
+    ],
+    "valueTransform": [
+      "\"amount\":%s",
+      "\"avatar\":%s",
+      "\"sender\":%s"
+    ]
   }
 ]
