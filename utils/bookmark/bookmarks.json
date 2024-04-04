@@ -7,7 +7,7 @@
     "title": "ZKP2P Wise Registration (All Users)",
     "description": "Notarize ownership of a wise tag. To start, click the button to view your account page",
     "secretResponseSelector": [
-      "(?<=\"title\":\"Account details\",\"modules\":\\[)[^\\]]+"
+      "(?<=\"title\":\"Account details\",)\"modules\":\\[[^\\]]+],"
     ],
     "valueTransform": ["\"modules\":\"%s\""]
   },
@@ -19,7 +19,7 @@
     "title": "ZKP2P Wise Onramp + Registration for Offramper",
     "description": "Notarize your payment transaction. To start, click the button and identify the correct payment transaction",
     "secretResponseSelector": [
-      "(?<=\"userId\":)\\d+"
+      "\"userId\":\\d+"
     ],
     "valueTransform": [
       "\"userId\":%s"
