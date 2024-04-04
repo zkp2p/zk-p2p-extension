@@ -19,7 +19,7 @@
     "title": "ZKP2P Wise Onramp + Registration for Offramper",
     "description": "Notarize your payment transaction. To start, click the button and identify the correct payment transaction",
     "secretResponseSelector": [
-      "\"userId\":\\d+"
+      "\"userId\":\\d+,"
     ],
     "valueTransform": [
       "\"userId\":%s"
