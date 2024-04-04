@@ -48,15 +48,7 @@
     "type": "xmlhttprequest",
     "title": "ZKP2P Venmo Transfer",
     "description": "Notarize your payment transaction. To start, click the button",
-    "secretResponseSelector": [
-      "(?<=\"amount\":\"\\+ \\$)\\d+.\\d+\"",
-      "(?<=\"avatar\":\")[^\"]+",
-      "(?<=\"sender\":{)[^}]+"
-    ],
-    "valueTransform": [
-      "\"amount\":%s",
-      "\"avatar\":%s",
-      "\"sender\":%s"
-    ]
+    "secretResponseSelector": [],
+    "valueTransform": []
   }
 ]
