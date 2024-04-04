@@ -79,37 +79,33 @@ chrome.sidePanel
   .catch((error: any) => console.error(error));
 
 /*
- * To use the setInterval method to keep your service worker awake in a Chrome Extension (Manifest V3)
- * you should place it at the root level of your service worker's JavaScript file. This ensures that the
- * interval starts running as soon as the service worker is activated, and continues to run for as long
- * as the service worker remains active.
+ * Janky way of responding to content script messages by sending messages back
  */
 
-let globalNotaryRequests: unknown = null;
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === 'REQUEST_HISTORY_BACKGROUND') {
-    // console.log('Background received REQUEST_HISTORY_BACKGROUND');
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === 'request_history_background') {
+    getNotaryRequests().then((notaryRequests) => {
+      // console.log(new Date().toISOString(), 'Successfully fetched:', notaryRequests);
 
-    if (globalNotaryRequests) {
-      sendResponse({ notaryRequests: globalNotaryRequests });
-
-      globalNotaryRequests = null;
-    } else {
-      getNotaryRequests()
-        .then((notaryRequests) => {
-          globalNotaryRequests = notaryRequests;
-
-          // console.log('Responding with: ', notaryRequests);
-
-          sendResponse({ notaryRequests });
-        })
-        .catch((error) => {
-          console.error('Error fetching notary requests:', error);
-
-          sendResponse({ error: 'Error occurred' });
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        return chrome.tabs.sendMessage(tabs[0].id, {
+          action: 'request_profile_history_response',
+          data: { notaryRequests },
         });
-    }
+      });
+    });
+  }
 
-    return true;
+  if (message.action === 'request_transfer_history_background') {
+    getNotaryRequests().then((notaryRequests) => {
+      // console.log(new Date().toISOString(), 'Successfully fetched:', notaryRequests);
+
+      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        return chrome.tabs.sendMessage(tabs[0].id, {
+          action: 'request_transfer_history_response',
+          data: { notaryRequests },
+        });
+      });
+    });
   }
 });

@@ -9,7 +9,7 @@ window.addEventListener('message', function (event) {
   }
 
   if (event.data.type && event.data.type == 'fetch_extension_version') {
-    // console.log('Content received fetch_extension_version');
+    // console.log(new Date().toISOString(), 'Content received fetch_extension_version');
 
     window.postMessage(
       {
@@ -22,55 +22,73 @@ window.addEventListener('message', function (event) {
   }
 
   if (event.data.type && event.data.type == 'fetch_profile_request_history') {
-    // console.log('Content received fetch_profile_request_history');
+    // console.log(new Date().toISOString(), 'Content received fetch_profile_request_history');
 
-    chrome.runtime.sendMessage({ action: 'REQUEST_HISTORY_BACKGROUND' }, (response) => {
-      // console.log('Content received fetch_profile_request_history', response);
-
-      let filteredResponse = [];
-      if (response.notaryRequests.length > 0) {
-        filteredResponse = response.notaryRequests.filter(
-          (item: { status: string; url: string }) =>
-            item.status === 'success' && item.url === 'https://wise.com/gateway/v1/payments',
-        );
-      }
-
-      window.postMessage(
-        {
-          type: 'profile_request_history_response',
-          status: 'loaded',
-          requestHistory: { notaryRequests: filteredResponse },
-        },
-        '*',
-      );
-    });
+    chrome.runtime.sendMessage({ action: 'request_history_background' });
   }
 
   if (event.data.type && event.data.type == 'fetch_transfer_request_history') {
     // console.log('Content received fetch_transfer_request_history');
 
-    chrome.runtime.sendMessage({ action: 'REQUEST_HISTORY_BACKGROUND' }, (response) => {
-      console.log('Content received fetch_transfer_request_history', response);
+    chrome.runtime.sendMessage({ action: 'request_transfer_history_background' });
+  }
+});
 
-      let filteredResponse = [];
-      if (response.notaryRequests.length > 0) {
-        const transferRequestPattern =
-          /^https:\/\/wise\.com\/gateway\/v3\/profiles\/\d+\/transfers\/\d+$/;
-        filteredResponse = response.notaryRequests.filter(
-          (item: { status: string; url: string }) =>
-            item.status === 'success' && transferRequestPattern.test(item.url),
-        );
-      }
+/*
+ * Background chrome message listeners
+ */
 
-      window.postMessage(
-        {
-          type: 'transfer_request_history_response',
-          status: 'loaded',
-          requestHistory: { notaryRequests: filteredResponse },
-        },
-        '*',
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === 'request_profile_history_response') {
+    // console.log(
+    //   new Date().toISOString(),
+    //   'Content received request_profile_history_response',
+    //   message.data,
+    // );
+
+    let filteredResponse = [];
+    if (message.data.notaryRequests && message.data.notaryRequests.length > 0) {
+      filteredResponse = message.data.notaryRequests.filter(
+        (item: { status: string; url: string }) =>
+          item.status === 'success' && item.url === 'https://wise.com/gateway/v1/payments',
       );
-    });
+    }
+
+    window.postMessage(
+      {
+        type: 'profile_request_history_response',
+        status: 'loaded',
+        requestHistory: { notaryRequests: filteredResponse },
+      },
+      '*',
+    );
+  }
+
+  if (message.action === 'request_transfer_history_response') {
+    // console.log(
+    //   new Date().toISOString(),
+    //   'Content received request_transfer_history_response',
+    //   message.data,
+    // );
+
+    let filteredResponse = [];
+    if (message.data.notaryRequests && message.data.notaryRequests.length > 0) {
+      const transferRequestPattern =
+        /^https:\/\/wise\.com\/gateway\/v3\/profiles\/\d+\/transfers\/\d+$/;
+      filteredResponse = message.data.notaryRequests.filter(
+        (item: { status: string; url: string }) =>
+          item.status === 'success' && transferRequestPattern.test(item.url),
+      );
+    }
+
+    window.postMessage(
+      {
+        type: 'transfer_request_history_response',
+        status: 'loaded',
+        requestHistory: { notaryRequests: filteredResponse },
+      },
+      '*',
+    );
   }
 });
 
