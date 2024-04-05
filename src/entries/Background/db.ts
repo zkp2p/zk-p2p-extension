@@ -110,7 +110,7 @@ export async function removeNotaryRequest(id: string): Promise<RequestHistory | 
 
 export async function getNotaryRequests(): Promise<RequestHistory[]> {
   const retVal = [];
-  for await (const [key, value] of historyDb.iterator()) {
+  for await (const [key, value] of historyDb.iterator({ reverse: true })) {
     retVal.push(value);
   }
   return retVal;
