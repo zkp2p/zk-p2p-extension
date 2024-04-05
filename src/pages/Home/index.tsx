@@ -1,11 +1,12 @@
-import React, { MouseEventHandler, ReactElement, ReactNode } from 'react';
+import React, { MouseEventHandler, ReactElement, ReactNode, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import browser from 'webextension-polyfill';
 
 import Icon from '../../components/Icon';
 import classNames from 'classnames';
-import { notarizeRequest, useActiveTabUrl, useRequests } from '../../reducers/requests';
+import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests } from '../../reducers/requests';
 import bookmarks from '../../../utils/bookmark/bookmarks.json';
 import { replayRequest, urlify } from '../../utils/misc';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
@@ -15,6 +16,26 @@ export default function Home(): ReactElement {
   const url = useActiveTabUrl();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [originalTabId, setOriginalTabId] = useState<number | null>(null);
+
+  const handleCreateTab = async(bm: any) => {
+    const [tab] = await browser.tabs.query({
+      active: true,
+      lastFocusedWindow: true,
+    });
+    // Store the original tab ID
+    if (tab) {
+      console.log('originalTabId123', tab.id);
+      setOriginalTabId(tab.id || null);
+    }
+    chrome.tabs.create({
+      url: bm.targetUrl
+    }).then(newTab => {
+      dispatch(setActiveTab(newTab))
+    })
+  }
+
 
   return (
     <div className="flex flex-col gap-4 py-4 overflow-y-auto">
@@ -166,7 +187,8 @@ export default function Home(): ReactElement {
                           websocketProxyUrl,
                           secretHeaders,
                           secretResps: filteredSecretResps,
-                          metadata: metadataResp
+                          metadata: metadataResp,
+                          originalTabId: originalTabId
                         }),
                       );
 
@@ -179,7 +201,7 @@ export default function Home(): ReactElement {
                 {!isReady && (
                   <button
                     className="button w-fit self-end mt-2"
-                    onClick={() => chrome.tabs.create({ url: bm.targetUrl })}
+                    onClick={() => handleCreateTab(bm)}
                   >
                     {`Go to ${bmHost}`}
                   </button>

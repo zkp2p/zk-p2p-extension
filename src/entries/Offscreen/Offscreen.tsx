@@ -23,6 +23,7 @@ const Offscreen = () => {
             secretHeaders,
             secretResps,
             metadata,
+            originalTabId,
           } = request.data;
 
           (async () => {
@@ -44,7 +45,8 @@ const Offscreen = () => {
                 data: {
                   id,
                   proof,
-                  metadata
+                  metadata,
+                  originalTabId,
                 },
               });
             } catch (error) {

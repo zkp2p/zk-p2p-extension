@@ -68,6 +68,7 @@ export type RequestHistory = {
   secretHeaders?: string[];
   secretResps?: string[];
   metadata?: string[];
+  originalTabId?: number | null;
 };
 
 export const initRPC = () => {
@@ -130,7 +131,7 @@ async function handleFinishProveRequest(
   request: BackgroundAction,
   sendResponse: (data?: any) => void,
 ) {
-  const { id, proof, error, verification } = request.data;
+  const { id, proof, error, verification, originalTabId } = request.data;
 
   if (proof) {
     const newReq = await addNotaryRequestProofs(id, proof);
@@ -143,6 +144,13 @@ async function handleFinishProveRequest(
       },
       action: addRequestHistory(await getNotaryRequest(id)),
     });
+
+    console.log('originalTabId', originalTabId);
+
+    // Close the active tab and switch back to the original tab
+    if (originalTabId) {
+      await browser.tabs.update(originalTabId, { active: true });
+    }
   }
 
   if (error) {
@@ -171,6 +179,7 @@ async function handleFinishProveRequest(
     });
   }
 
+
   return sendResponse();
 }
 
@@ -178,7 +187,7 @@ async function handleRetryProveReqest(
   request: BackgroundAction,
   sendResponse: (data?: any) => void,
 ) {
-  const { id, notaryUrl, websocketProxyUrl, metadata } = request.data;
+  const { id, notaryUrl, websocketProxyUrl, metadata, originalTabId } = request.data;
 
   await setNotaryRequestError(id, null);
   await setNotaryRequestStatus(id, 'pending');
@@ -199,7 +208,8 @@ async function handleRetryProveReqest(
       ...req,
       notaryUrl,
       websocketProxyUrl,
-      metadata
+      metadata,
+      originalTabId
     },
   });
 
@@ -221,6 +231,7 @@ async function handleProveRequestStart(
     secretHeaders,
     secretResps,
     metadata,
+    originalTabId
   } = request.data;
 
   const { id } = await addNotaryRequest(Date.now(), {
@@ -260,6 +271,7 @@ async function handleProveRequestStart(
       secretHeaders,
       secretResps,
       metadata,
+      originalTabId
     },
   });
 

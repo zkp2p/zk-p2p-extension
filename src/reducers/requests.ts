@@ -41,6 +41,7 @@ export const notarizeRequest = (options: RequestHistory) => async () => {
   const notaryUrl = await get(NOTARY_API_LS_KEY, 'https://52.71.111.129:7047');
   const websocketProxyUrl = await get(PROXY_API_LS_KEY, 'wss://notary.pse.dev/proxy');
 
+  console.log('originalTabId1234', options.originalTabId);
   chrome.runtime.sendMessage<any, string>({
     type: BackgroundActiontype.prove_request_start,
     data: {
@@ -54,6 +55,7 @@ export const notarizeRequest = (options: RequestHistory) => async () => {
       notaryUrl,
       websocketProxyUrl,
       metadata: options.metadata,
+      originalTabId: options.originalTabId
     },
   });
 };
