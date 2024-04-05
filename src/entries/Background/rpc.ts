@@ -67,6 +67,7 @@ export type RequestHistory = {
   };
   secretHeaders?: string[];
   secretResps?: string[];
+  metadata?: string[];
 };
 
 export const initRPC = () => {
@@ -177,7 +178,7 @@ async function handleRetryProveReqest(
   request: BackgroundAction,
   sendResponse: (data?: any) => void,
 ) {
-  const { id, notaryUrl, websocketProxyUrl } = request.data;
+  const { id, notaryUrl, websocketProxyUrl, metadata } = request.data;
 
   await setNotaryRequestError(id, null);
   await setNotaryRequestStatus(id, 'pending');
@@ -198,6 +199,7 @@ async function handleRetryProveReqest(
       ...req,
       notaryUrl,
       websocketProxyUrl,
+      metadata
     },
   });
 
@@ -218,6 +220,7 @@ async function handleProveRequestStart(
     websocketProxyUrl,
     secretHeaders,
     secretResps,
+    metadata,
   } = request.data;
 
   const { id } = await addNotaryRequest(Date.now(), {
@@ -230,6 +233,7 @@ async function handleProveRequestStart(
     websocketProxyUrl,
     secretHeaders,
     secretResps,
+    metadata,
   });
 
   await setNotaryRequestStatus(id, 'pending');
@@ -255,6 +259,7 @@ async function handleProveRequestStart(
       websocketProxyUrl,
       secretHeaders,
       secretResps,
+      metadata,
     },
   });
 

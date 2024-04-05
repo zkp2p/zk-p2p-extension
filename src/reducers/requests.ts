@@ -53,6 +53,7 @@ export const notarizeRequest = (options: RequestHistory) => async () => {
       secretResps: options.secretResps,
       notaryUrl,
       websocketProxyUrl,
+      metadata: options.metadata,
     },
   });
 };
