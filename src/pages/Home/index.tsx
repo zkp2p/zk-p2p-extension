@@ -84,34 +84,7 @@ export default function Home(): ReactElement {
                         })
                         .filter((d) => !!d);
 
-                      // Add response headers to secretHeaders
-                      // console.log('res headers', res.response.headers.keys())  // this is largely empty
-                      // Object.keys(res.response.headers).forEach((headerName) => {
-                      //   const headerValue = res.response.headers.get(headerName);
-                      //   console.log('headerName', headerName, 'headerValue', headerValue);
-                      //   secretHeaders.push(`${headerName.toLowerCase()}: ${headerValue}`);
-                      // });
-                      // const selectedValue = res.text.match(
-                      //   new RegExp(bm.secretResponseSelector, 'g'),
-                      // );
-
-                      // if (selectedValue) {
-                      //   const revealed = bm.valueTransform.replace(
-                      //     '%s',
-                      //     selectedValue[0],
-                      //   );
-                      //   const selectionStart = res.text.indexOf(revealed);
-                      //   const selectionEnd =
-                      //     selectionStart + revealed.length - 1;
-                      //   const secretResps = [
-                      //     res.text.substring(0, selectionStart),
-                      //     res.text.substring(selectionEnd, res.text.length),
-                      //   ].filter((d) => !!d);
-                      // }
-
-                      const selectedValues = [];
                       const secretResps = [] as string[];
-                      console.log('secretResps', secretResps);
 
                       bm.secretResponseSelector.forEach((secretResponseSelector) => {
                         const regex = new RegExp(secretResponseSelector, 'g');
@@ -121,23 +94,18 @@ export default function Home(): ReactElement {
                         console.log('secretResponseSelector', secretResponseSelector);
 
                         if (matches) {
-                          selectedValues.push(matches[0]);
-                          // console.log('matches', matches[0])
-
                           const hidden = matches[0];
-                          // console.log('hidden', hidden);
 
                           const selectionStart = res.text.indexOf(hidden);
                           const selectionEnd = selectionStart + hidden.length;
-                          // console.log('selectionStart', selectionStart, 'selectionEnd', selectionEnd);
 
                           if (selectionStart !== -1) {
                             secretResps.push(res.text.substring(selectionStart, selectionEnd));
-                            // console.log('selectionStart', selectionStart, 'selectionEnd', selectionEnd);
                           }
                           console.log('secretResps', secretResps);
                         }
                       });
+
                       // Filter out any empty strings
                       const filteredSecretResps = secretResps.filter((d) => !!d);
 
@@ -153,9 +121,38 @@ export default function Home(): ReactElement {
                         { Host: hostname },
                       );
 
-                      //TODO: for some reason, these needs to be override to work
                       headers['Accept-Encoding'] = 'identity';
                       headers['Connection'] = 'close';
+
+                      console.log('res', res);
+                      // Extract metadata to display in Web application
+                      const metadataResp = [] as string[];
+                      
+                      // Add date of request if exists
+                      const requestDate = res.response.headers.get('date') || res.response.headers.get('Date');
+                      if (requestDate) {
+                        metadataResp.push(requestDate);
+                      }
+
+                      bm.metaDataSelector.forEach((metaDataSelector) => {
+                        const regex = new RegExp(metaDataSelector, 'g');
+
+                        console.log(res.text);
+                        const matches = res.text.match(regex);
+                        console.log('metaDataSelector', metaDataSelector);
+
+                        if (matches) {
+                          const revealed = matches[0];
+
+                          const selectionStart = res.text.indexOf(revealed);
+                          const selectionEnd = selectionStart + revealed.length;
+
+                          if (selectionStart !== -1) {
+                            metadataResp.push(res.text.substring(selectionStart, selectionEnd));
+                          }
+                          console.log('metadataResp', metadataResp);
+                        }
+                      });
 
                       dispatch(
                         // @ts-ignore
@@ -169,6 +166,7 @@ export default function Home(): ReactElement {
                           websocketProxyUrl,
                           secretHeaders,
                           secretResps: filteredSecretResps,
+                          metadata: metadataResp
                         }),
                       );
 

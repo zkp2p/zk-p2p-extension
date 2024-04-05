@@ -9,7 +9,12 @@
     "secretResponseSelector": [
       "(?<=\"title\":\"Account details\",\"modules\":\\[)[^\\]]+"
     ],
-    "valueTransform": ["\"modules\":\"%s\""]
+    "metaDataSelector": [
+      "(?<=\"name\":\"Your Wisetag\",\"description\":\")[^\"]+"
+    ],
+    "valueTransform": [
+      "\"description\":%s"
+    ]
   },
   {
     "url": "https://wise.com/gateway/v3/profiles/\\d+/transfers/\\d+",
@@ -21,8 +26,19 @@
     "secretResponseSelector": [
       "(?<=\"userId\":)\\d+"
     ],
+    "metaDataSelector": [
+      "(?<=\"targetAmount\":)\\d+",
+      "(?<=\"targetCurrency\":\")[^\"]+",
+      "(?<=\"state\":\"OUTGOING_PAYMENT_SENT\",\"date\":)\\d+",
+      "(?<=\"state\":\")[^\"]+",
+      "(?<=\"actor\":\")[^\"]+"
+    ],
     "valueTransform": [
-      "\"userId\":%s"
+      "\"targetAmount\":%s",
+      "\"targetCurrency\":%s",
+      "\"date\":%s",
+      "\"state\":%s",
+      "\"actor\":%s"
     ]
   }
 ]
