@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import browser from 'webextension-polyfill';
+import styled from 'styled-components';
 
 import { setActiveTab, setRequests, useActiveTab, useActiveTabUrl } from '../../reducers/requests';
 import { BackgroundActiontype } from '../Background/rpc';
@@ -9,12 +10,18 @@ import Requests from '../../pages/Requests';
 import Options from '../../pages/Options';
 import Request from '../../pages/Requests/Request';
 import Home from '../../pages/Home';
-import logo from '../../assets/img/icon-48.png';
 import RequestBuilder from '../../pages/RequestBuilder';
 import Notarize from '../../pages/Notarize';
 import ProofViewer from '../../pages/ProofViewer';
 import History from '../../pages/History';
 import ProofUploader from '../../pages/ProofUploader';
+
+import Registration from '../../pages/Notarization/Registration';
+
+import logo from '../../assets/img/icon-48.png';
+import { TopNav } from '../../newcomponents/TopNav';
+import { colors } from '../../theme/colors';
+
 
 const SidePanel = () => {
   const dispatch = useDispatch();
@@ -46,8 +53,8 @@ const SidePanel = () => {
   }, []);
 
   return (
-    <div className="flex flex-col w-full h-full overflow-hidden">
-      <div className="flex flex-nowrap flex-shrink-0 flex-row items-center relative gap-2 h-9 p-2 cursor-default justify-center bg-slate-300 w-full">
+    <AppContainer>
+      {/* <div className="flex flex-nowrap flex-shrink-0 flex-row items-center relative gap-2 h-9 p-2 cursor-default justify-center bg-slate-300 w-full">
         <img
           className="absolute left-2 h-5 cursor-pointer"
           src={logo}
@@ -60,7 +67,8 @@ const SidePanel = () => {
           )}
           <div className="text-xs">{url?.hostname}</div>
         </div>
-      </div>
+      </div> */}
+      <TopNav />
       <Routes>
         <Route path="/requests/:requestId/*" element={<Request />} />
         <Route path="/notary/:requestId" element={<Notarize />} />
@@ -71,10 +79,20 @@ const SidePanel = () => {
         <Route path="/custom/*" element={<RequestBuilder />} />
         <Route path="/options" element={<Options />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/registration" element={<Registration requests={[]} />} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
-    </div>
+    </AppContainer>
   );
 };
+
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #171717;
+`;
 
 export default SidePanel;

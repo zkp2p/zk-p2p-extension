@@ -28,7 +28,7 @@ export const Button: React.FC<ButtonProps> = ({
   children
 }) => {
   const [svgLoaded, setSvgLoaded] = useState(!svg);
-  
+
   return (
     <BaseButton
       fullWidth={fullWidth}
@@ -112,7 +112,7 @@ const BaseButton = styled.button<BaseButtonProps & { $svgLoaded: boolean }>`
     box-shadow: inset 0px -8px 0px rgba(0, 0, 0, 0.16);
   }
 
-  ${({ $disabled }) => 
+  ${({ $disabled }) =>
     $disabled && css`
       opacity: 0.5;
       cursor: not-allowed;
@@ -121,14 +121,14 @@ const BaseButton = styled.button<BaseButtonProps & { $svgLoaded: boolean }>`
     `
   }
 
-  ${({ $loading }) => 
+  ${({ $loading }) =>
     $loading && css`
       cursor: wait;
       background: #df2e2d;
     `
   }
 
-  ${({ $svgLoaded }) => 
+  ${({ $svgLoaded }) =>
     !$svgLoaded && css`
       background: transparent;
     `

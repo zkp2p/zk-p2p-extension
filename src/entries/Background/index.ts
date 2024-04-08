@@ -85,7 +85,7 @@ chrome.sidePanel
 chrome.runtime.onMessage.addListener((message) => {
   if (message.action === 'request_history_background') {
     getNotaryRequests().then((notaryRequests) => {
-      // console.log(new Date().toISOString(), 'Successfully fetched:', notaryRequests);
+      console.log(new Date().toISOString(), 'Successfully fetched:', notaryRequests);
 
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         return chrome.tabs.sendMessage(tabs[0].id, {
