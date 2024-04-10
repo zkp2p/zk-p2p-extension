@@ -119,4 +119,7 @@ export const ThemedText = {
   DeprecatedError({ error, ...props }: { error: boolean } & TextProps) {
     return <TextWrapper fontWeight={500} color={error ? 'accentFailure' : 'textSecondary'} {...props} />
   },
+  TableHeaderSmall(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={16} color="textPrimary" {...props} />
+  },
 }
