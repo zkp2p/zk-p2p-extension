@@ -3,14 +3,16 @@ import browser from 'webextension-polyfill';
 import { deleteCacheByTabId } from './cache';
 import { onBeforeRequest, onResponseStarted, onSendHeaders } from './handlers';
 import { getNotaryRequests } from './db';
-import store from '../../utils/store';
-import { get } from 'http';
+
 
 (async () => {
   browser.webRequest.onSendHeaders.addListener(
     onSendHeaders,
     {
-      urls: ['<all_urls>'],
+      urls: [
+        'https://wise.com/account/payments',
+        'https://wise.com/gateway/v3/profiles/*/transfers/*'
+      ],
     },
     ['requestHeaders', 'extraHeaders'],
   );
@@ -18,7 +20,10 @@ import { get } from 'http';
   browser.webRequest.onBeforeRequest.addListener(
     onBeforeRequest,
     {
-      urls: ['<all_urls>'],
+      urls: [
+        'https://wise.com/account/payments',
+        'https://wise.com/gateway/v3/profiles/*/transfers/*'
+      ],
     },
     ['requestBody'],
   );
@@ -26,7 +31,10 @@ import { get } from 'http';
   browser.webRequest.onResponseStarted.addListener(
     onResponseStarted,
     {
-      urls: ['<all_urls>'],
+      urls: [
+        'https://wise.com/account/payments',
+        'https://wise.com/gateway/v3/profiles/*/transfers/*'
+      ],
     },
     ['responseHeaders', 'extraHeaders'],
   );
