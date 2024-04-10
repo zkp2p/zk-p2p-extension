@@ -15,7 +15,11 @@ import Notarize from '../../pages/Notarize';
 import ProofViewer from '../../pages/ProofViewer';
 import History from '../../pages/History';
 import ProofUploader from '../../pages/ProofUploader';
+
 import Registration from '../../pages/Notarizations/Registration';
+import DepositorRegistration from '../../pages/Notarizations/DepositorRegistration';
+import Onramp from '../../pages/Notarizations/Onramp';
+
 
 import logo from '../../assets/img/icon-48.png';
 import { TopNav } from '@newcomponents/TopNav/TopNav';
@@ -78,7 +82,9 @@ const SidePanel = () => {
         <Route path="/custom/*" element={<RequestBuilder />} />
         <Route path="/options" element={<Options />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/registration" element={<Registration requests={[]} />} />
+        <Route path="/registration" element={<Registration/>} />
+        <Route path="/deposit" element={<DepositorRegistration/>} />
+        <Route path="/onramp" element={<Onramp/>} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </AppContainer>
