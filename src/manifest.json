@@ -24,7 +24,12 @@
   },
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*", "<all_urls>"],
+      "matches": [
+        "http://localhost:3000/*",
+        "https://staging-testnet.zkp2p.xyz/*",
+        "https://staging-app.zkp2p.xyz/*",
+        "https://zkp2p.xyz/*"
+      ],
       "js": ["contentScript.bundle.js"],
       "css": ["content.styles.css"]
     }
@@ -35,7 +40,13 @@
       "matches": []
     }
   ],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": [
+    "https://wise.com/*",
+    "http://localhost:3000/*",
+    "https://staging-testnet.zkp2p.xyz/*",
+    "https://staging-app.zkp2p.xyz/*",
+    "https://zkp2p.xyz/*"
+  ],
   "permissions": [
     "offscreen",
     "storage",
