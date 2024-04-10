@@ -41,7 +41,7 @@ export default function OnRamp() {
         <TitleAndTableContainer>
           <TitleContainer>
             <ThemedText.TableHeaderSmall style={{ flex: '1', margin: 'auto', textAlign: 'left' }}>
-              Requests
+              Proofs
             </ThemedText.TableHeaderSmall>
           </TitleContainer>
 
@@ -59,7 +59,7 @@ export default function OnRamp() {
         <TitleAndTableContainer>
           <TitleContainer>
             <ThemedText.TableHeaderSmall style={{ flex: '1', margin: 'auto', textAlign: 'left' }}>
-              Proofs
+              Requests
             </ThemedText.TableHeaderSmall>
           </TitleContainer>
 
