@@ -16,9 +16,8 @@ import ProofViewer from '../../pages/ProofViewer';
 import History from '../../pages/History';
 import ProofUploader from '../../pages/ProofUploader';
 
-import Registration from '../../pages/Notarizations/Registration';
-import DepositorRegistration from '../../pages/Notarizations/DepositorRegistration';
-import Onramp from '../../pages/Notarizations/Onramp';
+import Wise from '../../pages/Wise';
+import { WiseAction } from '@utils/types';
 
 
 import logo from '../../assets/img/icon-48.png';
@@ -82,9 +81,9 @@ const SidePanel = () => {
         <Route path="/custom/*" element={<RequestBuilder />} />
         <Route path="/options" element={<Options />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/registration" element={<Registration/>} />
-        <Route path="/deposit" element={<DepositorRegistration/>} />
-        <Route path="/onramp" element={<Onramp/>} />
+        <Route path="/registration" element={<Wise action={WiseAction.REGISTRATION}/>} />
+        <Route path="/deposit" element={<Wise action={WiseAction.DEPOSITOR_REGISTRATION}/>} />
+        <Route path="/onramp" element={<Wise action={WiseAction.TRANSFER}/>} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </AppContainer>
