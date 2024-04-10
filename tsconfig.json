@@ -18,6 +18,7 @@
     "paths": {
       "@newcomponents/*": ["newcomponents/*"],
       "@theme/*": ["theme/*"],
+      "@utils/*": ["utils/*"],
     },
   },
   "include": ["src"],
