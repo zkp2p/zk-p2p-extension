@@ -15,6 +15,7 @@ const ASSET_PATH = process.env.ASSET_PATH || "/";
 var alias = {
   '@theme': path.resolve(__dirname, './src/theme/'),
   '@newcomponents': path.resolve(__dirname, './src/newcomponents/'),
+  '@utils': path.resolve(__dirname, './src/utils/'),
 };
 
 // load the secrets
