@@ -17,37 +17,13 @@ import { colors } from '@theme/colors';
 
 export default function Home(): ReactElement {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const requests = useRequests();
   const url = useActiveTabUrl();
 
   /*
-   * State
-   */
-
-  const [originalTabId, setOriginalTabId] = useState<number | null>(null);
-
-  /*
    * Handlers
    */
-
-  const handleCreateTab = async(bm: any) => {
-    const [tab] = await browser.tabs.query({
-      active: true,
-      lastFocusedWindow: true,
-    });
-    // Store the original tab ID
-    if (tab) {
-      console.log('originalTabId123', tab.id);
-      setOriginalTabId(tab.id || null);
-    }
-    chrome.tabs.create({
-      url: bm.targetUrl
-    }).then(newTab => {
-      dispatch(setActiveTab(newTab))
-    })
-  }
 
   const handleBookmarkPressedForIndex = (index: number) => {
     switch (index) {
