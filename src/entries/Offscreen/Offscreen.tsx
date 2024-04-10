@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import browser from 'webextension-polyfill';
-import { prove, verify } from 'tlsn-js-zkp2p';
+import { prove, verify } from 'tlsn-js';
 
 import { BackgroundActiontype } from '../Background/rpc';
 import { urlify } from '../../utils/misc';
@@ -16,6 +16,8 @@ const Offscreen = () => {
             method,
             headers,
             body = '',
+            // maxSentData,
+            // maxRecvData,
             maxTranscriptSize,
             notaryUrl,
             websocketProxyUrl,
@@ -33,6 +35,8 @@ const Offscreen = () => {
                 method,
                 headers,
                 body,
+                // maxSentData,
+                // maxRecvData,
                 maxTranscriptSize,
                 notaryUrl,
                 websocketProxyUrl: websocketProxyUrl + `?token=${token}`,

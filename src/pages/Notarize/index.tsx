@@ -15,7 +15,7 @@ import { urlify } from '../../utils/misc';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
 import { useDispatch } from 'react-redux';
 
-const maxTranscriptSize = 16384;
+const maxTranscriptSize = 20480;
 
 export default function Notarize(): ReactElement {
   const params = useParams<{ requestId: string }>();
