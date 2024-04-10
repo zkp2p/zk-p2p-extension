@@ -49,6 +49,20 @@ export default function Home(): ReactElement {
     })
   }
 
+  const handleBookmarkPressedForIndex = (index: number) => {
+    switch (index) {
+      case 0:
+        return navigate(`/registration`);
+
+      case 1:
+        return navigate(`/deposit`);
+
+      case 2:
+      default:
+        return navigate(`/onramp`);
+    }
+  };
+
   /*
    * Helpers
    */
@@ -112,7 +126,7 @@ export default function Home(): ReactElement {
               <BookmarkCard
                 key={i}
                 onClick={() => {
-                  navigate(`/registration`);
+                  handleBookmarkPressedForIndex(i)
                 }}
               >
                 <IconContainer>
