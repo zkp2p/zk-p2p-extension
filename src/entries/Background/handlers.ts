@@ -74,6 +74,7 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
       tabId: tabId,
       requestId: requestId,
       responseHeaders,
+      timestamp: Date.now(),
     };
 
     cache.set(requestId, newLog);
