@@ -46,6 +46,7 @@ export type RequestLog = {
     [k: string]: string[];
   };
   responseHeaders?: browser.WebRequest.HttpHeaders;
+  timestamp: number;
 };
 
 export type RequestHistory = {
