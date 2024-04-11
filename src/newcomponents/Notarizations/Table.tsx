@@ -1,18 +1,16 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
-import { Zap, UserX, UserCheck } from 'react-feather';
+import styled from 'styled-components';
+import { UserX } from 'react-feather';
 
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
-import { Button } from '@newcomponents/common/Button';
-import { RequestRow } from '@newcomponents/Requests/Row';
+import { RequestRow } from '@newcomponents/Notarizations/Row';
 import { BackgroundActiontype, RequestHistory } from '../../entries/Background/rpc';
 
 
 const ROWS_PER_PAGE = 3;
 
 type RequestRowData = {
-  proof: string;
   metadata: string;
   subject: string;
   date: string;
@@ -37,12 +35,6 @@ export default function RequestTable(props: Props): ReactElement {
 
   const [loadedRequests, setLoadedRequests] = useState<RequestRowData[]>([]);
 
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  const [ctaButtonTitle, setCtaButtonTitle] = useState<string>('');
-
-  const [isShowingTable, setIsShowingTable] = useState<boolean>(false);
-
   const [currentPage, setCurrentPage] = useState(0);
 
   /*
@@ -50,11 +42,7 @@ export default function RequestTable(props: Props): ReactElement {
    */
 
   const handleRowClick = (index: number) => {
-    // no-op
-  };
-
-  const handleToggleNotarizationTablePressed = () => {
-    setIsShowingTable(!isShowingTable);
+    // no-op: view proof
   };
 
   const handleChangePage = (newPage: number) => {
@@ -65,32 +53,27 @@ export default function RequestTable(props: Props): ReactElement {
    * Helpers
    */
 
-  const noNotarizationsErrorString = () => {
-    return 'No notarizations found';
-  };
-
-  function formatDateTime(unixTimestamp: string): string {
-    const date = new Date(Number(unixTimestamp));
+  function parseTimestamp(timestamp: string): string {
+    const date = new Date(timestamp);
     const now = new Date();
 
-    const isToday =
-      date.getDate() === now.getDate() &&
-      date.getMonth() === now.getMonth() &&
-      date.getFullYear() === now.getFullYear();
+    const isToday = date.getDate() === now.getDate() &&
+                    date.getMonth() === now.getMonth() &&
+                    date.getFullYear() === now.getFullYear();
 
     if (isToday) {
       return date.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
-        hour12: true,
+        hour12: true
       });
     } else {
       return date.toLocaleDateString('en-US', {
         month: 'numeric',
-        day: 'numeric',
+        day: 'numeric'
       });
     }
-  }
+  };
 
   const totalPages = Math.ceil(loadedRequests.length / ROWS_PER_PAGE);
 
@@ -102,11 +85,30 @@ export default function RequestTable(props: Props): ReactElement {
 
   useEffect(() => {
     const newRequests = requests.map((request) => {
+      let subject, metadata, timestamp = "";
+      switch (request.url) {
+        case 'https://wise.com/gateway/v1/payments':
+          const [requestTimestamp, wiseTag] = request.metadata;
+          const wiseTagStripped = wiseTag.split('@')[1];
+
+          subject = `${wiseTag}`;
+          metadata = wiseTagStripped;
+          timestamp = requestTimestamp;
+          break;
+
+        default:
+          const [requestTimestamp, amount, currency] = request.metadata;
+          
+          subject = `Sent €${amount} ${currency}`;
+          metadata = amount;
+          timestamp = requestTimestamp;
+          break;
+      }
+
       return {
-        proof: request.method, // TODO: update me
-        metadata: request.url, // TODO: update me
-        subject: request.url,
-        date: '1712706459',
+        metadata: metadata,
+        subject: subject,
+        date: parseTimestamp(timestamp)
       } as RequestRowData;
     });
 
@@ -119,53 +121,50 @@ export default function RequestTable(props: Props): ReactElement {
 
   return (
     <Container>
-      <ExtensionDetectedContainer>
-        <TableContainer>
-          {requests.length === 0 ? (
-            <EmptyNotarizationsContainer>
-              <StyledUserX />
+      <TableContainer>
+        {requests.length === 0 ? (
+          <EmptyNotarizationsContainer>
+            <StyledUserX />
 
-              <ThemedText.SubHeaderSmall textAlign="center" lineHeight={1.3}>
-                Test
-              </ThemedText.SubHeaderSmall>
-            </EmptyNotarizationsContainer>
-          ) : (
-            <Table>
-              {paginatedData.map((notarization, index) => (
-                <RequestRow
-                  key={index}
-                  subjectText={notarization.subject}
-                  dateText={notarization.date}
-                  isSelected={index === selectedIndex}
-                  isLastRow={index === loadedRequests.length - 1}
-                  onRowClick={() => handleRowClick(index)}
-                  rowIndex={index + 1 + currentPage * ROWS_PER_PAGE}
-                />
-              ))}
-            </Table>
-          )}
+            <ThemedText.SubHeaderSmall textAlign="center" lineHeight={1.3}>
+              Test
+            </ThemedText.SubHeaderSmall>
+          </EmptyNotarizationsContainer>
+        ) : (
+          <Table>
+            {paginatedData.map((notarization, index) => (
+              <RequestRow
+                key={index}
+                subjectText={notarization.subject}
+                dateText={notarization.date}
+                isLastRow={index === loadedRequests.length - 1}
+                onRowClick={() => handleRowClick(index)}
+                rowIndex={index + 1 + currentPage * ROWS_PER_PAGE}
+              />
+            ))}
+          </Table>
+        )}
 
-          {loadedRequests.length > ROWS_PER_PAGE && (
-            <PaginationContainer>
-              <PaginationButton
-                disabled={currentPage === 0}
-                onClick={() => handleChangePage(currentPage - 1)}
-              >
-                &#8249;
-              </PaginationButton>
-              <PageInfo>
-                {false ? '0 of 0' : `${currentPage + 1} of ${totalPages}`}
-              </PageInfo>
-              <PaginationButton
-                disabled={currentPage === totalPages - 1 || false}
-                onClick={() => handleChangePage(currentPage + 1)}
-              >
-                &#8250;
-              </PaginationButton>
-            </PaginationContainer>
-          )}
-        </TableContainer>
-      </ExtensionDetectedContainer>
+        {loadedRequests.length > ROWS_PER_PAGE && (
+          <PaginationContainer>
+            <PaginationButton
+              disabled={currentPage === 0}
+              onClick={() => handleChangePage(currentPage - 1)}
+            >
+              &#8249;
+            </PaginationButton>
+            <PageInfo>
+              {false ? '0 of 0' : `${currentPage + 1} of ${totalPages}`}
+            </PageInfo>
+            <PaginationButton
+              disabled={currentPage === totalPages - 1 || false}
+              onClick={() => handleChangePage(currentPage + 1)}
+            >
+              &#8250;
+            </PaginationButton>
+          </PaginationContainer>
+        )}
+      </TableContainer>
     </Container>
   )
 };
@@ -176,21 +175,9 @@ const Container = styled.div`
   flex-direction: column;
   align-self: flex-start;
   justify-content: center;
-  background-color: ${colors.container};
-  border: 1px solid ${colors.defaultBorderColor};
-  border-radius: 16px;
+  border-radius: 8px;
   overflow: hidden;
-`;
-
-const ExtensionDetectedContainer = styled.div`
-  display: flex;
-  flex-direction: column;
   gap: 1rem;
-  padding: 1.5rem;
-`;
-
-const TitleContainer = styled.div`
-  color: ${colors.white};
 `;
 
 const EmptyNotarizationsContainer = styled.div`
@@ -220,28 +207,8 @@ const Table = styled.div`
 
 const StyledUserX = styled(UserX)`
   color: #fff;
-  width: 28px;
-  height: 28px;
-`;
-
-const StyledUserCheck = styled(UserCheck)`
-  color: #fff;
-  width: 28px;
-  height: 28px;
-`;
-
-const TableToggleLink = styled.button`
-  width: 100%;
-  font-size: 15px;
-  font-family: 'Graphik';
-  color: #ffffff;
-  opacity: 0.3;
-  text-align: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-decoration: underline;
-  display: inline;
+  width: 24px;
+  height: 24px;
 `;
 
 const PaginationContainer = styled.div`
@@ -273,22 +240,4 @@ const PageInfo = styled.span`
   color: rgba(255, 255, 255, 0.8);
   word-spacing: 2px;
   font-size: 14px;
-`;
-
-const TagDetectionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: #0a0d14;
-  border: 1px solid ${colors.defaultBorderColor};
-  border-radius: 8px;
-`;
-
-const TagDetectionIconAndCopyContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem 1rem;
-  gap: 1rem;
-  border-radius: 8px;
 `;
