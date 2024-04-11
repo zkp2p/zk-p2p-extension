@@ -52,7 +52,7 @@
       "(?<=\"userId\":)\\d+"
     ],
     "metaDataSelector": [
-      "(?<=\"targetAmount\":)\\d+",
+      "(?<=\"targetAmount\":)([\\d.]+)",
       "(?<=\"targetCurrency\":\")[^\"]+",
       "(?<=\"state\":\"OUTGOING_PAYMENT_SENT\",\"date\":)\\d+",
       "(?<=\"state\":\")[^\"]+",
