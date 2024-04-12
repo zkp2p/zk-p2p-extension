@@ -1,17 +1,13 @@
-import React, { MouseEventHandler, ReactElement, ReactNode, useState } from 'react';
+import React, { ReactElement } from 'react';
 import { useNavigate } from 'react-router';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import browser from 'webextension-polyfill';
 import { User, PlusCircle, DollarSign } from 'react-feather';
 import styled from 'styled-components';
-import classNames from 'classnames';
 
-import Icon from '../../components/Icon';
-import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests } from '../../reducers/requests';
+import { notarizeRequest, useActiveTabUrl, useRequests } from '../../reducers/requests';
 import bookmarks from '../../../utils/bookmark/bookmarks.json';
-import { replayRequest, urlify } from '../../utils/misc';
-import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
+import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '@utils/storage';
+import { replayRequest, urlify } from '@utils/misc';
 import { colors } from '@theme/colors';
 
 
@@ -89,149 +85,128 @@ export default function Home(): ReactElement {
 
       <BookmarkContainer>
         {bookmarks.map((bm, i) => {
-          try {
-            const regex = new RegExp(bm.url); // Assuming bm.url contains a regex pattern
-            const reqs = requests.filter((req) => {
-              return regex.test(req?.url);
-            });
+          return (
+            <BookmarkCard
+              key={i}
+              onClick={() => {
+                handleBookmarkPressedForIndex(i)
+              }}
+            >
+              <IconContainer>
+                {iconForIndex(i)}
+                <BookmarkTitle>{bm.title}</BookmarkTitle>
+                <BookmarkDescription>{bm.description}</BookmarkDescription>
+              </IconContainer>
 
-            const bmHost = urlify(bm.targetUrl)?.host;
-            const isReady = !!reqs.length;
+              {/* {isReady && (
+                <button
+                  className="button button--primary w-fit self-end mt-2"
+                  onClick={async () => {
+                    if (!isReady) return;
 
-            return (
-              <BookmarkCard
-                key={i}
-                onClick={() => {
-                  handleBookmarkPressedForIndex(i)
-                }}
-              >
-                <IconContainer>
-                  {iconForIndex(i)}
-                  <BookmarkTitle>{bm.title}</BookmarkTitle>
-                  <BookmarkDescription>{bm.description}</BookmarkDescription>
-                </IconContainer>
+                    const req = reqs[0];
+                    const res = await replayRequest(req);
+                    const secretHeaders = req.requestHeaders
+                      .map((h) => {
+                        return `${h.name.toLowerCase()}: ${h.value || ''}` || '';
+                      })
+                      .filter((d) => !!d);
 
-                {/* {isReady && (
-                  <button
-                    className="button button--primary w-fit self-end mt-2"
-                    onClick={async () => {
-                      if (!isReady) return;
+                    const secretResps = [] as string[];
 
-                      const req = reqs[0];
-                      const res = await replayRequest(req);
-                      const secretHeaders = req.requestHeaders
-                        .map((h) => {
-                          return `${h.name.toLowerCase()}: ${h.value || ''}` || '';
-                        })
-                        .filter((d) => !!d);
+                    bm.secretResponseSelector.forEach((secretResponseSelector) => {
+                      const regex = new RegExp(secretResponseSelector, 'g');
 
-                      const secretResps = [] as string[];
+                      console.log(res.text);
+                      const matches = res.text.match(regex);
+                      console.log('secretResponseSelector', secretResponseSelector);
 
-                      bm.secretResponseSelector.forEach((secretResponseSelector) => {
-                        const regex = new RegExp(secretResponseSelector, 'g');
+                      if (matches) {
+                        const hidden = matches[0];
 
-                        console.log(res.text);
-                        const matches = res.text.match(regex);
-                        console.log('secretResponseSelector', secretResponseSelector);
+                        const selectionStart = res.text.indexOf(hidden);
+                        const selectionEnd = selectionStart + hidden.length;
 
-                        if (matches) {
-                          const hidden = matches[0];
-
-                          const selectionStart = res.text.indexOf(hidden);
-                          const selectionEnd = selectionStart + hidden.length;
-
-                          if (selectionStart !== -1) {
-                            secretResps.push(res.text.substring(selectionStart, selectionEnd));
-                          }
-                          console.log('secretResps', secretResps);
+                        if (selectionStart !== -1) {
+                          secretResps.push(res.text.substring(selectionStart, selectionEnd));
                         }
-                      });
-
-                      // Filter out any empty strings
-                      const filteredSecretResps = secretResps.filter((d) => !!d);
-
-                      const hostname = urlify(req.url)?.hostname;
-                      const notaryUrl = await get(NOTARY_API_LS_KEY);
-                      const websocketProxyUrl = await get(PROXY_API_LS_KEY);
-
-                      const headers: { [k: string]: string } = req.requestHeaders.reduce(
-                        (acc: any, h) => {
-                          acc[h.name] = h.value;
-                          return acc;
-                        },
-                        { Host: hostname },
-                      );
-
-                      headers['Accept-Encoding'] = 'identity';
-                      headers['Connection'] = 'close';
-
-                      console.log('res', res);
-                      // Extract metadata to display in Web application
-                      const metadataResp = [] as string[];
-                      
-                      // Add date of request if exists
-                      const requestDate = res.response.headers.get('date') || res.response.headers.get('Date');
-                      if (requestDate) {
-                        metadataResp.push(requestDate);
+                        console.log('secretResps', secretResps);
                       }
+                    });
 
-                      bm.metaDataSelector.forEach((metaDataSelector) => {
-                        const regex = new RegExp(metaDataSelector, 'g');
+                    // Filter out any empty strings
+                    const filteredSecretResps = secretResps.filter((d) => !!d);
 
-                        console.log(res.text);
-                        const matches = res.text.match(regex);
-                        console.log('metaDataSelector', metaDataSelector);
+                    const hostname = urlify(req.url)?.hostname;
+                    const notaryUrl = await get(NOTARY_API_LS_KEY);
+                    const websocketProxyUrl = await get(PROXY_API_LS_KEY);
 
-                        if (matches) {
-                          const revealed = matches[0];
+                    const headers: { [k: string]: string } = req.requestHeaders.reduce(
+                      (acc: any, h) => {
+                        acc[h.name] = h.value;
+                        return acc;
+                      },
+                      { Host: hostname },
+                    );
 
-                          const selectionStart = res.text.indexOf(revealed);
-                          const selectionEnd = selectionStart + revealed.length;
+                    headers['Accept-Encoding'] = 'identity';
+                    headers['Connection'] = 'close';
 
-                          if (selectionStart !== -1) {
-                            metadataResp.push(res.text.substring(selectionStart, selectionEnd));
-                          }
-                          console.log('metadataResp', metadataResp);
+                    console.log('res', res);
+                    // Extract metadata to display in Web application
+                    const metadataResp = [] as string[];
+                    
+                    // Add date of request if exists
+                    const requestDate = res.response.headers.get('date') || res.response.headers.get('Date');
+                    if (requestDate) {
+                      metadataResp.push(requestDate);
+                    }
+
+                    bm.metaDataSelector.forEach((metaDataSelector) => {
+                      const regex = new RegExp(metaDataSelector, 'g');
+
+                      console.log(res.text);
+                      const matches = res.text.match(regex);
+                      console.log('metaDataSelector', metaDataSelector);
+
+                      if (matches) {
+                        const revealed = matches[0];
+
+                        const selectionStart = res.text.indexOf(revealed);
+                        const selectionEnd = selectionStart + revealed.length;
+
+                        if (selectionStart !== -1) {
+                          metadataResp.push(res.text.substring(selectionStart, selectionEnd));
                         }
-                      });
+                        console.log('metadataResp', metadataResp);
+                      }
+                    });
 
-                      dispatch(
-                        // @ts-ignore
-                        notarizeRequest({
-                          url: req.url,
-                          method: req.method,
-                          headers: headers,
-                          body: req.requestBody,
-                          maxTranscriptSize: 16384,
-                          notaryUrl,
-                          websocketProxyUrl,
-                          secretHeaders,
-                          secretResps: filteredSecretResps,
-                          metadata: metadataResp,
-                          originalTabId: originalTabId
-                        }),
-                      );
+                    dispatch(
+                      // @ts-ignore
+                      notarizeRequest({
+                        url: req.url,
+                        method: req.method,
+                        headers: headers,
+                        body: req.requestBody,
+                        maxTranscriptSize: 16384,
+                        notaryUrl,
+                        websocketProxyUrl,
+                        secretHeaders,
+                        secretResps: filteredSecretResps,
+                        metadata: metadataResp,
+                        originalTabId: originalTabId
+                      }),
+                    );
 
-                      navigate(`/history`);
-                    }}
-                  >
-                    Notarize
-                  </button>
-                )} */}
-
-                {/* {!isReady && (
-                  <button
-                    className="button w-fit self-end mt-2"
-                    onClick={() => handleCreateTab(bm)}
-                  >
-                    {`Go to ${bmHost}`}
-                  </button>
-                )} */}
-              </BookmarkCard>
-            );
-          } catch (e) {
-            return null;
-          }
+                    navigate(`/history`);
+                  }}
+                >
+                  Notarize
+                </button>
+              )} */}
+            </BookmarkCard>
+          );
         })}
       </BookmarkContainer>
     </PageWrapper>
