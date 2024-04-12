@@ -28,7 +28,7 @@ export const RequestRow: React.FC<RequestRowProps> = ({
   const dateLabel = `${dateText}`;
 
   return (
-    <Container onClick={onRowClick} isLastRow={isLastRow}>
+    <Container onClick={onRowClick} lastRow={isLastRow}>
       <IndexLabel> {rowIndex} </IndexLabel>
       <SubjectLabel> {subjectLabel} </SubjectLabel>
       {isProving ? (
@@ -42,15 +42,16 @@ export const RequestRow: React.FC<RequestRowProps> = ({
   );
 };
 
-const Container = styled.div<{ isLastRow: boolean }>`
+const Container = styled.div<{ lastRow: boolean }>`
   display: grid;
   grid-template-columns: 0.1fr 1fr 0.4fr;
   grid-gap: 1px;
   padding: 1rem 1rem 0.75rem 1rem;
   font-size: 14px;
   color: #ffffff;
-  border-radius: ${({ isLastRow }) => (isLastRow ? '0 0 8px 8px' : '0')};
-  border-bottom: ${({ isLastRow }) => !isLastRow && `1px solid ${colors.defaultBorderColor}`};
+  
+  border-radius: ${({ lastRow }) => (lastRow ? '0 0 8px 8px' : '0')};
+  border-bottom: ${({ lastRow }) => !lastRow && `1px solid ${colors.defaultBorderColor}`};
 `;
 
 const IndexLabel = styled.label`

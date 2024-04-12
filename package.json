@@ -33,7 +33,7 @@
     "redux": "^4.2.1",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.4.2",
-    "styled-components": "^6.1.8",
+    "styled-components": "^5.3.3",
     "tailwindcss": "^3.3.3",
     "tlsn-js-zkp2p": "0.1.0-alpha.4.5"
   },

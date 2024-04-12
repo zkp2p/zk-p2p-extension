@@ -111,7 +111,7 @@ export default function RequestTable(props: Props): ReactElement {
       return {
         metadata: metadata,
         subject: subject,
-        date: parseTimestamp(timestamp)
+        date: parseTimestamp(timestamp),
         isProving: request.status === 'pending',
       } as RequestRowData;
     });
