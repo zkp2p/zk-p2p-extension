@@ -1,2 +1,2 @@
-export { WiseAction, wiseActions } from './wiseActions';
-export type { WiseActionType } from './wiseActions';
+export { WiseAction, wiseActions, WiseStep, wiseSteps } from './wiseActions';
+export type { WiseActionType, WiseStepType } from './wiseActions';
