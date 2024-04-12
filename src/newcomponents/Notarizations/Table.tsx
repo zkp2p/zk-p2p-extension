@@ -134,7 +134,7 @@ export default function RequestTable(props: Props): ReactElement {
           <StyledSlash />
 
           <ThemedText.TableDescriptionSmall textAlign="center" lineHeight={1.3}>
-            No proofs stored. Notarize one of the requests above to generate a valid proof.
+            No stored proofs found. Follow the steps to generate a valid proof.
           </ThemedText.TableDescriptionSmall>
         </EmptyNotarizationsContainer>
       ) : (
