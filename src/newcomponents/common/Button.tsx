@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 
+import { colors } from '@theme/colors';
+
 
 interface ButtonProps {
   fullWidth?: boolean;
@@ -88,7 +90,7 @@ interface BaseButtonProps {
 const BaseButton = styled.button<BaseButtonProps & { $svgLoaded: boolean }>`
   width: ${({ fullWidth, width }) => fullWidth ? '100%' : width ? `${width}px` : 'auto'};
   height: ${({ height }) => height}px;
-  background: #df2e2d;
+  background: ${colors.buttonRed};
   box-shadow: inset -3px -6px 4px rgba(0, 0, 0, 0.16);
   border-radius: 24px;
   padding: 8px ${({ fullWidth }) => (fullWidth ? '0' : '24px')};
@@ -113,14 +115,14 @@ const BaseButton = styled.button<BaseButtonProps & { $svgLoaded: boolean }>`
     $disabled && css`
       opacity: 0.5;
       cursor: not-allowed;
-      color: #6C757D;
+      color: ${colors.buttonRedDisabled}
       background: #131A2A;
     `
   }
   ${({ $loading }) =>
     $loading && css`
       cursor: wait;
-      background: #df2e2d;
+      background: ${colors.buttonRed};
     `
   }
   ${({ $svgLoaded }) =>

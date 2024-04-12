@@ -29,6 +29,7 @@ export const colors = {
   container: '#0D111C',
 
   buttonRed: '#DF2E2D',
+  buttonRedDisabled: '#EF9696',
 
   defaultBorderColor: '#98A1C03D',
   readOnlyBorderColor: '#98A1C03D',
