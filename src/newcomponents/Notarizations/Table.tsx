@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { UserX } from 'react-feather';
+import { Slash } from 'react-feather';
 
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
@@ -8,12 +8,13 @@ import { RequestRow } from '@newcomponents/Notarizations/Row';
 import { BackgroundActiontype, RequestHistory } from '../../entries/Background/rpc';
 
 
-const ROWS_PER_PAGE = 3;
+const ROWS_PER_PAGE = 2;
 
 type RequestRowData = {
   metadata: string;
   subject: string;
   date: string;
+  isProving: boolean;
 };
 
 type Props = {
@@ -85,6 +86,8 @@ export default function RequestTable(props: Props): ReactElement {
 
   useEffect(() => {
     const newRequests = requests.map((request) => {
+      console.log('Request: ', request.url);
+      
       let subject, metadata, timestamp = "";
       switch (request.url) {
         case 'https://wise.com/gateway/v1/payments':
@@ -109,6 +112,7 @@ export default function RequestTable(props: Props): ReactElement {
         metadata: metadata,
         subject: subject,
         date: parseTimestamp(timestamp)
+        isProving: request.status === 'pending',
       } as RequestRowData;
     });
 
@@ -124,10 +128,10 @@ export default function RequestTable(props: Props): ReactElement {
       <TableContainer>
         {requests.length === 0 ? (
           <EmptyNotarizationsContainer>
-            <StyledUserX />
+            <StyledSlash />
 
             <ThemedText.SubHeaderSmall textAlign="center" lineHeight={1.3}>
-              Test
+              No proofs stored. Notarize one of the requests above to generate a valid proof.
             </ThemedText.SubHeaderSmall>
           </EmptyNotarizationsContainer>
         ) : (
@@ -140,6 +144,7 @@ export default function RequestTable(props: Props): ReactElement {
                 isLastRow={index === loadedRequests.length - 1}
                 onRowClick={() => handleRowClick(index)}
                 rowIndex={index + 1 + currentPage * ROWS_PER_PAGE}
+                isProving={notarization.isProving}
               />
             ))}
           </Table>
@@ -205,7 +210,7 @@ const Table = styled.div`
   color: #616161;
 `;
 
-const StyledUserX = styled(UserX)`
+const StyledSlash = styled(Slash)`
   color: #fff;
   width: 24px;
   height: 24px;

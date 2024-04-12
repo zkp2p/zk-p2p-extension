@@ -8,26 +8,24 @@ import { RequestRow } from '@newcomponents/Requests/Row';
 import { BackgroundActiontype, RequestLog } from '../../entries/Background/rpc';
 
 
-const ROWS_PER_PAGE = 3;
+const ROWS_PER_PAGE = 2;
 
 type RequestRowData = {
   subject: string;
   date: string;
 };
 
-type Props = {
+type RequestTableProps = {
   requests: RequestLog[];
+  setSelectedIndex: (index: number | null) => void;
+  selectedIndex: number | null;
 };
 
-export default function RequestTable(props: Props): ReactElement {
-  const { requests } = props;
-
-  /*
-   * Context
-   */
-
-  // no-op
-
+export const RequestTable: React.FC<RequestTableProps> = ({
+  requests,
+  setSelectedIndex,
+  selectedIndex,
+}: RequestTableProps) => {
   /*
    * State
    */
@@ -39,10 +37,6 @@ export default function RequestTable(props: Props): ReactElement {
   /*
    * Handlers
    */
-
-  const handleRowClick = (index: number) => {
-    // no-op
-  };
 
   const handleChangePage = (newPage: number) => {
     setCurrentPage(newPage);
@@ -116,8 +110,9 @@ export default function RequestTable(props: Props): ReactElement {
               key={index}
               subjectText={notarization.subject}
               dateText={notarization.date}
+              isSelected={index === selectedIndex}
               isLastRow={index === loadedRequests.length - 1}
-              onRowClick={() => handleRowClick(index)}
+              onRowClick={() => setSelectedIndex(index)}
               rowIndex={index + 1 + currentPage * ROWS_PER_PAGE}
             />
           ))}
@@ -143,18 +138,6 @@ export default function RequestTable(props: Props): ReactElement {
           </PaginationButton>
         </PaginationContainer>
       )}
-
-      {/* <ButtonContainer>
-        <Button
-          disabled={selectedIndex === null}
-          onClick={() => {}}
-          width={164}
-          height={40}
-          fontSize={14}
-        >
-          Notarize
-        </Button>
-      </ButtonContainer> */}
     </Container>
   )
 };
@@ -226,3 +209,5 @@ const PageInfo = styled.span`
   word-spacing: 2px;
   font-size: 14px;
 `;
+
+export default RequestTable;

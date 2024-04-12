@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { colors } from '@theme/colors';
+import Spinner from '@newcomponents/common/Spinner';
 
 
 interface RequestRowProps {
@@ -10,6 +11,7 @@ interface RequestRowProps {
   isLastRow: boolean;
   onRowClick: () => void;
   rowIndex: number;
+  isProving?: boolean;
 }
 
 export const RequestRow: React.FC<RequestRowProps> = ({
@@ -18,6 +20,7 @@ export const RequestRow: React.FC<RequestRowProps> = ({
   isLastRow,
   onRowClick,
   rowIndex,
+  isProving = false,
 }: RequestRowProps) => {
   RequestRow.displayName = 'RequestRow';
 
@@ -28,14 +31,20 @@ export const RequestRow: React.FC<RequestRowProps> = ({
     <Container onClick={onRowClick} isLastRow={isLastRow}>
       <IndexLabel> {rowIndex} </IndexLabel>
       <SubjectLabel> {subjectLabel} </SubjectLabel>
-      <DateLabel> {dateLabel} </DateLabel>
+      {isProving ? (
+        <SpinnerContainer>
+          <Spinner size={20}/>
+        </SpinnerContainer>
+      ) : (
+        <DateLabel>{dateLabel}</DateLabel>
+      )}
     </Container>
   );
 };
 
 const Container = styled.div<{ isLastRow: boolean }>`
   display: grid;
-  grid-template-columns: 0.1fr 1fr 0.3fr;
+  grid-template-columns: 0.1fr 1fr 0.4fr;
   grid-gap: 1px;
   padding: 1rem 1rem 0.75rem 1rem;
   font-size: 14px;
@@ -50,6 +59,11 @@ const IndexLabel = styled.label`
 
 const SubjectLabel = styled.label`
   text-align: left;
+`;
+
+const SpinnerContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const DateLabel = styled.label`
