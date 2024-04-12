@@ -38,10 +38,9 @@ export const setRequests = (requests: RequestLog[]): Action<RequestLog[]> => ({
 });
 
 export const notarizeRequest = (options: RequestHistory) => async () => {
-  const notaryUrl = await get(NOTARY_API_LS_KEY, 'https://52.71.111.129:7047');
-  const websocketProxyUrl = await get(PROXY_API_LS_KEY, 'wss://notary.pse.dev/proxy');
+  const notaryUrl = await get(NOTARY_API_LS_KEY, 'https://notary-california.zkp2p.xyz');
+  const websocketProxyUrl = await get(PROXY_API_LS_KEY, 'wss://proxy-california.zkp2p.xyz');
 
-  console.log('originalTabId1234', options.originalTabId);
   chrome.runtime.sendMessage<any, string>({
     type: BackgroundActiontype.prove_request_start,
     data: {
@@ -107,9 +106,13 @@ export default function requests(state = initialState, action: Action<any>): Sta
   }
 }
 
-export const useRequests = (): RequestLog[] => {
+export const useRequests = (order: 'ascending' | 'descending' = 'ascending'): RequestLog[] => {
   return useSelector((state: AppRootState) => {
-    return Object.values(state.requests.map);
+    const requests = Object.values(state.requests.map);
+    if (order === 'descending') {
+      return requests.sort((a, b) => b.timestamp - a.timestamp);
+    }
+    return requests.sort((a, b) => a.timestamp - b.timestamp);
   }, deepEqual);
 };
 
