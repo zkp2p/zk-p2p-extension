@@ -86,26 +86,30 @@ export default function RequestTable(props: Props): ReactElement {
 
   useEffect(() => {
     const newRequests = requests.map((request) => {
-      console.log('Request: ', request.url);
-      
+      const requestUrlString = request.url;
+      console.log('Request url: ', requestUrlString);
+
       let subject, metadata, timestamp = "";
-      switch (request.url) {
-        case 'https://wise.com/gateway/v1/payments':
-          const [requestTimestamp, wiseTag] = request.metadata;
-          const wiseTagStripped = wiseTag.split('@')[1];
 
-          subject = `${wiseTag}`;
-          metadata = wiseTagStripped;
-          timestamp = requestTimestamp;
-          break;
+      if (requestUrlString === 'https://wise.com/gateway/v1/payments') {
+        const [requestTimestamp, wiseTag] = request.metadata;
+        const wiseTagStripped = wiseTag.split('@')[1];
 
-        default:
-          const [requestTimestamp, amount, currency] = request.metadata;
-          
-          subject = `Sent €${amount} ${currency}`;
-          metadata = amount;
-          timestamp = requestTimestamp;
-          break;
+        subject = `${wiseTag}`;
+        metadata = wiseTagStripped;
+        timestamp = requestTimestamp;
+      } else if (/^https:\/\/wise.com\/gateway\/v3\/profiles\/.*\/transfers\/.*$/.test(requestUrlString)) {
+        const [requestTimestamp, amount, currency] = request.metadata;
+        
+        subject = `Sent €${amount} ${currency}`;
+        metadata = amount;
+        timestamp = requestTimestamp;
+      } else {
+        const [requestTimestamp] = request.metadata;
+        
+        subject = `Unrecognized (or outdated)`;
+        metadata = '';
+        timestamp = requestTimestamp;
       }
 
       return {

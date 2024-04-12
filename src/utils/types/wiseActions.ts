@@ -11,3 +11,18 @@ export const wiseActions = [
 ];
 
 export type WiseActionType = typeof WiseAction[keyof typeof WiseAction];
+
+
+export const WiseStep = {
+  NAVIGATE: 'navigate',
+  PROVE: 'prove',
+  REVIEW: 'review'
+} as const;
+
+export const wiseSteps = [
+  WiseStep.NAVIGATE,
+  WiseStep.PROVE,
+  WiseStep.REVIEW,
+];
+
+export type WiseStepType = typeof WiseStep[keyof typeof WiseStep];

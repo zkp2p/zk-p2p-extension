@@ -13,9 +13,9 @@ import { colors } from '@theme/colors';
 
 import NotarizationTable from '@newcomponents/Notarizations/Table';
 import RequestTable from '@newcomponents/Requests/Table';
-import { InstructionStep } from '@newcomponents/Instructions/Step';
+import { InstructionTitle } from '@newcomponents/Instructions/Title';
 import { Button } from '@newcomponents/common/Button';
-import { WiseAction, WiseActionType } from '@utils/types';
+import { WiseAction, WiseActionType, WiseStep } from '@utils/types';
 import { replayRequest, urlify } from '@utils/misc';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '@utils/storage';
 
@@ -81,8 +81,28 @@ const Wise: React.FC<WiseProps> = ({
   }, [requests, selectedIndex]);
 
   useEffect(() => {
-    setLoadedNotarizations(notarizations);
-  }, [notarizations]);
+    if (notarizations) {
+      const filteredNotarizations = notarizations.filter(notarization => {
+        const notarizationUrl = notarization.url;
+
+        switch (action) {
+          case WiseAction.REGISTRATION:
+            const registrationRegex = /^https:\/\/wise\.com\/gateway\/v1\/payments$/;
+            return registrationRegex.test(notarizationUrl);
+
+          case WiseAction.DEPOSITOR_REGISTRATION:
+          case WiseAction.TRANSFER:
+            const transferRegex = new RegExp('https://wise.com/gateway/v3/profiles/.*/transfers/.*');
+            return transferRegex.test(notarizationUrl);
+
+          default:
+            return false;
+        }
+      });
+  
+      setLoadedNotarizations(filteredNotarizations);
+    }
+  }, [notarizations, action]);
 
   /*
    * Handlers
@@ -226,7 +246,7 @@ const Wise: React.FC<WiseProps> = ({
         settingsObject.action_url = 'https://wise.com/account/payments';
         settingsObject.navigate_instruction = 'Go to the account page on Wise to listen for the correct request';
         settingsObject.request_instruction = 'Notarize a request, this will take approximately 20 seconds';
-        settingsObject.review_instruction = 'Succesfully notarized proofs will appear here and in zkp2p.xyz for submission';
+        settingsObject.review_instruction = 'Succesful notarizations will appear here and in zkp2p.xyz for submission';
 
         const registrationBookmark = bookmarks[0];
         settingsObject.bookmark_data = {
@@ -240,7 +260,7 @@ const Wise: React.FC<WiseProps> = ({
         settingsObject.action_url = 'https://wise.com/all-transactions?direction=OUTGOING';
         settingsObject.navigate_instruction = 'Go to the account page on Wise to listen for the correct request'
         settingsObject.request_instruction = 'Notarize a request, this will take approximately 20 seconds'
-        settingsObject.review_instruction = 'Succesfully notarized proofs will appear here and in zkp2p.xyz for submission'
+        settingsObject.review_instruction = 'Succesful notarizations will appear here and in zkp2p.xyz for submission'
 
         const depositorRegistrationBookmark = bookmarks[1];
         settingsObject.bookmark_data = {
@@ -253,7 +273,7 @@ const Wise: React.FC<WiseProps> = ({
         settingsObject.action_url = 'https://wise.com/all-transactions?direction=OUTGOING';
         settingsObject.navigate_instruction = 'Go to the account page on Wise to listen for the correct request'
         settingsObject.request_instruction = 'Notarize a request, this will take approximately 20 seconds'
-        settingsObject.review_instruction = 'Succesfully notarized proofs will appear here and in zkp2p.xyz for submission'
+        settingsObject.review_instruction = 'Succesful notarizations will appear here and in zkp2p.xyz for submission'
 
         const transferBookmark = bookmarks[2];
         settingsObject.bookmark_data = {
@@ -274,15 +294,11 @@ const Wise: React.FC<WiseProps> = ({
     <Container>
       <BodyContainer>
         <BodyStepContainer>
-          <TitleAndInstructionContainer>
-            <ThemedText.TableHeaderSmall style={{ flex: '1', textAlign: 'left' }}>
-              { actionSettings.navigate_title }
-            </ThemedText.TableHeaderSmall>
-
-            <InstructionStep>
-              { actionSettings.navigate_instruction }
-            </InstructionStep>
-          </TitleAndInstructionContainer>
+          <InstructionTitle
+            title={actionSettings.navigate_title}
+            description={actionSettings.navigate_instruction}
+            step={WiseStep.NAVIGATE}
+          />
 
           <ButtonContainer>
             <Button
@@ -296,18 +312,12 @@ const Wise: React.FC<WiseProps> = ({
           </ButtonContainer>
         </BodyStepContainer>
 
-        {/* <VerticalDivider /> */}
-
         <BodyStepContainer>
-          <TitleAndInstructionContainer>
-            <ThemedText.TableHeaderSmall style={{ flex: '1', textAlign: 'left' }}>
-              { actionSettings.request_title }
-            </ThemedText.TableHeaderSmall>
-
-            <InstructionStep>
-              { actionSettings.request_instruction }
-            </InstructionStep>
-          </TitleAndInstructionContainer>
+          <InstructionTitle
+            title={actionSettings.request_title}
+            description={actionSettings.request_instruction}
+            step={WiseStep.PROVE}
+          />
 
           <RequestTableAndButtonContainer>
             <RequestTable
@@ -330,18 +340,12 @@ const Wise: React.FC<WiseProps> = ({
           </RequestTableAndButtonContainer>
         </BodyStepContainer>
 
-        {/* <VerticalDivider /> */}
-
         <BodyStepContainer>
-          <TitleAndInstructionContainer>
-            <ThemedText.TableHeaderSmall style={{ flex: '1', textAlign: 'left' }}>
-              { actionSettings.review_title }
-            </ThemedText.TableHeaderSmall>
-
-            <InstructionStep>
-              { actionSettings.review_instruction }
-            </InstructionStep>
-          </TitleAndInstructionContainer>
+          <InstructionTitle
+            title={actionSettings.review_title}
+            description={actionSettings.review_instruction}
+            step={WiseStep.REVIEW}
+          />
 
           <NotarizationTable
             requests={loadedNotarizations}
@@ -371,18 +375,7 @@ const BodyStepContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 0.25rem;
-`;
-
-const TitleAndInstructionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding: 0rem 0.25rem 0.55rem 0.25rem;
-  gap: 0.25rem;
-
-  color: ${colors.white};
-  font-size: 14px;
+  gap: 0.5rem;
 `;
 
 const RequestTableAndButtonContainer = styled.div`
