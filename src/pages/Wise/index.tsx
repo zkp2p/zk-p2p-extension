@@ -7,6 +7,7 @@ import browser from 'webextension-polyfill';
 
 import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests } from '../../reducers/requests';
 import { useHistoryOrder } from '../../reducers/history';
+import { RequestHistory } from '../../entries/Background/rpc';
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
 
@@ -52,7 +53,10 @@ const Wise: React.FC<WiseProps> = ({
 
   const requests = useRequests('descending'); // RequestLog
   const requestHistoryOrder = useHistoryOrder('descending'); // string[]
-  const notarizations = requestHistoryOrder.map((id) => useSelector((state: AppRootState) => state.history.map[id], deepEqual));
+  const notarizations = useSelector((state: AppRootState) => {
+    return requestHistoryOrder.map(id => state.history.map[id]);
+  }, deepEqual);
+
 
   /*
    * State
@@ -60,6 +64,8 @@ const Wise: React.FC<WiseProps> = ({
 
   const [originalTabId, setOriginalTabId] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  const [loadedNotarizations, setLoadedNotarizations] = useState<RequestHistory[]>([]);
 
   /*
    * Hooks
@@ -73,6 +79,10 @@ const Wise: React.FC<WiseProps> = ({
       setSelectedIndex(0);
     }
   }, [requests, selectedIndex]);
+
+  useEffect(() => {
+    setLoadedNotarizations(notarizations);
+  }, [notarizations]);
 
   /*
    * Handlers
@@ -136,8 +146,8 @@ const Wise: React.FC<WiseProps> = ({
     const filteredSecretResps = secretResps.filter((d) => !!d);
 
     const hostname = urlify(requestLog.url)?.hostname;
-    const notaryUrl = 'https://notary-california.zkp2p.xyz' // await get(NOTARY_API_LS_KEY);
-    const websocketProxyUrl = 'wss://proxy-california.zkp2p.xyz' // await get(PROXY_API_LS_KEY);
+    const notaryUrl = 'http://0.0.0.0:7047'; // 'https://notary-california.zkp2p.xyz' // await get(NOTARY_API_LS_KEY);
+    const websocketProxyUrl = 'ws://localhost:55688'; // 'wss://proxy-california.zkp2p.xyz' // await get(PROXY_API_LS_KEY);
 
     const headers: { [k: string]: string } = requestLog.requestHeaders.reduce(
       (acc: any, h) => {
@@ -163,9 +173,9 @@ const Wise: React.FC<WiseProps> = ({
     actionSettings.bookmark_data.metaDataSelector.forEach((metaDataSelector) => {
       const regex = new RegExp(metaDataSelector, 'g');
 
-      console.log(response.text);
+      // console.log(response.text);
       const matches = response.text.match(regex);
-      console.log('metaDataSelector', metaDataSelector);
+      // console.log('metaDataSelector', metaDataSelector);
 
       if (matches) {
         const revealed = matches[0];
@@ -176,26 +186,27 @@ const Wise: React.FC<WiseProps> = ({
         if (selectionStart !== -1) {
           metadataResp.push(response.text.substring(selectionStart, selectionEnd));
         }
-        console.log('metadataResp', metadataResp);
+        // console.log('metadataResp', metadataResp);
       }
     });
 
-    console.log('dispatching notarizeRequest');
+    const notarizeRequestParams = {
+      url: requestLog.url,
+      method: requestLog.method,
+      headers: headers,
+      body: requestLog.requestBody,
+      maxTranscriptSize: 16384,
+      notaryUrl,
+      websocketProxyUrl,
+      secretHeaders,
+      secretResps: filteredSecretResps,
+      metadata: metadataResp,
+      originalTabId: originalTabId
+    };
+
 
     dispatch(
-      notarizeRequest({
-        url: requestLog.url,
-        method: requestLog.method,
-        headers: headers,
-        body: requestLog.requestBody,
-        maxTranscriptSize: 16384,
-        notaryUrl,
-        websocketProxyUrl,
-        secretHeaders,
-        secretResps: filteredSecretResps,
-        metadata: metadataResp,
-        originalTabId: originalTabId
-      }),
+      notarizeRequest(notarizeRequestParams),
     );
   };
 
@@ -333,7 +344,7 @@ const Wise: React.FC<WiseProps> = ({
           </TitleAndInstructionContainer>
 
           <NotarizationTable
-            requests={notarizations}
+            requests={loadedNotarizations}
           />
         </BodyStepContainer>
       </BodyContainer>
@@ -383,11 +394,5 @@ const RequestTableAndButtonContainer = styled.div`
 const ButtonContainer = styled.div`
   margin: auto;
 `;
-
-// const VerticalDivider = styled.div`
-//   height: 20px;
-//   border-left: 1px solid ${colors.defaultBorderColor};
-//   margin: 0 auto;
-// `;
 
 export default Wise;
