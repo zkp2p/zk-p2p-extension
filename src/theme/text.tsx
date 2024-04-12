@@ -122,4 +122,7 @@ export const ThemedText = {
   TableHeaderSmall(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={16} color="textPrimary" {...props} />
   },
+  TableDescriptionSmall(props: TextProps) {
+    return <TextWrapper fontWeight={500} fontSize={14} color="textPrimary" {...props} />
+  },
 }
