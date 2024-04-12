@@ -220,23 +220,22 @@ const PaginationContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 8px;
+  padding: 10px;
 `;
 
 const PaginationButton = styled.button`
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #131A2A;
   color: white;
-  padding: 8px 16px;
+  padding: 4px 12px;
   margin: 0 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-  }
+  line-height: 1;
+  font-size: 20px;
+
   &:disabled {
-    background-color: rgba(0, 0, 0, 0.2);
     cursor: not-allowed;
   }
 `;
