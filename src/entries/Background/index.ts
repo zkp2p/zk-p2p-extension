@@ -10,7 +10,7 @@ import { getNotaryRequests } from './db';
     onSendHeaders,
     {
       urls: [
-        'https://wise.com/account/payments',
+        'https://wise.com/gateway/v1/payments',
         'https://wise.com/gateway/v3/profiles/*/transfers/*'
       ],
     },
@@ -21,7 +21,7 @@ import { getNotaryRequests } from './db';
     onBeforeRequest,
     {
       urls: [
-        'https://wise.com/account/payments',
+        'https://wise.com/gateway/v1/payments',
         'https://wise.com/gateway/v3/profiles/*/transfers/*'
       ],
     },
@@ -32,7 +32,7 @@ import { getNotaryRequests } from './db';
     onResponseStarted,
     {
       urls: [
-        'https://wise.com/account/payments',
+        'https://wise.com/gateway/v1/payments',
         'https://wise.com/gateway/v3/profiles/*/transfers/*'
       ],
     },
