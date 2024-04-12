@@ -125,51 +125,49 @@ export default function RequestTable(props: Props): ReactElement {
 
   return (
     <Container>
-      <TableContainer>
-        {requests.length === 0 ? (
-          <EmptyNotarizationsContainer>
-            <StyledSlash />
+      {requests.length === 0 ? (
+        <EmptyNotarizationsContainer>
+          <StyledSlash />
 
-            <ThemedText.SubHeaderSmall textAlign="center" lineHeight={1.3}>
-              No proofs stored. Notarize one of the requests above to generate a valid proof.
-            </ThemedText.SubHeaderSmall>
-          </EmptyNotarizationsContainer>
-        ) : (
-          <Table>
-            {paginatedData.map((notarization, index) => (
-              <RequestRow
-                key={index}
-                subjectText={notarization.subject}
-                dateText={notarization.date}
-                isLastRow={index === loadedRequests.length - 1}
-                onRowClick={() => handleRowClick(index)}
-                rowIndex={index + 1 + currentPage * ROWS_PER_PAGE}
-                isProving={notarization.isProving}
-              />
-            ))}
-          </Table>
-        )}
+          <ThemedText.TableDescriptionSmall textAlign="center" lineHeight={1.3}>
+            No proofs stored. Notarize one of the requests above to generate a valid proof.
+          </ThemedText.TableDescriptionSmall>
+        </EmptyNotarizationsContainer>
+      ) : (
+        <Table>
+          {paginatedData.map((notarization, index) => (
+            <RequestRow
+              key={index}
+              subjectText={notarization.subject}
+              dateText={notarization.date}
+              isLastRow={index === loadedRequests.length - 1}
+              onRowClick={() => handleRowClick(index)}
+              rowIndex={index + 1 + currentPage * ROWS_PER_PAGE}
+              isProving={notarization.isProving}
+            />
+          ))}
+        </Table>
+      )}
 
-        {loadedRequests.length > ROWS_PER_PAGE && (
-          <PaginationContainer>
-            <PaginationButton
-              disabled={currentPage === 0}
-              onClick={() => handleChangePage(currentPage - 1)}
-            >
-              &#8249;
-            </PaginationButton>
-            <PageInfo>
-              {false ? '0 of 0' : `${currentPage + 1} of ${totalPages}`}
-            </PageInfo>
-            <PaginationButton
-              disabled={currentPage === totalPages - 1 || false}
-              onClick={() => handleChangePage(currentPage + 1)}
-            >
-              &#8250;
-            </PaginationButton>
-          </PaginationContainer>
-        )}
-      </TableContainer>
+      {loadedRequests.length > ROWS_PER_PAGE && (
+        <PaginationContainer>
+          <PaginationButton
+            disabled={currentPage === 0}
+            onClick={() => handleChangePage(currentPage - 1)}
+          >
+            &#8249;
+          </PaginationButton>
+          <PageInfo>
+            {false ? '0 of 0' : `${currentPage + 1} of ${totalPages}`}
+          </PageInfo>
+          <PaginationButton
+            disabled={currentPage === totalPages - 1 || false}
+            onClick={() => handleChangePage(currentPage + 1)}
+          >
+            &#8250;
+          </PaginationButton>
+        </PaginationContainer>
+      )}
     </Container>
   )
 };
@@ -182,7 +180,10 @@ const Container = styled.div`
   justify-content: center;
   border-radius: 8px;
   overflow: hidden;
-  gap: 1rem;
+
+  border: 1px solid ${colors.defaultBorderColor};
+  border-radius: 8px;
+  background-color: #090d14;
 `;
 
 const EmptyNotarizationsContainer = styled.div`
@@ -191,17 +192,11 @@ const EmptyNotarizationsContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 1.9rem 0rem;
+  padding: 1.25rem 0rem;
   max-width: 75%;
   margin: auto;
-  gap: 1rem;
+  gap: 0.75rem;
   color: #ffffff;
-`;
-
-const TableContainer = styled.div`
-  border: 1px solid ${colors.defaultBorderColor};
-  border-radius: 8px;
-  background-color: #090d14;
 `;
 
 const Table = styled.div`
