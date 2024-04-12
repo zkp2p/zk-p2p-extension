@@ -85,11 +85,12 @@ export default function history(state = initialState, action: Action<any>): Stat
 
 export const useHistoryOrder = (order: 'ascending' | 'descending' = 'ascending'): string[] => {
   return useSelector((state: AppRootState) => {
-    const historyOrder = [...state.history.order];
+    const currentHistoryOrder = state.history.order;
     if (order === 'descending') {
-      return historyOrder.reverse();
+      return currentHistoryOrder;
     }
-    return historyOrder;
+
+    return currentHistoryOrder.reverse();
   }, deepEqual);
 };
 
