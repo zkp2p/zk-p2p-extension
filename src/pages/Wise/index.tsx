@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import deepEqual from 'fast-deep-equal';
@@ -60,6 +60,19 @@ const Wise: React.FC<WiseProps> = ({
 
   const [originalTabId, setOriginalTabId] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  /*
+   * Hooks
+   */
+
+  useEffect(() => {
+    const requestsRetrieved = requests.length > 0;
+    const indexNotSelected = selectedIndex === null;
+
+    if (requestsRetrieved && indexNotSelected) {
+      setSelectedIndex(0);
+    }
+  }, [requests, selectedIndex]);
 
   /*
    * Handlers
