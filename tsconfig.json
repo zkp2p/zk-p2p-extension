@@ -19,6 +19,7 @@
       "@newcomponents/*": ["newcomponents/*"],
       "@theme/*": ["theme/*"],
       "@utils/*": ["utils/*"],
+      "@hooks/*": ["hook/*"],
     },
   },
   "include": ["src"],
