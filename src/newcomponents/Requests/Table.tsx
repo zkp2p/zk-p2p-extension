@@ -86,27 +86,34 @@ export const RequestTable: React.FC<RequestTableProps> = ({
    */
 
   useEffect(() => {
-    console.log('requests', requests);
-    // TODO: stores all the requests in state
-    const newRequests = requests.map((request) => {
-      console.log('Request: ', request);
+    const newRequests = requests.filter((request) => {
+      switch (action) {
+        case WiseAction.REGISTRATION:
+          return /^https:\/\/wise\.com\/gateway\/v1\/payments$/.test(request.url);
+
+        case WiseAction.DEPOSITOR_REGISTRATION:
+        case WiseAction.TRANSFER:
+          const transferRegex = new RegExp('https://wise.com/gateway/v3/profiles/.*/transfers/.*');
+          return transferRegex.test(request.url);
+
+        default:
+          return false;
+      }
+    }).map((request) => {
+      console.log("JSON Response Body", JSON.parse(request.responseBody as string));
 
       const jsonResponseBody = JSON.parse(request.responseBody as string);
 
-      console.log(JSON.parse(request.responseBody as string))
 
       let subject = '';
       switch (action) {
         case WiseAction.REGISTRATION:
-          subject = jsonResponseBody.sections[2].modules[0].description;
+          subject = `My Wisetag: ${jsonResponseBody.sections[2].modules[0].description}`;
           break;
 
         case WiseAction.DEPOSITOR_REGISTRATION:
-          subject = jsonResponseBody.refundRecipientId;
-          break;
-
         case WiseAction.TRANSFER:
-          subject = jsonResponseBody.targetAmount + jsonResponseBody.targetCurrency;
+          subject = `${jsonResponseBody.actor} of ${jsonResponseBody.targetAmount} ${jsonResponseBody.targetCurrency}`;
           break;
 
         default:
@@ -146,7 +153,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
 
   return (
     <Container>
-      {requests.length === 0 ? (
+      {loadedRequests.length === 0 ? (
         <EmptyRequestsContainer>
           <StyledUserX />
 
