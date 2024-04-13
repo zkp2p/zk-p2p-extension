@@ -96,7 +96,7 @@ const AppContainer = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: #171717;
+  background-color: ${colors.appBackground};
 `;
 
 export default SidePanel;
