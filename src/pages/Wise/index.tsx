@@ -99,6 +99,8 @@ const Wise: React.FC<WiseProps> = ({
       });
   
       setLoadedNotarizations(filteredNotarizations);
+    } else {
+      setLoadedNotarizations([]);
     }
   }, [notarizations, action]);
 
@@ -321,6 +323,7 @@ const Wise: React.FC<WiseProps> = ({
 
           <RequestTableAndButtonContainer>
             <RequestTable
+              action={action}
               requests={requests}
               setSelectedIndex={setSelectedIndex}
               selectedIndex={selectedIndex}
@@ -348,6 +351,7 @@ const Wise: React.FC<WiseProps> = ({
           />
 
           <NotarizationTable
+            action={action}
             requests={loadedNotarizations}
           />
         </BodyStepContainer>
@@ -367,7 +371,6 @@ const BodyContainer = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 16px;
-  padding-top: 1rem;
   gap: 1.5rem;
 `;
 
