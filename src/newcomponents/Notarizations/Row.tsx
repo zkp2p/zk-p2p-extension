@@ -14,6 +14,7 @@ interface NotarizationRowProps {
   rowIndex: number;
   isProving?: boolean;
   isFailed?: boolean;
+  onDeleteClicked?: () => void;
 }
 
 export const NotarizationRow: React.FC<NotarizationRowProps> = ({
@@ -24,6 +25,7 @@ export const NotarizationRow: React.FC<NotarizationRowProps> = ({
   rowIndex,
   isProving = false,
   isFailed = false,
+  onDeleteClicked
 }: NotarizationRowProps) => {
   NotarizationRow.displayName = 'NotarizationRow';
 
@@ -40,7 +42,13 @@ export const NotarizationRow: React.FC<NotarizationRowProps> = ({
         </SpinnerContainer>
       ) : isFailed ? (
         <FailedIconsContainer>
-          <StyledTrashIcon/>
+          <StyledTrashIcon onClick={(e) => {
+            e.stopPropagation();
+            if (onDeleteClicked) {
+              onDeleteClicked(); 
+            }
+          }} />
+
           <StyledXIcon/>
         </FailedIconsContainer>
       ) : (
@@ -88,7 +96,7 @@ const FailedIconsContainer = styled.div`
 `;
 
 const StyledCheck = styled(Check)`
-  colors: ${colors.successGreen};
+  color: ${colors.successGreen};
   height: 16px;
   width: 16px;
 `;
@@ -96,6 +104,10 @@ const StyledCheck = styled(Check)`
 const StyledTrashIcon = styled(Trash2)`
   height: 16px;
   width: 16px;
+
+  &:hover:not([disabled]) {
+    color: #495057;
+  }
 `;
 
 const StyledXIcon = styled(X)`

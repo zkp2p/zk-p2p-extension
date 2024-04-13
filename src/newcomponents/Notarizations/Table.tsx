@@ -1,17 +1,20 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Slash } from 'react-feather';
+import { useDispatch } from 'react-redux';
 
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
 import { NotarizationRow } from '@newcomponents/Notarizations/Row';
 import { WiseAction, WiseActionType } from '@utils/types';
 import { BackgroundActiontype, RequestHistory } from '../../entries/Background/rpc';
+import { deleteRequestHistory } from '../../reducers/history';
 
 
 const ROWS_PER_PAGE = 2;
 
 type NotarizationRowData = {
+  requestHistoryId: string;
   metadata: string;
   subject: string;
   date: string;
@@ -28,6 +31,7 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
   action,
   notarizations,
 }: NotarizationTableProps) => {
+  const dispatch = useDispatch();
 
   /*
    * Context
@@ -53,6 +57,10 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
 
   const handleChangePage = (newPage: number) => {
     setCurrentPage(newPage);
+  };
+
+  const handleDeleteRequestHistoryClick = (requestHistoryId: string) => {
+    dispatch(deleteRequestHistory(requestHistoryId));
   };
 
   /*
@@ -128,6 +136,7 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
       }
 
       return {
+        requestHistoryId: notarization.id,
         metadata: metadata,
         subject: subject,
         date: parseTimestamp(timestamp),
@@ -165,6 +174,7 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
               rowIndex={index + 1 + currentPage * ROWS_PER_PAGE}
               isProving={notarization.isProving}
               isFailed={notarization.isFailed}
+              onDeleteClicked={() => handleDeleteRequestHistoryClick(notarization.requestHistoryId)}
             />
           ))}
         </Table>
