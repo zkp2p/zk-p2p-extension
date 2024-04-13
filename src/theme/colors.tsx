@@ -26,6 +26,8 @@ export const colors = {
   white: '#FFFFFF',
   black: '#000000',
 
+  appBackground: '#171717',
+
   container: '#0D111C',
 
   buttonRed: '#DF2E2D',
