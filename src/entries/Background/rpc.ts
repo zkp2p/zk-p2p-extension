@@ -49,7 +49,7 @@ export type RequestLog = {
   responseHeaders?: browser.WebRequest.HttpHeaders;
   timestamp: number;
   requestType: WiseRequestType;
-  metadata?: string[];
+  responseBody?: string;
 };
 
 export type RequestHistory = {

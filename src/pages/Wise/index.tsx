@@ -65,7 +65,6 @@ const Wise: React.FC<WiseProps> = ({
 
   const [loadedRequests, setLoadedRequests] = useState<RequestLog[]>([]);
   const [loadedNotarizations, setLoadedNotarizations] = useState<RequestHistory[]>([]);
-  const [requestsWithMetadata, setRequestsWithMetadata] = useState<RequestLog[]>([]);
 
   /*
    * Hooks
@@ -127,46 +126,6 @@ const Wise: React.FC<WiseProps> = ({
       setLoadedRequests([]);
     }
   }, [requests, action]);
-
-  useEffect(() => {
-    const fetchRequestMetadata = async () => {
-      const promises = requests.map(async (requestLog) => {
-        const response = await replayRequest(requestLog);
-        const metadataResp = [] as string[];
-        
-        actionSettings.bookmark_data.metaDataSelector.forEach((metaDataSelector) => {
-          const regex = new RegExp(metaDataSelector, 'g');
-
-          // console.log(response.text);
-          const matches = response.text.match(regex);
-          // console.log('metaDataSelector', metaDataSelector);
-
-          if (matches) {
-            const revealed = matches[0];
-
-            const selectionStart = response.text.indexOf(revealed);
-            const selectionEnd = selectionStart + revealed.length;
-
-            if (selectionStart !== -1) {
-              metadataResp.push(response.text.substring(selectionStart, selectionEnd));
-            }
-            // console.log('metadataResp', metadataResp);
-          }
-        });
-
-        return {
-          ...requestLog,
-          metadata: metadataResp,
-        }
-      });
-
-      const requestsWithMetadataResolved = await Promise.all(promises);
-
-      setRequestsWithMetadata(requestsWithMetadataResolved);
-    };
-
-    fetchRequestMetadata();
-  }, [requests]);
 
   /*
    * Handlers

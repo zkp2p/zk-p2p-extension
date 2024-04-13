@@ -86,11 +86,35 @@ export const RequestTable: React.FC<RequestTableProps> = ({
    */
 
   useEffect(() => {
+    console.log('requests', requests);
+    // TODO: stores all the requests in state
     const newRequests = requests.map((request) => {
       console.log('Request: ', request);
 
+      const jsonResponseBody = JSON.parse(request.responseBody as string);
+
+      console.log(JSON.parse(request.responseBody as string))
+
+      let subject = '';
+      switch (action) {
+        case WiseAction.REGISTRATION:
+          subject = jsonResponseBody.sections[2].modules[0].description;
+          break;
+
+        case WiseAction.DEPOSITOR_REGISTRATION:
+          subject = jsonResponseBody.refundRecipientId;
+          break;
+
+        case WiseAction.TRANSFER:
+          subject = jsonResponseBody.targetAmount + jsonResponseBody.targetCurrency;
+          break;
+
+        default:
+          subject = '';
+      }
+
       return {
-        subject: request.metadata?.[0],
+        subject,
         date: parseTimestamp(request.timestamp),
       } as RequestRowData;
     });
