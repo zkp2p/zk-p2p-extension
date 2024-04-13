@@ -67,6 +67,7 @@ export default function history(state = initialState, action: Action<any>): Stat
         order: newOrder,
       };
     }
+
     case ActionType['/history/deleteRequest']: {
       const reqId: string = action.payload;
       const newMap = { ...state.map };
@@ -97,6 +98,7 @@ export const useHistoryOrder = (order: 'ascending' | 'descending' = 'ascending')
 export const useRequestHistory = (id?: string): RequestHistory | undefined => {
   return useSelector((state: AppRootState) => {
     if (!id) return undefined;
+    
     return state.history.map[id];
   }, deepEqual);
 };
