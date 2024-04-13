@@ -90,7 +90,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
       console.log('Request: ', request);
 
       return {
-        subject: request.requestId,
+        subject: request.metadata?.[0],
         date: parseTimestamp(request.timestamp),
       } as RequestRowData;
     });
