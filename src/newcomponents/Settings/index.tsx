@@ -6,6 +6,7 @@ import { useOnClickOutside } from '@hooks/useOnClickOutside';
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
 import { set, get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
+import { Overlay } from '@newcomponents/common/Overlay';
 
 
 const CLIENT_VERSION = '0.0.1';
@@ -60,6 +61,10 @@ export const Settings = () => {
    * Handler
    */
 
+  const handleOverlayClick = () => {
+    toggleOpen();
+  };
+
   const handleApiChange = useCallback(async (newNotary, newProxy) => {
     setNotary(newNotary);
     setProxy(newProxy);
@@ -80,37 +85,41 @@ export const Settings = () => {
       </NavButton>
 
       {isOpen && (
-        <NavDropdown>
-          <NotaryContainer>
-            <ThemedText.LabelSmall textAlign="left">
-              Notary
-            </ThemedText.LabelSmall>
-            
-            <NotaryOptionsContainer>
-              {API_CONFIGURATIONS.map((config, index) => (
-                <NotaryOptionRow
-                  topRow={index === 0}
-                  lastRow={index === API_CONFIGURATIONS.length - 1}
-                  onClick={() => handleApiChange(config.notary, config.proxy)}
-                >
-                  <NotaryOptionTitle>
-                    {`${config.name}`}
-                  </NotaryOptionTitle>
+        <DropdownAndOverlayContainer>
+          <Overlay onClick={handleOverlayClick} />
 
-                  {notary === config.notary && (
-                    <StyledCheck />
-                  )}
-                </NotaryOptionRow>
-              ))}
-            </NotaryOptionsContainer>
-          </NotaryContainer>
+          <DropdownContainer>
+            <NotarySettingContainer>
+              <ThemedText.LabelSmall textAlign="left">
+                Notary
+              </ThemedText.LabelSmall>
+              
+              <NotaryOptionsContainer>
+                {API_CONFIGURATIONS.map((config, index) => (
+                  <NotaryOptionRow
+                    topRow={index === 0}
+                    lastRow={index === API_CONFIGURATIONS.length - 1}
+                    onClick={() => handleApiChange(config.notary, config.proxy)}
+                  >
+                    <NotaryOptionTitle>
+                      {`${config.name}`}
+                    </NotaryOptionTitle>
 
-          <IconRow>
-            <VersionLabel>
-              v{CLIENT_VERSION}
-            </VersionLabel>
-          </IconRow>
-        </NavDropdown>
+                    {notary === config.notary && (
+                      <StyledCheck />
+                    )}
+                  </NotaryOptionRow>
+                ))}
+              </NotaryOptionsContainer>
+            </NotarySettingContainer>
+
+            <IconRow>
+              <VersionLabel>
+                v{CLIENT_VERSION}
+              </VersionLabel>
+            </IconRow>
+          </DropdownContainer>
+        </DropdownAndOverlayContainer>
       )}
     </Wrapper>
   )
@@ -138,7 +147,11 @@ const NavButton = styled.div`
   padding-right: 8px;
 `;
 
-const NavDropdown = styled.div`
+const DropdownAndOverlayContainer = styled.div`
+
+`;
+
+const DropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 184px;
@@ -154,7 +167,7 @@ const NavDropdown = styled.div`
   color: #FFFFFF;
 `;
 
-const NotaryContainer = styled.div`
+const NotarySettingContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
