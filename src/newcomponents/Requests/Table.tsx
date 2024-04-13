@@ -45,6 +45,12 @@ export const RequestTable: React.FC<RequestTableProps> = ({
     setCurrentPage(newPage);
   };
 
+  const handleRowClick = (index: number) => {
+    const globalIndex = index + currentPage * ROWS_PER_PAGE;
+
+    setSelectedIndex(globalIndex);
+  };
+
   /*
    * Helpers
    */
@@ -131,9 +137,9 @@ export const RequestTable: React.FC<RequestTableProps> = ({
               key={index}
               subjectText={notarization.subject}
               dateText={notarization.date}
-              isSelected={index === selectedIndex}
+              isSelected={selectedIndex === (index + currentPage * ROWS_PER_PAGE)}
               isLastRow={index === loadedRequests.length - 1}
-              onRowClick={() => setSelectedIndex(index)}
+              onRowClick={() => handleRowClick(index)}
               rowIndex={index + 1 + currentPage * ROWS_PER_PAGE}
             />
           ))}
