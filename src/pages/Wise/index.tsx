@@ -352,7 +352,7 @@ const Wise: React.FC<WiseProps> = ({
 
           <NotarizationTable
             action={action}
-            requests={loadedNotarizations}
+            notarizations={loadedNotarizations}
           />
         </BodyStepContainer>
       </BodyContainer>
