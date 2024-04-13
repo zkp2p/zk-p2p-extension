@@ -4,7 +4,7 @@
     "targetUrl": "https://wise.com/account/payments",
     "method": "GET",
     "type": "xmlhttprequest",
-    "title": "ZKP2P Registration",
+    "title": "Register",
     "description": "Generate proof of a Wise account required to complete registration",
     "secretResponseSelector": [
       "(?<=\"title\":\"Account details\",\"modules\":\\[)[^\\]]+"
@@ -21,7 +21,7 @@
     "targetUrl": "https://wise.com/all-transactions?direction=OUTGOING",
     "method": "GET",
     "type": "xmlhttprequest",
-    "title": "Depositor Registration",
+    "title": "Deposit",
     "description": "Generate proof of a past Wise transfer required to enable deposits",
     "secretResponseSelector": [
       "(?<=\"userId\":)\\d+"
@@ -46,7 +46,7 @@
     "targetUrl": "https://wise.com/all-transactions?direction=OUTGOING",
     "method": "GET",
     "type": "xmlhttprequest",
-    "title": "Complete Swap",
+    "title": "On-Ramp",
     "description": "Generate proof of your completed Wise transfer to complete onramp",
     "secretResponseSelector": [
       "(?<=\"userId\":)\\d+"
