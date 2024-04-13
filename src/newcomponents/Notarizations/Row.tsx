@@ -53,7 +53,9 @@ export const NotarizationRow: React.FC<NotarizationRowProps> = ({
         </FailedIconsContainer>
       ) : (
         // <DateLabel>{dateLabel}</DateLabel>
-        <StyledCheck />
+        <CheckContainer>
+          <StyledCheck />
+        </CheckContainer>
       )}
     </Container>
   );
@@ -93,6 +95,12 @@ const FailedIconsContainer = styled.div`
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
+`;
+
+const CheckContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 const StyledCheck = styled(Check)`
