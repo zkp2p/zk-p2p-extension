@@ -1,13 +1,11 @@
 import React, { ReactElement } from 'react';
 import { useNavigate } from 'react-router';
-import browser from 'webextension-polyfill';
 import { User, PlusCircle, DollarSign } from 'react-feather';
 import styled from 'styled-components';
 
-import { notarizeRequest, useActiveTabUrl, useRequests } from '../../reducers/requests';
+import { useActiveTabUrl, useRequests } from '../../reducers/requests';
 import bookmarks from '../../../utils/bookmark/bookmarks.json';
-import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '@utils/storage';
-import { replayRequest, urlify } from '@utils/misc';
+
 import { colors } from '@theme/colors';
 
 
@@ -97,114 +95,6 @@ export default function Home(): ReactElement {
                 <BookmarkTitle>{bm.title}</BookmarkTitle>
                 <BookmarkDescription>{bm.description}</BookmarkDescription>
               </IconContainer>
-
-              {/* {isReady && (
-                <button
-                  className="button button--primary w-fit self-end mt-2"
-                  onClick={async () => {
-                    if (!isReady) return;
-
-                    const req = reqs[0];
-                    const res = await replayRequest(req);
-                    const secretHeaders = req.requestHeaders
-                      .map((h) => {
-                        return `${h.name.toLowerCase()}: ${h.value || ''}` || '';
-                      })
-                      .filter((d) => !!d);
-
-                    const secretResps = [] as string[];
-
-                    bm.secretResponseSelector.forEach((secretResponseSelector) => {
-                      const regex = new RegExp(secretResponseSelector, 'g');
-
-                      console.log(res.text);
-                      const matches = res.text.match(regex);
-                      console.log('secretResponseSelector', secretResponseSelector);
-
-                      if (matches) {
-                        const hidden = matches[0];
-
-                        const selectionStart = res.text.indexOf(hidden);
-                        const selectionEnd = selectionStart + hidden.length;
-
-                        if (selectionStart !== -1) {
-                          secretResps.push(res.text.substring(selectionStart, selectionEnd));
-                        }
-                        console.log('secretResps', secretResps);
-                      }
-                    });
-
-                    // Filter out any empty strings
-                    const filteredSecretResps = secretResps.filter((d) => !!d);
-
-                    const hostname = urlify(req.url)?.hostname;
-                    const notaryUrl = await get(NOTARY_API_LS_KEY);
-                    const websocketProxyUrl = await get(PROXY_API_LS_KEY);
-
-                    const headers: { [k: string]: string } = req.requestHeaders.reduce(
-                      (acc: any, h) => {
-                        acc[h.name] = h.value;
-                        return acc;
-                      },
-                      { Host: hostname },
-                    );
-
-                    headers['Accept-Encoding'] = 'identity';
-                    headers['Connection'] = 'close';
-
-                    console.log('res', res);
-                    // Extract metadata to display in Web application
-                    const metadataResp = [] as string[];
-                    
-                    // Add date of request if exists
-                    const requestDate = res.response.headers.get('date') || res.response.headers.get('Date');
-                    if (requestDate) {
-                      metadataResp.push(requestDate);
-                    }
-
-                    bm.metaDataSelector.forEach((metaDataSelector) => {
-                      const regex = new RegExp(metaDataSelector, 'g');
-
-                      console.log(res.text);
-                      const matches = res.text.match(regex);
-                      console.log('metaDataSelector', metaDataSelector);
-
-                      if (matches) {
-                        const revealed = matches[0];
-
-                        const selectionStart = res.text.indexOf(revealed);
-                        const selectionEnd = selectionStart + revealed.length;
-
-                        if (selectionStart !== -1) {
-                          metadataResp.push(res.text.substring(selectionStart, selectionEnd));
-                        }
-                        console.log('metadataResp', metadataResp);
-                      }
-                    });
-
-                    dispatch(
-                      // @ts-ignore
-                      notarizeRequest({
-                        url: req.url,
-                        method: req.method,
-                        headers: headers,
-                        body: req.requestBody,
-                        maxTranscriptSize: 16384,
-                        notaryUrl,
-                        websocketProxyUrl,
-                        secretHeaders,
-                        secretResps: filteredSecretResps,
-                        metadata: metadataResp,
-                        originalTabId: originalTabId
-                      }),
-                    );
-
-                    navigate(`/history`);
-                  }}
-                >
-                  Notarize
-                </button>
-              )} */}
             </BookmarkCard>
           );
         })}
