@@ -1,28 +1,31 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Trash2, X, Check } from 'react-feather';
 
 import { colors } from '@theme/colors';
 import Spinner from '@newcomponents/common/Spinner';
 
 
-interface RequestRowProps {
+interface NotarizationRowProps {
   subjectText: string;
   dateText: string;
   isLastRow: boolean;
   onRowClick: () => void;
   rowIndex: number;
   isProving?: boolean;
+  isFailed?: boolean;
 }
 
-export const RequestRow: React.FC<RequestRowProps> = ({
+export const NotarizationRow: React.FC<NotarizationRowProps> = ({
   subjectText,
   dateText,
   isLastRow,
   onRowClick,
   rowIndex,
   isProving = false,
-}: RequestRowProps) => {
-  RequestRow.displayName = 'RequestRow';
+  isFailed = false,
+}: NotarizationRowProps) => {
+  NotarizationRow.displayName = 'NotarizationRow';
 
   const subjectLabel = `${subjectText}`;
   const dateLabel = `${dateText}`;
@@ -35,8 +38,14 @@ export const RequestRow: React.FC<RequestRowProps> = ({
         <SpinnerContainer>
           <Spinner size={20}/>
         </SpinnerContainer>
+      ) : isFailed ? (
+        <FailedIconsContainer>
+          <StyledTrashIcon/>
+          <StyledXIcon/>
+        </FailedIconsContainer>
       ) : (
-        <DateLabel>{dateLabel}</DateLabel>
+        // <DateLabel>{dateLabel}</DateLabel>
+        <StyledCheck />
       )}
     </Container>
   );
@@ -69,4 +78,28 @@ const SpinnerContainer = styled.div`
 
 const DateLabel = styled.label`
   text-align: right;
+`;
+
+const FailedIconsContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+`;
+
+const StyledCheck = styled(Check)`
+  colors: ${colors.successGreen};
+  height: 16px;
+  width: 16px;
+`;
+
+const StyledTrashIcon = styled(Trash2)`
+  height: 16px;
+  width: 16px;
+`;
+
+const StyledXIcon = styled(X)`
+  color: ${colors.warningRed};
+  height: 16px;
+  width: 16px;
 `;

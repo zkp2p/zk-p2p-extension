@@ -31,6 +31,10 @@ export const colors = {
   buttonRed: '#DF2E2D',
   buttonRedDisabled: '#EF9696',
 
+  disabledGray: '#6C757D',
+  warningRed: '#DF2E2D',
+  successGreen: '#4BB543',
+
   defaultBorderColor: '#98A1C03D',
   readOnlyBorderColor: '#98A1C03D',
 

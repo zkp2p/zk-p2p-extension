@@ -4,28 +4,29 @@ import { Slash } from 'react-feather';
 
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
-import { RequestRow } from '@newcomponents/Notarizations/Row';
+import { NotarizationRow } from '@newcomponents/Notarizations/Row';
 import { WiseAction, WiseActionType } from '@utils/types';
 import { BackgroundActiontype, RequestHistory } from '../../entries/Background/rpc';
 
 
 const ROWS_PER_PAGE = 2;
 
-type RequestRowData = {
+type NotarizationRowData = {
   metadata: string;
   subject: string;
   date: string;
   isProving: boolean;
+  isFailed: boolean;
 };
 
 type NotarizationTableProps = {
   action: WiseActionType;
-  requests: RequestHistory[];
+  notarizations: RequestHistory[];
 };
 
 export const NotarizationTable: React.FC<NotarizationTableProps> = ({
   action,
-  requests,
+  notarizations,
 }: NotarizationTableProps) => {
 
   /*
@@ -38,7 +39,7 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
    * State
    */
 
-  const [loadedRequests, setLoadedRequests] = useState<RequestRowData[]>([]);
+  const [loadedNotarizations, setLoadedNotarizations] = useState<NotarizationRowData[]>([]);
 
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -80,9 +81,9 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
     }
   };
 
-  const totalPages = Math.ceil(loadedRequests.length / ROWS_PER_PAGE);
+  const totalPages = Math.ceil(loadedNotarizations.length / ROWS_PER_PAGE);
 
-  const paginatedData = loadedRequests.slice(currentPage * ROWS_PER_PAGE, (currentPage + 1) * ROWS_PER_PAGE);
+  const paginatedData = loadedNotarizations.slice(currentPage * ROWS_PER_PAGE, (currentPage + 1) * ROWS_PER_PAGE);
 
   const emptyNotarizationsCopy = (): string => {
     switch (action) {
@@ -99,43 +100,44 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
    */
 
   useEffect(() => {
-    const newRequests = requests.map((request) => {
-      const requestUrlString = request.url;
-      console.log('Request url: ', requestUrlString);
+    const loadingNotarizations = notarizations.map((notarization) => {
+      const notarizationUrlString = notarization.url;
+      console.log('Notarization request url: ', notarizationUrlString);
 
       let subject, metadata, timestamp = "";
 
-      if (requestUrlString === 'https://wise.com/gateway/v1/payments') {
-        const [requestTimestamp, wiseTag] = request.metadata;
+      if (notarizationUrlString === 'https://wise.com/gateway/v1/payments') {
+        const [notarizationTimestamp, wiseTag] = notarization.metadata;
         const wiseTagStripped = wiseTag.split('@')[1];
 
         subject = `${wiseTag}`;
         metadata = wiseTagStripped;
-        timestamp = requestTimestamp;
-      } else if (/^https:\/\/wise.com\/gateway\/v3\/profiles\/.*\/transfers\/.*$/.test(requestUrlString)) {
-        const [requestTimestamp, amount, currency] = request.metadata;
+        timestamp = notarizationTimestamp;
+      } else if (/^https:\/\/wise.com\/gateway\/v3\/profiles\/.*\/transfers\/.*$/.test(notarizationUrlString)) {
+        const [notarizationTimestamp, amount, currency] = notarization.metadata;
         
         subject = `Sent €${amount} ${currency}`;
         metadata = amount;
-        timestamp = requestTimestamp;
+        timestamp = notarizationTimestamp;
       } else {
-        const [requestTimestamp] = request.metadata;
+        const [notarizationTimestamp] = notarization.metadata;
         
         subject = `Unrecognized (or outdated)`;
         metadata = '';
-        timestamp = requestTimestamp;
+        timestamp = notarizationTimestamp;
       }
 
       return {
         metadata: metadata,
         subject: subject,
         date: parseTimestamp(timestamp),
-        isProving: request.status === 'pending',
-      } as RequestRowData;
+        isProving: notarization.status === 'pending',
+        isFailed: notarization.status === 'error',
+      } as NotarizationRowData;
     });
 
-    setLoadedRequests(newRequests);
-  }, [requests]);
+    setLoadedNotarizations(loadingNotarizations);
+  }, [notarizations]);
 
   /*
    * Component
@@ -143,7 +145,7 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
 
   return (
     <Container>
-      {requests.length === 0 ? (
+      {loadedNotarizations.length === 0 ? (
         <EmptyNotarizationsContainer>
           <StyledSlash />
 
@@ -154,20 +156,21 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
       ) : (
         <Table>
           {paginatedData.map((notarization, index) => (
-            <RequestRow
+            <NotarizationRow
               key={index}
               subjectText={notarization.subject}
               dateText={notarization.date}
-              isLastRow={index === loadedRequests.length - 1}
+              isLastRow={index === loadedNotarizations.length - 1}
               onRowClick={() => handleRowClick(index)}
               rowIndex={index + 1 + currentPage * ROWS_PER_PAGE}
               isProving={notarization.isProving}
+              isFailed={notarization.isFailed}
             />
           ))}
         </Table>
       )}
 
-      {loadedRequests.length > ROWS_PER_PAGE && (
+      {loadedNotarizations.length > ROWS_PER_PAGE && (
         <PaginationContainer>
           <PaginationButton
             disabled={currentPage === 0}
