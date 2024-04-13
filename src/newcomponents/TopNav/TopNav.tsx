@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { Settings } from 'react-feather';
 
 import logo from '../../assets/img/logo192.png';
+import { Settings } from '@newcomponents/Settings';
 
 
 export const TopNav: React.FC<{ withoutLinks?: boolean }> = ({ withoutLinks }) => {
@@ -31,7 +31,7 @@ export const TopNav: React.FC<{ withoutLinks?: boolean }> = ({ withoutLinks }) =
         {selectedItem}
       </NavigationTitle>
 
-      <StyledSettings />
+      <Settings />
     </NavBar>
   );
 };
@@ -67,10 +67,4 @@ const NavigationTitle = styled.div`
   font-size: 20px;
   font-weight: 600;
   color: #ffffff;
-`;
-
-const StyledSettings = styled(Settings)`
-  color: #fff;
-  width: 20px;
-  height: 20px;
 `;
