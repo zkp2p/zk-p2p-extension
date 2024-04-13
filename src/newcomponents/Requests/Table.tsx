@@ -220,7 +220,12 @@ const PaginationButton = styled.button`
   line-height: 1;
   font-size: 20px;
 
+  &:hover {
+    background-color: rgba(19, 26, 42, 0.75);
+  }
+
   &:disabled {
+    background-color: rgba(19, 26, 42, 0.5);
     cursor: not-allowed;
   }
 `;
