@@ -5,6 +5,7 @@ import { UserX } from 'react-feather';
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
 import { RequestRow } from '@newcomponents/Requests/Row';
+import { WiseAction, WiseActionType } from '@utils/types';
 import { BackgroundActiontype, RequestLog } from '../../entries/Background/rpc';
 
 
@@ -16,12 +17,14 @@ type RequestRowData = {
 };
 
 type RequestTableProps = {
+  action: WiseActionType;
   requests: RequestLog[];
   setSelectedIndex: (index: number | null) => void;
   selectedIndex: number | null;
 };
 
 export const RequestTable: React.FC<RequestTableProps> = ({
+  action,
   requests,
   setSelectedIndex,
   selectedIndex,
@@ -90,6 +93,24 @@ export const RequestTable: React.FC<RequestTableProps> = ({
   }, [requests]);
 
   /*
+   * Helpers
+   */
+
+  const emptyRequestCopy = (): string => {
+    switch (action) {
+      case WiseAction.REGISTRATION:
+        return 'No registration requests found. Navigate to the Payments page on Wise to load requests.';
+
+      case WiseAction.DEPOSITOR_REGISTRATION:
+        return 'No past payment requests found. Navigate to any past outgoing transfer to load requests.';
+
+      case WiseAction.TRANSFER:
+      default:
+        return 'No payment request found. Navigate to the transaction page for this order to load request.';
+    }
+  };
+
+  /*
    * Component
    */
 
@@ -100,7 +121,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
           <StyledUserX />
 
           <ThemedText.TableDescriptionSmall textAlign="center" lineHeight={1.3}>
-            No registration requests found. Navigate to the appropriate page to load requests.
+            { emptyRequestCopy() }
           </ThemedText.TableDescriptionSmall>
         </EmptyRequestsContainer>
       ) : (

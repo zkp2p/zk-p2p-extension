@@ -5,6 +5,7 @@ import { Slash } from 'react-feather';
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
 import { RequestRow } from '@newcomponents/Notarizations/Row';
+import { WiseAction, WiseActionType } from '@utils/types';
 import { BackgroundActiontype, RequestHistory } from '../../entries/Background/rpc';
 
 
@@ -17,12 +18,15 @@ type RequestRowData = {
   isProving: boolean;
 };
 
-type Props = {
+type NotarizationTableProps = {
+  action: WiseActionType;
   requests: RequestHistory[];
 };
 
-export default function RequestTable(props: Props): ReactElement {
-  const { requests } = props;
+export const NotarizationTable: React.FC<NotarizationTableProps> = ({
+  action,
+  requests,
+}: NotarizationTableProps) => {
 
   /*
    * Context
@@ -80,6 +84,16 @@ export default function RequestTable(props: Props): ReactElement {
 
   const paginatedData = loadedRequests.slice(currentPage * ROWS_PER_PAGE, (currentPage + 1) * ROWS_PER_PAGE);
 
+  const emptyNotarizationsCopy = (): string => {
+    switch (action) {
+      case WiseAction.REGISTRATION:
+      case WiseAction.DEPOSITOR_REGISTRATION:
+      case WiseAction.TRANSFER:
+      default:
+        return 'No stored proofs found. Follow the steps to generate a valid proof.';
+    }
+  };
+
   /*
    * Hooks
    */
@@ -134,7 +148,7 @@ export default function RequestTable(props: Props): ReactElement {
           <StyledSlash />
 
           <ThemedText.TableDescriptionSmall textAlign="center" lineHeight={1.3}>
-            No stored proofs found. Follow the steps to generate a valid proof.
+            { emptyNotarizationsCopy() }
           </ThemedText.TableDescriptionSmall>
         </EmptyNotarizationsContainer>
       ) : (
@@ -244,3 +258,5 @@ const PageInfo = styled.span`
   word-spacing: 2px;
   font-size: 14px;
 `;
+
+export default NotarizationTable;
