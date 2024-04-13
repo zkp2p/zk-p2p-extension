@@ -7,7 +7,7 @@ import browser from 'webextension-polyfill';
 
 import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests } from '../../reducers/requests';
 import { useHistoryOrder } from '../../reducers/history';
-import { RequestHistory } from '../../entries/Background/rpc';
+import { RequestHistory, RequestLog } from '../../entries/Background/rpc';
 
 import NotarizationTable from '@newcomponents/Notarizations/Table';
 import RequestTable from '@newcomponents/Requests/Table';
@@ -63,6 +63,7 @@ const Wise: React.FC<WiseProps> = ({
   const [originalTabId, setOriginalTabId] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
+  const [loadedRequests, setLoadedRequests] = useState<RequestLog[]>([]);
   const [loadedNotarizations, setLoadedNotarizations] = useState<RequestHistory[]>([]);
 
   /*
@@ -103,6 +104,34 @@ const Wise: React.FC<WiseProps> = ({
       setLoadedNotarizations([]);
     }
   }, [notarizations, action]);
+
+  useEffect(() => {
+    console.log('Updating loaded requests: ', requests);
+  
+    if (requests) {
+      const filteredRequests = requests.filter(request => {
+        const requestUrl = request.url;
+
+        switch (action) {
+          case WiseAction.REGISTRATION:
+            const registrationRegex = /^https:\/\/wise\.com\/gateway\/v1\/payments$/;
+            return registrationRegex.test(requestUrl);
+
+          case WiseAction.DEPOSITOR_REGISTRATION:
+          case WiseAction.TRANSFER:
+            const transferRegex = new RegExp('https://wise.com/gateway/v3/profiles/.*/transfers/.*');
+            return transferRegex.test(requestUrl);
+
+          default:
+            return false;
+        }
+      });
+  
+      setLoadedRequests(filteredRequests);
+    } else {
+      setLoadedRequests([]);
+    }
+  }, [requests, action]);
 
   /*
    * Handlers
@@ -259,7 +288,7 @@ const Wise: React.FC<WiseProps> = ({
       case WiseAction.DEPOSITOR_REGISTRATION:
         settingsObject.request_title = 'Prove Past Payment';
         settingsObject.action_url = 'https://wise.com/all-transactions?direction=OUTGOING';
-        settingsObject.navigate_instruction = 'Go to the account page on Wise to listen for the correct request'
+        settingsObject.navigate_instruction = 'Go to the transaction page on Wise to listen for the correct request'
         settingsObject.request_instruction = 'Notarize a request, this will take approximately 20 seconds'
         settingsObject.review_instruction = 'Succesful notarizations below can now be used in zkp2p.xyz'
 
@@ -273,7 +302,7 @@ const Wise: React.FC<WiseProps> = ({
       case WiseAction.TRANSFER:
         settingsObject.request_title = 'Prove Payment Sent';
         settingsObject.action_url = 'https://wise.com/all-transactions?direction=OUTGOING';
-        settingsObject.navigate_instruction = 'Go to the account page on Wise to listen for the correct request'
+        settingsObject.navigate_instruction = 'Go to the transaction page on Wise to listen for the correct request'
         settingsObject.request_instruction = 'Notarize a request, this will take approximately 20 seconds'
         settingsObject.review_instruction = 'Succesful notarizations below can now be used in zkp2p.xyz'
 
@@ -324,7 +353,7 @@ const Wise: React.FC<WiseProps> = ({
           <RequestTableAndButtonContainer>
             <RequestTable
               action={action}
-              requests={requests}
+              requests={loadedRequests}
               setSelectedIndex={setSelectedIndex}
               selectedIndex={selectedIndex}
             />
