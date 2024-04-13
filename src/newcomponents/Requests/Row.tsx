@@ -43,9 +43,10 @@ const Container = styled.div<{ selected: boolean; isLastRow: boolean }>`
   display: grid;
   grid-template-columns: 0.1fr 1fr 0.4fr;
   grid-gap: 1px;
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1rem 0.75rem 1rem;
   font-size: 14px;
   color: #ffffff;
+  
   border-radius: ${({ isLastRow }) => (isLastRow ? '0 0 8px 8px' : '0')};
   border-bottom: ${({ isLastRow }) => !isLastRow && `1px solid ${colors.defaultBorderColor}`};
 
