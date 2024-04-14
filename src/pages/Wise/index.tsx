@@ -98,8 +98,10 @@ const Wise: React.FC<WiseProps> = ({
             return false;
         }
       });
+
+      const reverseOrderNotarizations = filteredNotarizations.reverse();
   
-      setLoadedNotarizations(filteredNotarizations);
+      setLoadedNotarizations(reverseOrderNotarizations);
     } else {
       setLoadedNotarizations([]);
     }
