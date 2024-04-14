@@ -105,7 +105,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
   const emptyRequestCopy = (): string => {
     switch (action) {
       case WiseAction.REGISTRATION:
-        return 'No registration requests found. Navigate to the Payments page on Wise to load requests.';
+        return 'No Wise tags found. Navigate to the Payments page on Wise to load your tag.';
 
       case WiseAction.DEPOSITOR_REGISTRATION:
         return 'No past payment requests found. Navigate to any past outgoing transfer to load requests.';

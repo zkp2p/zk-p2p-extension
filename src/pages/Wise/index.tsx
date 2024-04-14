@@ -273,9 +273,9 @@ const Wise: React.FC<WiseProps> = ({
       case WiseAction.REGISTRATION:
         settingsObject.request_title = 'Prove Wise Tag';
         settingsObject.action_url = 'https://wise.com/account/payments';
-        settingsObject.navigate_instruction = 'Go to the account page on Wise to listen for the correct request';
-        settingsObject.request_instruction = 'Notarize a request, this will take approximately 20 seconds';
-        settingsObject.review_instruction = 'Succesful notarizations below can now be used in zkp2p.xyz';
+        settingsObject.navigate_instruction = 'Go to the account page on Wise to load your account\'s Wise tag';
+        settingsObject.request_instruction = 'Notarize the Wise Tag, this will take approximately 20 seconds';
+        settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to register';
 
         const registrationBookmark = bookmarks[0];
         settingsObject.bookmark_data = {
@@ -288,9 +288,9 @@ const Wise: React.FC<WiseProps> = ({
       case WiseAction.DEPOSITOR_REGISTRATION:
         settingsObject.request_title = 'Prove Past Payment';
         settingsObject.action_url = 'https://wise.com/all-transactions?direction=OUTGOING';
-        settingsObject.navigate_instruction = 'Go to the transaction page on Wise to listen for the correct request'
-        settingsObject.request_instruction = 'Notarize a request, this will take approximately 20 seconds'
-        settingsObject.review_instruction = 'Succesful notarizations below can now be used in zkp2p.xyz'
+        settingsObject.navigate_instruction = 'Go to the transaction page on Wise to load a past transaction'
+        settingsObject.request_instruction = 'Notarize the transaction, this will take approximately 20 seconds'
+        settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to register'
 
         const depositorRegistrationBookmark = bookmarks[1];
         settingsObject.bookmark_data = {
@@ -303,8 +303,8 @@ const Wise: React.FC<WiseProps> = ({
         settingsObject.request_title = 'Prove Payment Sent';
         settingsObject.action_url = 'https://wise.com/all-transactions?direction=OUTGOING';
         settingsObject.navigate_instruction = 'Go to the transaction page on Wise to listen for the correct request'
-        settingsObject.request_instruction = 'Notarize a request, this will take approximately 20 seconds'
-        settingsObject.review_instruction = 'Succesful notarizations below can now be used in zkp2p.xyz'
+        settingsObject.request_instruction = 'Notarize the transaction, this will take approximately 20 seconds'
+        settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to on-ramp'
 
         const transferBookmark = bookmarks[2];
         settingsObject.bookmark_data = {
