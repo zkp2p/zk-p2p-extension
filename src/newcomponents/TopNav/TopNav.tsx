@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import logo from '../../assets/img/logo192.png';
 import { Settings } from '@newcomponents/Settings';
+import { colors } from '@theme/colors';
 
 
 export const TopNav: React.FC<{ withoutLinks?: boolean }> = ({ withoutLinks }) => {
@@ -44,14 +45,9 @@ const NavBar = styled.nav`
 `;
 
 const Logo = styled(Link)<{ size?: number }>`
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 1.2rem;
   img {
-    width: ${({ size }) => size || 32}px;
-    height: ${({ size }) => size || 32}px;
+    width: ${({ size }) => size || 28}px;
+    height: ${({ size }) => size || 28}px;
     object-fit: cover;
   }
 `;
@@ -64,7 +60,7 @@ const LogoAndNavItems = styled.div`
 
 const NavigationTitle = styled.div`
   display: flex;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
-  color: #ffffff;
+  color: ${colors.white};
 `;

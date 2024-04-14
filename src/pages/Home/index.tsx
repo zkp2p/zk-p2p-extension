@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { useNavigate } from 'react-router';
-import { User, PlusCircle, DollarSign } from 'react-feather';
+import { UserPlus, Pocket, DollarSign } from 'react-feather';
 import styled from 'styled-components';
 
 import { useActiveTabUrl, useRequests } from '../../reducers/requests';
@@ -44,7 +44,7 @@ export default function Home(): ReactElement {
         return <StyledUser />;
 
       case 1:
-        return <StyledPlusCircle />;
+        return <StyledPocket />;
 
       case 2:
       default:
@@ -59,7 +59,10 @@ export default function Home(): ReactElement {
   return (
     <PageWrapper>
       <IntroductionContainer>
-        <IntroductionTitle>Welcome to ZKP2P</IntroductionTitle>
+        <IntroductionTitle>
+          Welcome to ZKP2P
+        </IntroductionTitle>
+        
         <IntroductionDescription>
           This extension is meant to be used with the client: zkp2p.xyz
         </IntroductionDescription>
@@ -142,12 +145,14 @@ const IntroductionContainer = styled.div`
 `;
 
 const IntroductionTitle = styled.div`
+  text-align: left;
   font-size: 18px;
   font-weight: 600;
 `;
 
 const IntroductionDescription = styled.div`
-  font-size: 14px;
+  text-align: left;
+  font-size: 15px;
 `;
 
 const WiseContainer = styled.div`
@@ -190,13 +195,13 @@ const ActionCard = styled.div`
   }
 `;
 
-const StyledUser = styled(User)`
+const StyledUser = styled(UserPlus)`
   color: ${colors.white};
   width: 20px;
   height: 20px;
 `;
 
-const StyledPlusCircle = styled(PlusCircle)`
+const StyledPocket = styled(Pocket)`
   color: ${colors.white};
   width: 20px;
   height: 20px;

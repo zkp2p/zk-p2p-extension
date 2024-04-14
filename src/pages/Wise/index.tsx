@@ -290,7 +290,7 @@ const Wise: React.FC<WiseProps> = ({
       case WiseAction.DEPOSITOR_REGISTRATION:
         settingsObject.request_title = 'Prove Past Payment';
         settingsObject.action_url = 'https://wise.com/all-transactions?direction=OUTGOING';
-        settingsObject.navigate_instruction = 'Go to the transaction page on Wise to load a past transaction'
+        settingsObject.navigate_instruction = 'Go to the transactions page on Wise to load a past transaction'
         settingsObject.request_instruction = 'Notarize the transaction, this will take approximately 20 seconds'
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to register'
 
