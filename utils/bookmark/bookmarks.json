@@ -4,7 +4,7 @@
     "targetUrl": "https://wise.com/account/payments",
     "method": "GET",
     "type": "xmlhttprequest",
-    "title": "Register",
+    "title": "Registration",
     "description": "Generate proof of a Wise account required to complete registration",
     "secretResponseSelector": [
       "(?<=\"title\":\"Account details\",\"modules\":\\[)[^\\]]+"
@@ -21,7 +21,7 @@
     "targetUrl": "https://wise.com/all-transactions?direction=OUTGOING",
     "method": "GET",
     "type": "xmlhttprequest",
-    "title": "Deposit",
+    "title": "New Depositor",
     "description": "Generate proof of a past Wise transfer required to enable deposits",
     "secretResponseSelector": [
       "(?<=\"userId\":)\\d+"

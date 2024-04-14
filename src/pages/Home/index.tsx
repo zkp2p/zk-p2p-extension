@@ -82,14 +82,14 @@ export default function Home(): ReactElement {
           Options
         </NavButton> */}
 
-      <BookmarkContainer>
-        <BookmarkTitle>
+      <WiseContainer>
+        <WiseTitle>
           <ThemedText.ModalHeadline textAlign="left">
             Wise
           </ThemedText.ModalHeadline>
-        </BookmarkTitle>
+        </WiseTitle>
 
-        <Bookmarks>
+        <ActionsGrid>
           {bookmarks.map((bm, i) => {
             return (
               <ActionCard
@@ -106,15 +106,15 @@ export default function Home(): ReactElement {
               </ActionCard>
             );
           })}
-        </Bookmarks>
-      </BookmarkContainer>
+        </ActionsGrid>
+      </WiseContainer>
 
       <ComingSoonContainer>
-        <BookmarkTitle>
+        <WiseTitle>
           <ThemedText.ModalHeadline textAlign="left">
             Coming Soon
           </ThemedText.ModalHeadline>
-        </BookmarkTitle>
+        </WiseTitle>
 
         <ComingSoonDescription>
           <ThemedText.SubHeaderSmall textAlign="left">
@@ -150,23 +150,23 @@ const IntroductionDescription = styled.div`
   font-size: 14px;
 `;
 
-const BookmarkContainer = styled.div`
+const WiseContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  margin: 0rem 1rem;
+  margin: 0rem 0.5rem;
   gap: 0.75rem;
 `;
 
 // border-radius: 12px;
 // border: 1px solid ${colors.defaultBorderColor};
 
-const BookmarkTitle = styled.div`
+const WiseTitle = styled.div`
   padding-left: 0.75rem;
   color: ${colors.white};
 `;
 
-const Bookmarks = styled.div`
+const ActionsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 0.5rem;
@@ -183,8 +183,6 @@ const ActionCard = styled.div`
   padding: 1rem 1.25rem;
   gap: 0.75rem;
   background-color: ${colors.selectorColor};
-  color: ${colors.white};
-  font-size: 14px;
 
   &:hover {
     background-color: ${colors.selectorHover};
@@ -213,13 +211,14 @@ const StyledDollarSign = styled(DollarSign)`
 const ActionTitle = styled.div`
   font-size: 15px;
   font-weight: 600;
+  color: ${colors.white};
 `;
 
 const ComingSoonContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  margin: 0rem 1rem;
+  margin: 0rem 0.5rem;
   gap: 0.75rem;
 `;
 
