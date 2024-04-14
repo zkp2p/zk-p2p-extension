@@ -134,8 +134,8 @@ const Wrapper = styled.div`
 
 const StyledSettings = styled(SettingsIcon)`
   color: #FFF;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 `;
 
 const NavButton = styled.div`

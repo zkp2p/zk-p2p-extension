@@ -108,11 +108,11 @@ export const RequestTable: React.FC<RequestTableProps> = ({
         return 'No Wise tags found. Navigate to the Payments page on Wise to load your tag.';
 
       case WiseAction.DEPOSITOR_REGISTRATION:
-        return 'No past payment requests found. Navigate to any past outgoing transfer to load requests.';
+        return 'No past payments found. Navigate to any past outgoing transfer to load requests.';
 
       case WiseAction.TRANSFER:
       default:
-        return 'No payment request found. Navigate to the transaction page for this order to load request.';
+        return 'No payment found. Navigate to the transaction page for this order to load request.';
     }
   };
 
