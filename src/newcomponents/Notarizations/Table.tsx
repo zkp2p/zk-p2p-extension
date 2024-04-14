@@ -124,7 +124,7 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
       } else if (/^https:\/\/wise.com\/gateway\/v3\/profiles\/.*\/transfers\/.*$/.test(notarizationUrlString)) {
         const [notarizationTimestamp, amount, currency] = notarization.metadata;
         
-        subject = `Sent €${amount} ${currency}`;
+        subject = `Sent ${amount} ${currency}`;
         metadata = amount;
         timestamp = notarizationTimestamp;
       } else {
