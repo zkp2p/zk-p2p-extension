@@ -13,11 +13,25 @@ export const TopNav: React.FC<{ withoutLinks?: boolean }> = ({ withoutLinks }) =
   const [selectedItem, setSelectedItem] = useState<string>('Home');
 
   useEffect(() => {
-    const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-    
-    const routeName = location.pathname.split('/')[1];
+    let selectedItem = '';
+    switch (location.pathname) {
+      case '/registration':
+        selectedItem = 'Registration';
+        break;
 
-    setSelectedItem(routeName ? capitalize(routeName) : 'Home');
+      case '/deposit':
+        selectedItem = 'New Depositor';
+        break;
+
+      case '/onramp':
+        selectedItem = 'On-Ramp';
+        break;
+
+      default:
+        selectedItem = 'Home';
+    };
+
+    setSelectedItem(selectedItem);
   }, [location]);
 
   return (
