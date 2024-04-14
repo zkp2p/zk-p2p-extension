@@ -275,7 +275,7 @@ const Wise: React.FC<WiseProps> = ({
       case WiseAction.REGISTRATION:
         settingsObject.request_title = 'Prove Wise Tag';
         settingsObject.action_url = 'https://wise.com/account/payments';
-        settingsObject.navigate_instruction = 'Go to the account page on Wise to load your account\'s Wise tag';
+        settingsObject.navigate_instruction = 'Go to the Payments page on Wise to load your account\'s Wise tag';
         settingsObject.request_instruction = 'Notarize the Wise Tag, this will take approximately 20 seconds';
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to register';
 
@@ -290,7 +290,7 @@ const Wise: React.FC<WiseProps> = ({
       case WiseAction.DEPOSITOR_REGISTRATION:
         settingsObject.request_title = 'Prove Past Payment';
         settingsObject.action_url = 'https://wise.com/all-transactions?direction=OUTGOING';
-        settingsObject.navigate_instruction = 'Go to the transactions page on Wise to load a past transaction'
+        settingsObject.navigate_instruction = 'Go to the Transactions page on Wise and open a past outgoing transaction'
         settingsObject.request_instruction = 'Notarize the transaction, this will take approximately 20 seconds'
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to register'
 
@@ -304,7 +304,7 @@ const Wise: React.FC<WiseProps> = ({
       case WiseAction.TRANSFER:
         settingsObject.request_title = 'Prove Payment Sent';
         settingsObject.action_url = 'https://wise.com/all-transactions?direction=OUTGOING';
-        settingsObject.navigate_instruction = 'Go to the transaction page on Wise to listen for the correct request'
+        settingsObject.navigate_instruction = 'Go to the Transaction details page on Wise to view the send payment'
         settingsObject.request_instruction = 'Notarize the transaction, this will take approximately 20 seconds'
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to on-ramp'
 
