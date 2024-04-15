@@ -108,7 +108,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
       let subject = '';
       switch (action) {
         case WiseAction.REGISTRATION:
-          subject = `My Wisetag: ${jsonResponseBody.sections[2].modules[0].description}`;
+          subject = `Wisetag: ${jsonResponseBody.sections[2].modules[0].description}`;
           break;
 
         case WiseAction.DEPOSITOR_REGISTRATION:
