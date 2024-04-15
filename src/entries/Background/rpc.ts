@@ -11,6 +11,7 @@ import {
   setNotaryRequestVerification,
   removeNotaryRequest,
 } from './db';
+import { WiseRequestType } from '@utils/types/wiseActions';
 
 export enum BackgroundActiontype {
   get_requests = 'get_requests',
@@ -47,6 +48,7 @@ export type RequestLog = {
   };
   responseHeaders?: browser.WebRequest.HttpHeaders;
   timestamp: number;
+  requestType: WiseRequestType;
 };
 
 export type RequestHistory = {
@@ -70,6 +72,7 @@ export type RequestHistory = {
   secretResps?: string[];
   metadata?: string[];
   originalTabId?: number | null;
+  requestType: WiseRequestType;
 };
 
 export const initRPC = () => {
@@ -232,7 +235,8 @@ async function handleProveRequestStart(
     secretHeaders,
     secretResps,
     metadata,
-    originalTabId
+    originalTabId,
+    requestType,
   } = request.data;
 
   const { id } = await addNotaryRequest(Date.now(), {
@@ -246,6 +250,7 @@ async function handleProveRequestStart(
     secretHeaders,
     secretResps,
     metadata,
+    requestType,
   });
 
   await setNotaryRequestStatus(id, 'pending');
@@ -272,7 +277,8 @@ async function handleProveRequestStart(
       secretHeaders,
       secretResps,
       metadata,
-      originalTabId
+      originalTabId,
+      requestType,
     },
   });
 
