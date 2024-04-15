@@ -13,7 +13,7 @@ import NotarizationTable from '@newcomponents/Notarizations/Table';
 import RequestTable from '@newcomponents/Requests/Table';
 import { InstructionTitle } from '@newcomponents/Instructions/Title';
 import { Button } from '@newcomponents/common/Button';
-import { WiseAction, WiseActionType, WiseStep } from '@utils/types';
+import { WiseAction, WiseActionType, WiseStep, WiseRequest } from '@utils/types';
 import { replayRequest, urlify } from '@utils/misc';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '@utils/storage';
 
@@ -81,18 +81,15 @@ const Wise: React.FC<WiseProps> = ({
 
   useEffect(() => {
     if (notarizations) {
+      console.log('notarizations', notarizations);
       const filteredNotarizations = notarizations.filter(notarization => {
-        const notarizationUrl = notarization.url;
-
         switch (action) {
           case WiseAction.REGISTRATION:
-            const registrationRegex = /^https:\/\/wise\.com\/gateway\/v1\/payments$/;
-            return registrationRegex.test(notarizationUrl);
+            return notarization.requestType === WiseRequest.WISETAG_REGISTRATION;
 
           case WiseAction.DEPOSITOR_REGISTRATION:
           case WiseAction.TRANSFER:
-            const transferRegex = new RegExp('https://wise.com/gateway/v3/profiles/.*/transfers/.*');
-            return transferRegex.test(notarizationUrl);
+            return notarization.requestType === WiseRequest.TRANSFERS;
 
           default:
             return false;
@@ -112,17 +109,13 @@ const Wise: React.FC<WiseProps> = ({
   
     if (requests) {
       const filteredRequests = requests.filter(request => {
-        const requestUrl = request.url;
-
         switch (action) {
           case WiseAction.REGISTRATION:
-            const registrationRegex = /^https:\/\/wise\.com\/gateway\/v1\/payments$/;
-            return registrationRegex.test(requestUrl);
+            return request.requestType === WiseRequest.WISETAG_REGISTRATION;
 
           case WiseAction.DEPOSITOR_REGISTRATION:
           case WiseAction.TRANSFER:
-            const transferRegex = new RegExp('https://wise.com/gateway/v3/profiles/.*/transfers/.*');
-            return transferRegex.test(requestUrl);
+            return request.requestType === WiseRequest.TRANSFERS;
 
           default:
             return false;
@@ -252,7 +245,8 @@ const Wise: React.FC<WiseProps> = ({
       secretHeaders,
       secretResps: filteredSecretResps,
       metadata: metadataResp,
-      originalTabId: originalTabId
+      originalTabId: originalTabId,
+      requestType: requestLog.requestType,
     };
 
 

@@ -1,3 +1,5 @@
+import { WiseRequest } from '@utils/types';
+
 window.onerror = (error) => {
   // console.log('error');
   // console.log(error);
@@ -49,8 +51,8 @@ chrome.runtime.onMessage.addListener((message) => {
     let filteredResponse = [];
     if (message.data.notaryRequests && message.data.notaryRequests.length > 0) {
       filteredResponse = message.data.notaryRequests.filter(
-        (item: { status: string; url: string }) =>
-          item.status === 'success' && item.url === 'https://wise.com/gateway/v1/payments',
+        (item: { status: string; requestType: string }) =>
+          item.status === 'success' && item.requestType === WiseRequest.WISETAG_REGISTRATION,
       );
     }
 
@@ -73,11 +75,9 @@ chrome.runtime.onMessage.addListener((message) => {
 
     let filteredResponse = [];
     if (message.data.notaryRequests && message.data.notaryRequests.length > 0) {
-      const transferRequestPattern =
-        /^https:\/\/wise\.com\/gateway\/v3\/profiles\/\d+\/transfers\/\d+$/;
       filteredResponse = message.data.notaryRequests.filter(
-        (item: { status: string; url: string }) =>
-          item.status === 'success' && transferRequestPattern.test(item.url),
+        (item: { status: string; requestType: string }) =>
+          item.status === 'success' && item.requestType === WiseRequest.TRANSFERS,
       );
     }
 

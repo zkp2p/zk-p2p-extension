@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
 import { NotarizationRow } from '@newcomponents/Notarizations/Row';
-import { WiseAction, WiseActionType } from '@utils/types';
+import { WiseAction, WiseActionType, WiseRequest } from '@utils/types';
 import { BackgroundActiontype, RequestHistory } from '../../entries/Background/rpc';
 import { deleteRequestHistory } from '../../reducers/history';
 
@@ -114,25 +114,33 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
 
       let subject, metadata, timestamp = "";
 
-      if (notarizationUrlString === 'https://wise.com/gateway/v1/payments') {
-        const [notarizationTimestamp, wiseTag] = notarization.metadata;
-        const wiseTagStripped = wiseTag.split('@')[1];
+      console.log('notarization.requestType', notarization.requestType);
 
-        subject = `${wiseTag}`;
-        metadata = wiseTagStripped;
-        timestamp = notarizationTimestamp;
-      } else if (/^https:\/\/wise.com\/gateway\/v3\/profiles\/.*\/transfers\/.*$/.test(notarizationUrlString)) {
-        const [notarizationTimestamp, amount, currency] = notarization.metadata;
+      switch (notarization.requestType) {
+        case WiseRequest.WISETAG_REGISTRATION:
+          const [notarizationTimestamp, wiseTag] = notarization.metadata;
+          const wiseTagStripped = wiseTag.split('@')[1];
+  
+          subject = `${wiseTag}`;
+          metadata = wiseTagStripped;
+          timestamp = notarizationTimestamp;
+          break;
+
+        case WiseRequest.TRANSFERS:
+          const [notarizationTimestamp, amount, currency] = notarization.metadata;
         
-        subject = `Sent ${amount} ${currency}`;
-        metadata = amount;
-        timestamp = notarizationTimestamp;
-      } else {
-        const [notarizationTimestamp] = notarization.metadata;
+          subject = `Sent ${amount} ${currency}`;
+          metadata = amount;
+          timestamp = notarizationTimestamp;
+          break;
+
+        default:
+          const [notarizationTimestamp] = notarization.metadata;
         
-        subject = `Unrecognized (or outdated)`;
-        metadata = '';
-        timestamp = notarizationTimestamp;
+          subject = `Unrecognized (or outdated)`;
+          metadata = '';
+          timestamp = notarizationTimestamp;
+          break;
       }
 
       return {

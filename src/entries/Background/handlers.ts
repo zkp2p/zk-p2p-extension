@@ -4,6 +4,7 @@ import { getCacheByTabId } from './cache';
 import mutex from './mutex';
 import { BackgroundActiontype, RequestLog } from './rpc';
 import { addRequest } from '../../reducers/requests';
+import { WiseRequest, WiseRequestType } from '@utils/types';
 
 export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsType) => {
   return mutex.runExclusive(async () => {
@@ -12,6 +13,19 @@ export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsTy
     if (method !== 'OPTIONS') {
       const cache = getCacheByTabId(tabId);
       const existing = cache.get<RequestLog>(requestId);
+
+      // Set request type
+      const notarizationUrlString = details.url;
+      const wiseTagEndpointRegex = new RegExp('https://wise.com/gateway/v1/payments');
+      const transferEndpointRegex = new RegExp('https://wise.com/gateway/v3/profiles/\\d+/transfers/\\d+');
+
+      let requestType: WiseRequestType = "";
+      if (wiseTagEndpointRegex.test(notarizationUrlString)) {
+        requestType = WiseRequest.WISETAG_REGISTRATION;
+      } else if (transferEndpointRegex.test(notarizationUrlString)) {
+        requestType = WiseRequest.TRANSFERS;
+      }
+
       cache.set(requestId, {
         ...existing,
         method: details.method as 'GET' | 'POST',
@@ -21,6 +35,7 @@ export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsTy
         requestHeaders: details.requestHeaders || [],
         tabId: tabId,
         requestId: requestId,
+        requestType,
       });
     }
   });
@@ -64,6 +79,19 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
     const cache = getCacheByTabId(tabId);
 
     const existing = cache.get<RequestLog>(requestId);
+
+    // Set request type
+    const notarizationUrlString = details.url;
+    const wiseTagEndpointRegex = new RegExp('https://wise.com/gateway/v1/payments');
+    const transferEndpointRegex = new RegExp('https://wise.com/gateway/v3/profiles/\\d+/transfers/\\d+');
+
+    let requestType: WiseRequestType = "";
+    if (wiseTagEndpointRegex.test(notarizationUrlString)) {
+      requestType = WiseRequest.WISETAG_REGISTRATION;
+    } else if (transferEndpointRegex.test(notarizationUrlString)) {
+      requestType = WiseRequest.TRANSFERS;
+    }
+    
     const newLog: RequestLog = {
       requestHeaders: [],
       ...existing,
@@ -75,6 +103,7 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
       requestId: requestId,
       responseHeaders,
       timestamp: Date.now(),
+      requestType,
     };
 
     cache.set(requestId, newLog);
