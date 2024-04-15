@@ -56,6 +56,8 @@ export type RequestHistory = {
   headers: { [key: string]: string };
   body?: string;
   maxTranscriptSize: number;
+  maxSentData: number;
+  maxRecvData: number;
   notaryUrl: string;
   websocketProxyUrl: string;
   status: '' | 'pending' | 'success' | 'error';
@@ -227,6 +229,8 @@ async function handleProveRequestStart(
     headers,
     body,
     maxTranscriptSize,
+    maxSentData,
+    maxRecvData,
     notaryUrl,
     websocketProxyUrl,
     secretHeaders,
@@ -241,6 +245,8 @@ async function handleProveRequestStart(
     headers,
     body,
     maxTranscriptSize,
+    maxSentData,
+    maxRecvData,
     notaryUrl,
     websocketProxyUrl,
     secretHeaders,
