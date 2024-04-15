@@ -81,7 +81,6 @@ const Wise: React.FC<WiseProps> = ({
 
   useEffect(() => {
     if (notarizations) {
-      console.log('notarizations', notarizations);
       const filteredNotarizations = notarizations.filter(notarization => {
         switch (action) {
           case WiseAction.REGISTRATION:
