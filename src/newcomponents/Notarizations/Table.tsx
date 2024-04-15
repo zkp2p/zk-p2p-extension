@@ -109,12 +109,8 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
 
   useEffect(() => {
     const loadingNotarizations = notarizations.map((notarization) => {
-      const notarizationUrlString = notarization.url;
-      console.log('Notarization request url: ', notarizationUrlString);
 
       let subject, metadata, timestamp = "";
-
-      console.log('notarization.requestType', notarization.requestType);
 
       switch (notarization.requestType) {
         case WiseRequest.WISETAG_REGISTRATION:
