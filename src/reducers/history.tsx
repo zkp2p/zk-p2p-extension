@@ -67,6 +67,7 @@ export default function history(state = initialState, action: Action<any>): Stat
         order: newOrder,
       };
     }
+
     case ActionType['/history/deleteRequest']: {
       const reqId: string = action.payload;
       const newMap = { ...state.map };
@@ -83,15 +84,21 @@ export default function history(state = initialState, action: Action<any>): Stat
   }
 }
 
-export const useHistoryOrder = (): string[] => {
+export const useHistoryOrder = (order: 'ascending' | 'descending' = 'ascending'): string[] => {
   return useSelector((state: AppRootState) => {
-    return state.history.order;
+    const currentHistoryOrder = state.history.order;
+    if (order === 'descending') {
+      return currentHistoryOrder;
+    }
+
+    return currentHistoryOrder.reverse();
   }, deepEqual);
 };
 
 export const useRequestHistory = (id?: string): RequestHistory | undefined => {
   return useSelector((state: AppRootState) => {
     if (!id) return undefined;
+    
     return state.history.map[id];
   }, deepEqual);
 };

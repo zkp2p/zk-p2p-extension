@@ -4,8 +4,8 @@
     "targetUrl": "https://wise.com/account/payments",
     "method": "GET",
     "type": "xmlhttprequest",
-    "title": "ZKP2P Wise Registration (All Users)",
-    "description": "Notarize ownership of a wise tag. To start, click the button to view your account page",
+    "title": "Registration",
+    "description": "Generate proof of a Wise account required to complete registration",
     "secretResponseSelector": [
       "(?<=\"title\":\"Account details\",\"modules\":\\[)[^\\]]+"
     ],
@@ -21,8 +21,33 @@
     "targetUrl": "https://wise.com/all-transactions?direction=OUTGOING",
     "method": "GET",
     "type": "xmlhttprequest",
-    "title": "ZKP2P Wise Onramp + Registration for Offramper",
-    "description": "Notarize your payment transaction. To start, click the button and identify the correct payment transaction",
+    "title": "New Depositor",
+    "description": "Generate proof of a past Wise transfer required to enable deposits",
+    "secretResponseSelector": [
+      "(?<=\"userId\":)\\d+"
+    ],
+    "metaDataSelector": [
+      "(?<=\"targetAmount\":)\\d+",
+      "(?<=\"targetCurrency\":\")[^\"]+",
+      "(?<=\"state\":\"OUTGOING_PAYMENT_SENT\",\"date\":)\\d+",
+      "(?<=\"state\":\")[^\"]+",
+      "(?<=\"actor\":\")[^\"]+"
+    ],
+    "valueTransform": [
+      "\"targetAmount\":%s",
+      "\"targetCurrency\":%s",
+      "\"date\":%s",
+      "\"state\":%s",
+      "\"actor\":%s"
+    ]
+  },
+  {
+    "url": "https://wise.com/gateway/v3/profiles/\\d+/transfers/\\d+",
+    "targetUrl": "https://wise.com/all-transactions?direction=OUTGOING",
+    "method": "GET",
+    "type": "xmlhttprequest",
+    "title": "On-Ramp",
+    "description": "Generate proof of your completed Wise transfer to complete onramp",
     "secretResponseSelector": [
       "(?<=\"userId\":)\\d+"
     ],

@@ -12,7 +12,12 @@ const ExtReloader = require('webpack-ext-reloader');
 
 const ASSET_PATH = process.env.ASSET_PATH || "/";
 
-var alias = {};
+var alias = {
+  '@theme': path.resolve(__dirname, './src/theme/'),
+  '@newcomponents': path.resolve(__dirname, './src/newcomponents/'),
+  '@utils': path.resolve(__dirname, './src/utils/'),
+  '@hooks': path.resolve(__dirname, './src/hooks/'),
+};
 
 // load the secrets
 var secretsPath = path.join(__dirname, "secrets." + env.NODE_ENV + ".js");

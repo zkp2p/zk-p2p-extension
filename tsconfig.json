@@ -13,7 +13,14 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "noEmit": false,
-    "jsx": "react"
+    "jsx": "react",
+    "baseUrl": "src",
+    "paths": {
+      "@newcomponents/*": ["newcomponents/*"],
+      "@theme/*": ["theme/*"],
+      "@utils/*": ["utils/*"],
+      "@hooks/*": ["hook/*"],
+    },
   },
   "include": ["src"],
   "exclude": ["build", "node_modules"]
