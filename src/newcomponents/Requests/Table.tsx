@@ -87,10 +87,28 @@ export const RequestTable: React.FC<RequestTableProps> = ({
 
   useEffect(() => {
     const newRequests = requests.map((request) => {
-      console.log('Request: ', request);
+      console.log("JSON Response Body", JSON.parse(request.responseBody as string));
+      const jsonResponseBody = JSON.parse(request.responseBody as string);
+
+      let subject = '';
+      if (jsonResponseBody) {
+        switch (action) {
+          case WiseAction.REGISTRATION:
+            subject = `Wisetag: ${jsonResponseBody.sections[2].modules[0].description}`;
+            break;
+  
+          case WiseAction.DEPOSITOR_REGISTRATION:
+          case WiseAction.TRANSFER:
+            subject = `${jsonResponseBody.actor} of ${jsonResponseBody.targetAmount} ${jsonResponseBody.targetCurrency}`;
+            break;
+  
+          default:
+            subject = '';
+        }
+      }
 
       return {
-        subject: request.requestId,
+        subject,
         date: parseTimestamp(request.timestamp),
       } as RequestRowData;
     });
@@ -122,7 +140,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
 
   return (
     <Container>
-      {requests.length === 0 ? (
+      {loadedRequests.length === 0 ? (
         <EmptyRequestsContainer>
           <StyledUserX />
 

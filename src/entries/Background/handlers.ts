@@ -5,10 +5,14 @@ import mutex from './mutex';
 import { BackgroundActiontype, RequestLog } from './rpc';
 import { addRequest } from '../../reducers/requests';
 import { WiseRequest, WiseRequestType } from '@utils/types';
+import { replayRequest } from '@utils/misc';
 
 export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsType) => {
   return mutex.runExclusive(async () => {
     const { method, tabId, requestId } = details;
+
+    const fetchUrl = new URL(details.url);
+    if (fetchUrl.searchParams.has('replay_request')) return; // Skip processing for replay requests
 
     if (method !== 'OPTIONS') {
       const cache = getCacheByTabId(tabId);
@@ -21,9 +25,9 @@ export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsTy
 
       let requestType: WiseRequestType = "";
       if (wiseTagEndpointRegex.test(notarizationUrlString)) {
-        requestType = WiseRequest.WISETAG_REGISTRATION;
+        requestType = WiseRequest.PAYMENT_PROFILE;
       } else if (transferEndpointRegex.test(notarizationUrlString)) {
-        requestType = WiseRequest.TRANSFERS;
+        requestType = WiseRequest.TRANSFER_DETAILS;
       }
 
       cache.set(requestId, {
@@ -46,6 +50,9 @@ export const onBeforeRequest = (details: browser.WebRequest.OnBeforeRequestDetai
     const { method, requestBody, tabId, requestId } = details;
 
     if (method === 'OPTIONS') return;
+    
+    const fetchUrl = new URL(details.url);
+    if (fetchUrl.searchParams.has('replay_request')) return; // Skip processing for replay requests
 
     if (requestBody) {
       const cache = getCacheByTabId(tabId);
@@ -76,6 +83,9 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
 
     if (method === 'OPTIONS') return;
 
+    const fetchUrl = new URL(details.url);
+    if (fetchUrl.searchParams.has('replay_request')) return; // Skip processing for replay requests
+
     const cache = getCacheByTabId(tabId);
 
     const existing = cache.get<RequestLog>(requestId);
@@ -87,9 +97,9 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
 
     let requestType: WiseRequestType = "";
     if (wiseTagEndpointRegex.test(notarizationUrlString)) {
-      requestType = WiseRequest.WISETAG_REGISTRATION;
+      requestType = WiseRequest.PAYMENT_PROFILE;
     } else if (transferEndpointRegex.test(notarizationUrlString)) {
-      requestType = WiseRequest.TRANSFERS;
+      requestType = WiseRequest.TRANSFER_DETAILS;
     }
     
     const newLog: RequestLog = {
@@ -106,15 +116,23 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
       requestType,
     };
 
-    cache.set(requestId, newLog);
+    const response = await replayRequest(newLog);
+    console.log('response', response);
+
+    const newLogWithResponseBody: RequestLog = {
+      ...newLog,
+      responseBody: response.text,
+    };
+
+    cache.set(requestId, newLogWithResponseBody);
 
     chrome.runtime.sendMessage({
       type: BackgroundActiontype.push_action,
       data: {
         tabId: details.tabId,
-        request: newLog,
+        request: newLogWithResponseBody,
       },
-      action: addRequest(newLog),
+      action: addRequest(newLogWithResponseBody),
     });
   });
 };

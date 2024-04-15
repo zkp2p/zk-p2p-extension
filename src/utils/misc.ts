@@ -61,8 +61,12 @@ export async function replayRequest(
     options.body = formData.toString();
   }
 
+  // Append a query parameter to indicate this is a replay request
+  const replayUrl = new URL(req.url);
+  replayUrl.searchParams.append('replay_request', '1');
+
   // @ts-ignore
-  const resp = await fetch(req.url, options);
+  const resp = await fetch(replayUrl, options);
   const contentType = resp?.headers.get('content-type') || resp?.headers.get('Content-Type');
 
   // if (contentType?.includes('application/json')) {
