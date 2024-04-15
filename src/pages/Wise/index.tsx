@@ -62,6 +62,7 @@ const Wise: React.FC<WiseProps> = ({
 
   const [originalTabId, setOriginalTabId] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [validNotarizationExists, setValidNotarizationExists] = useState<boolean>(false);
 
   const [loadedRequests, setLoadedRequests] = useState<RequestLog[]>([]);
   const [loadedNotarizations, setLoadedNotarizations] = useState<RequestHistory[]>([]);
@@ -127,6 +128,12 @@ const Wise: React.FC<WiseProps> = ({
     }
   }, [requests, action]);
 
+  useEffect(() => {
+    const validNotarizationExists = loadedNotarizations.some(notarization => notarization.status === 'success');
+
+    setValidNotarizationExists(validNotarizationExists);
+  }, [loadedNotarizations]);
+
   /*
    * Handlers
    */
@@ -146,6 +153,14 @@ const Wise: React.FC<WiseProps> = ({
     }).then(newTab => {
       dispatch(setActiveTab(newTab))
     })
+  };
+
+  const handleReturnToTab = async() => {
+    if (originalTabId) {
+      chrome.tabs.update(originalTabId, {
+        active: true,
+      });
+    }
   };
 
   const handleNotarizePressed = async() => {
@@ -378,6 +393,18 @@ const Wise: React.FC<WiseProps> = ({
             action={action}
             notarizations={loadedNotarizations}
           />
+
+          <ButtonContainer>
+            <Button
+              onClick={() => handleReturnToTab()}
+              disabled={!validNotarizationExists}
+              width={164}
+              height={40}
+              fontSize={14}
+            >
+              Go to zkp2p.xyz
+            </Button>
+          </ButtonContainer>
         </BodyStepContainer>
       </BodyContainer>
     </Container>
