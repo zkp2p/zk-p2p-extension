@@ -14,7 +14,7 @@ import RequestTable from '@newcomponents/Requests/Table';
 import { InstructionTitle } from '@newcomponents/Instructions/Title';
 import { Button } from '@newcomponents/common/Button';
 import { WiseAction, WiseActionType, WiseStep, WiseRequest } from '@utils/types';
-import { replayRequest, urlify } from '@utils/misc';
+import { urlify } from '@utils/misc';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '@utils/storage';
 
 import bookmarks from '../../../utils/bookmark/bookmarks.json';
