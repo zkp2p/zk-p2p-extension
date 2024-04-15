@@ -11,6 +11,9 @@ export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsTy
   return mutex.runExclusive(async () => {
     const { method, tabId, requestId } = details;
 
+    const fetchUrl = new URL(details.url);
+    if (fetchUrl.searchParams.has('replay_request')) return; // Skip processing for replay requests
+
     if (method !== 'OPTIONS') {
       const cache = getCacheByTabId(tabId);
       const existing = cache.get<RequestLog>(requestId);
@@ -47,6 +50,9 @@ export const onBeforeRequest = (details: browser.WebRequest.OnBeforeRequestDetai
     const { method, requestBody, tabId, requestId } = details;
 
     if (method === 'OPTIONS') return;
+    
+    const fetchUrl = new URL(details.url);
+    if (fetchUrl.searchParams.has('replay_request')) return; // Skip processing for replay requests
 
     if (requestBody) {
       const cache = getCacheByTabId(tabId);
@@ -76,6 +82,9 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
     const { method, responseHeaders, tabId, requestId } = details;
 
     if (method === 'OPTIONS') return;
+
+    const fetchUrl = new URL(details.url);
+    if (fetchUrl.searchParams.has('replay_request')) return; // Skip processing for replay requests
 
     const cache = getCacheByTabId(tabId);
 
