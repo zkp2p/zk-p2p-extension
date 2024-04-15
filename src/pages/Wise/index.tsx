@@ -84,11 +84,11 @@ const Wise: React.FC<WiseProps> = ({
       const filteredNotarizations = notarizations.filter(notarization => {
         switch (action) {
           case WiseAction.REGISTRATION:
-            return notarization.requestType === WiseRequest.WISETAG_REGISTRATION;
+            return notarization.requestType === WiseRequest.PAYMENT_PROFILE;
 
           case WiseAction.DEPOSITOR_REGISTRATION:
           case WiseAction.TRANSFER:
-            return notarization.requestType === WiseRequest.TRANSFERS;
+            return notarization.requestType === WiseRequest.TRANSFER_DETAILS;
 
           default:
             return false;
@@ -110,11 +110,11 @@ const Wise: React.FC<WiseProps> = ({
       const filteredRequests = requests.filter(request => {
         switch (action) {
           case WiseAction.REGISTRATION:
-            return request.requestType === WiseRequest.WISETAG_REGISTRATION;
+            return request.requestType === WiseRequest.PAYMENT_PROFILE;
 
           case WiseAction.DEPOSITOR_REGISTRATION:
           case WiseAction.TRANSFER:
-            return request.requestType === WiseRequest.TRANSFERS;
+            return request.requestType === WiseRequest.TRANSFER_DETAILS;
 
           default:
             return false;
@@ -156,7 +156,10 @@ const Wise: React.FC<WiseProps> = ({
     console.log('Attempting to notarize', selectedIndex);
 
     const requestLog = requests[selectedIndex];
-    const response = await replayRequest(requestLog);
+    const responseBody = requestLog.responseBody;
+    const responseHeaders = requestLog.responseHeaders;
+    if (!responseBody || !responseHeaders) return;
+
     const secretHeaders = requestLog.requestHeaders
       .map((headers) => {
         return `${headers.name.toLowerCase()}: ${headers.value || ''}` || '';
@@ -168,18 +171,18 @@ const Wise: React.FC<WiseProps> = ({
     actionSettings.bookmark_data.secretResponseSelector.forEach((secretResponseSelector) => {
       const regex = new RegExp(secretResponseSelector, 'g');
 
-      // console.log(response.text);
-      const matches = response.text.match(regex);
+      // console.log(responseBody);
+      const matches = responseBody.match(regex);
       // console.log('secretResponseSelector', secretResponseSelector);
 
       if (matches) {
         const hidden = matches[0];
 
-        const selectionStart = response.text.indexOf(hidden);
+        const selectionStart = responseBody.indexOf(hidden);
         const selectionEnd = selectionStart + hidden.length;
 
         if (selectionStart !== -1) {
-          secretResps.push(response.text.substring(selectionStart, selectionEnd));
+          secretResps.push(responseBody.substring(selectionStart, selectionEnd));
         }
         // console.log('secretResps', secretResps);
       }
@@ -208,26 +211,26 @@ const Wise: React.FC<WiseProps> = ({
     const metadataResp = [] as string[];
     
     // Add date of request if exists
-    const requestDate = response.response.headers.get('date') || response.response.headers.get('Date');
-    if (requestDate) {
-      metadataResp.push(requestDate);
+    const requestDate = responseHeaders.find((h) => h.name === 'date' || h.name === 'Date');
+    if (requestDate && requestDate.value) {
+      metadataResp.push(requestDate.value);
     }
 
     actionSettings.bookmark_data.metaDataSelector.forEach((metaDataSelector) => {
       const regex = new RegExp(metaDataSelector, 'g');
 
-      // console.log(response.text);
-      const matches = response.text.match(regex);
+      // console.log(requestLog.responseBody);
+      const matches = responseBody.match(regex);
       // console.log('metaDataSelector', metaDataSelector);
 
       if (matches) {
         const revealed = matches[0];
 
-        const selectionStart = response.text.indexOf(revealed);
+        const selectionStart = responseBody.indexOf(revealed);
         const selectionEnd = selectionStart + revealed.length;
 
         if (selectionStart !== -1) {
-          metadataResp.push(response.text.substring(selectionStart, selectionEnd));
+          metadataResp.push(responseBody.substring(selectionStart, selectionEnd));
         }
         // console.log('metadataResp', metadataResp);
       }

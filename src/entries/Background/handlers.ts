@@ -25,9 +25,9 @@ export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsTy
 
       let requestType: WiseRequestType = "";
       if (wiseTagEndpointRegex.test(notarizationUrlString)) {
-        requestType = WiseRequest.WISETAG_REGISTRATION;
+        requestType = WiseRequest.PAYMENT_PROFILE;
       } else if (transferEndpointRegex.test(notarizationUrlString)) {
-        requestType = WiseRequest.TRANSFERS;
+        requestType = WiseRequest.TRANSFER_DETAILS;
       }
 
       cache.set(requestId, {
@@ -97,9 +97,9 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
 
     let requestType: WiseRequestType = "";
     if (wiseTagEndpointRegex.test(notarizationUrlString)) {
-      requestType = WiseRequest.WISETAG_REGISTRATION;
+      requestType = WiseRequest.PAYMENT_PROFILE;
     } else if (transferEndpointRegex.test(notarizationUrlString)) {
-      requestType = WiseRequest.TRANSFERS;
+      requestType = WiseRequest.TRANSFER_DETAILS;
     }
     
     const newLog: RequestLog = {

@@ -52,7 +52,7 @@ chrome.runtime.onMessage.addListener((message) => {
     if (message.data.notaryRequests && message.data.notaryRequests.length > 0) {
       filteredResponse = message.data.notaryRequests.filter(
         (item: { status: string; requestType: string }) =>
-          item.status === 'success' && item.requestType === WiseRequest.WISETAG_REGISTRATION,
+          item.status === 'success' && item.requestType === WiseRequest.PAYMENT_PROFILE,
       );
     }
 
@@ -77,7 +77,7 @@ chrome.runtime.onMessage.addListener((message) => {
     if (message.data.notaryRequests && message.data.notaryRequests.length > 0) {
       filteredResponse = message.data.notaryRequests.filter(
         (item: { status: string; requestType: string }) =>
-          item.status === 'success' && item.requestType === WiseRequest.TRANSFERS,
+          item.status === 'success' && item.requestType === WiseRequest.TRANSFER_DETAILS,
       );
     }
 

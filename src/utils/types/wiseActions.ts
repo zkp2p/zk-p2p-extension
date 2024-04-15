@@ -28,8 +28,8 @@ export const wiseSteps = [
 export type WiseStepType = typeof WiseStep[keyof typeof WiseStep];
 
 export const WiseRequest = {
-  WISETAG_REGISTRATION: 'wisetag_registration',
-  TRANSFERS: 'transfers',
+  PAYMENT_PROFILE: 'payment_profile',
+  TRANSFER_DETAILS: 'transfer_details',
 }
 
 export type WiseRequestType = typeof WiseRequest[keyof typeof WiseRequest];

@@ -113,7 +113,7 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
       let subject, metadata, timestamp = "";
 
       switch (notarization.requestType) {
-        case WiseRequest.WISETAG_REGISTRATION:
+        case WiseRequest.PAYMENT_PROFILE:
           const [notarizationTimestamp, wiseTag] = notarization.metadata;
           const wiseTagStripped = wiseTag.split('@')[1];
   
@@ -122,7 +122,7 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
           timestamp = notarizationTimestamp;
           break;
 
-        case WiseRequest.TRANSFERS:
+        case WiseRequest.TRANSFER_DETAILS:
           const [notarizationTimestamp, amount, currency] = notarization.metadata;
         
           subject = `Sent ${amount} ${currency}`;
