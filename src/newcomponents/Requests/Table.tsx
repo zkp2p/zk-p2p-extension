@@ -105,14 +105,14 @@ export const RequestTable: React.FC<RequestTableProps> = ({
   const emptyRequestCopy = (): string => {
     switch (action) {
       case WiseAction.REGISTRATION:
-        return 'No Wise tags found. Navigate to the Payments page on Wise to prove your tag.';
+        return 'No Wise tags found. Open the Payments page on Wise.';
 
       case WiseAction.DEPOSITOR_REGISTRATION:
-        return 'No past payment was opened. Navigate to any past outgoing transfer to prove details.';
+        return 'No past payment found. Open any past outgoing Wise transfer.';
 
       case WiseAction.TRANSFER:
       default:
-        return 'No payment was opened. Navigate to the transaction details for this order to prove details.';
+        return 'No payment found. Open the details for the Wise transaction.';
     }
   };
 
