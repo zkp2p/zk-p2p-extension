@@ -284,10 +284,10 @@ const Wise: React.FC<WiseProps> = ({
 
     switch (action) {
       case WiseAction.REGISTRATION:
-        settingsObject.request_title = 'Prove Wise Tag';
+        settingsObject.request_title = 'Prove Wisetag';
         settingsObject.action_url = 'https://wise.com/account/payments';
-        settingsObject.navigate_instruction = 'Go to the Payments page on Wise to load your account\'s Wise tag';
-        settingsObject.request_instruction = 'Notarize the Wise Tag, this will take approximately 20 seconds';
+        settingsObject.navigate_instruction = 'Go to the Payments page on Wise to load your account\'s Wisetag';
+        settingsObject.request_instruction = 'Notarize the Wisetag, this will take approximately 20 seconds';
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to register';
 
         const registrationBookmark = bookmarks[0];

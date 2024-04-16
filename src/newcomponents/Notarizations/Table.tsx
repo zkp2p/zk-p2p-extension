@@ -117,7 +117,7 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
           const [notarizationTimestamp, wiseTag] = notarization.metadata;
           const wiseTagStripped = wiseTag.split('@')[1];
   
-          subject = `${wiseTag}`;
+          subject = `Wisetag: ${wiseTag}`;
           metadata = wiseTagStripped;
           timestamp = notarizationTimestamp;
           break;

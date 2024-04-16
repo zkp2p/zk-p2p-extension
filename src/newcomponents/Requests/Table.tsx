@@ -94,7 +94,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
       if (jsonResponseBody) {
         switch (action) {
           case WiseAction.REGISTRATION:
-            subject = `Wisetag: ${jsonResponseBody.sections[2].modules[0].description}`;
+            subject = `Detected: ${jsonResponseBody.sections[2].modules[0].description}`;
             break;
   
           case WiseAction.DEPOSITOR_REGISTRATION:
@@ -123,7 +123,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
   const emptyRequestCopy = (): string => {
     switch (action) {
       case WiseAction.REGISTRATION:
-        return 'No Wise tags found. Open the Payments page on Wise.';
+        return 'No Wisetags found. Open the Payments page on Wise.';
 
       case WiseAction.DEPOSITOR_REGISTRATION:
         return 'No past payment found. Open any past outgoing Wise transfer.';
