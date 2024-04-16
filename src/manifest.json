@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ZKP2P Extension",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Extension for connecting off-chain platforms to ZKP2P",
   "icons": {
     "16": "icon-16.png",
