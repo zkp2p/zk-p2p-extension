@@ -82,6 +82,7 @@ async function createOffscreenDocument() {
  * Set panel behavior on action bar item click: https://developer.chrome.com/docs/extensions/reference/api/sidePanel
  */
 
+// @ts-ignore
 chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })
   .catch((error: any) => console.error(error));
@@ -96,6 +97,7 @@ chrome.runtime.onMessage.addListener((message) => {
       // console.log(new Date().toISOString(), 'Successfully fetched:', notaryRequests);
 
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        if (!tabs[0].id) return;
         return chrome.tabs.sendMessage(tabs[0].id, {
           action: 'request_profile_history_response',
           data: { notaryRequests },
@@ -109,9 +111,39 @@ chrome.runtime.onMessage.addListener((message) => {
       // console.log(new Date().toISOString(), 'Successfully fetched:', notaryRequests);
 
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        if (!tabs[0].id) return;
         return chrome.tabs.sendMessage(tabs[0].id, {
           action: 'request_transfer_history_response',
           data: { notaryRequests },
+        });
+      });
+    });
+  }
+});
+
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === "install") {
+    console.log("Extension just installed.");
+    
+    // Define the URL patterns from your manifest's content_scripts section
+    const urlPatterns = [
+      "http://localhost:3000/*",
+      "https://staging-testnet.zkp2p.xyz/*",
+      "https://staging-app.zkp2p.xyz/*",
+      "https://zkp2p.xyz/*"
+    ];
+
+    // Query only the tabs that match your specified URLs
+    chrome.tabs.query({url: urlPatterns}, (tabs) => {
+      tabs.forEach(tab => {
+        if (!tab.id) return;
+        chrome.scripting.executeScript({
+          target: { tabId: tab.id || 0 },
+          files: ["contentScript.bundle.js"]
+        }).then(() => {
+          console.log(`Injected contentScript.bundle.js into tab ${tab.id}`);
+        }).catch(err => {
+          console.error(`Failed to inject script into tab ${tab.id}: ${err.message}`);
         });
       });
     });

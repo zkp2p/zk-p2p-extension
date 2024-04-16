@@ -53,6 +53,7 @@
     "webRequest",
     "activeTab",
     "sidePanel",
-    "tabs"
+    "tabs",
+    "scripting"
   ]
 }
