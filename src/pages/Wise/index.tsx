@@ -155,11 +155,17 @@ const Wise: React.FC<WiseProps> = ({
     })
   };
 
-  const handleReturnToTab = async() => {
+  const handleReturnToTab = async () => {
     if (originalTabId) {
-      chrome.tabs.update(originalTabId, {
-        active: true,
+      chrome.tabs.update(originalTabId, { active: true }, (tab) => {
+        if (chrome.runtime.lastError) {
+          console.error("Failed to find original tab:", chrome.runtime.lastError.message);
+
+          chrome.tabs.create({ url: urlForAction });
+        }
       });
+    } else {
+      chrome.tabs.create({ url: urlForAction });
     }
   };
 
@@ -275,6 +281,22 @@ const Wise: React.FC<WiseProps> = ({
   /*
    * Helpers
    */
+
+  const urlForAction = useMemo(() => {
+    switch (action) {
+      case WiseAction.REGISTRATION:
+        return 'https://zkp2p.xyz/register';
+      
+        case WiseAction.DEPOSITOR_REGISTRATION:
+        return 'https://zkp2p.xyz/deposits';
+      
+        case WiseAction.TRANSFER:
+        return 'https://zkp2p.xyz/swap';
+      
+        default:
+        return 'https://zkp2p.xyz';
+    }
+  }, [action]);
 
   const actionSettings = useMemo(() => {
     const settingsObject = {
