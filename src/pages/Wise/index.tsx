@@ -18,6 +18,9 @@ import { urlify } from '@utils/misc';
 
 import bookmarks from '../../../utils/bookmark/bookmarks.json';
 
+const maxSentData = 4000;
+const maxRecvData = 4000;
+
 interface ActionSettings {
   action_url: string;
   navigate_title: string;
@@ -299,9 +302,8 @@ const Wise: React.FC<WiseProps> = ({
       method: requestLog.method,
       headers: headers,
       body: requestLog.requestBody,
-      // maxTranscriptSize: 16384,
-      maxSentData: 4000,
-      maxRecvData: 4000,
+      maxSentData,
+      maxRecvData,
       notaryUrl,
       websocketProxyUrl,
       secretHeaders,
