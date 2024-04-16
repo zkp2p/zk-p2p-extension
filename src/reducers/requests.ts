@@ -48,7 +48,6 @@ export const notarizeRequest = (options: RequestHistory) => async () => {
       method: options.method,
       headers: options.headers,
       body: options.body,
-      maxTranscriptSize: options.maxTranscriptSize,
       maxSentData: options.maxSentData,
       maxRecvData: options.maxRecvData,
       secretHeaders: options.secretHeaders,
