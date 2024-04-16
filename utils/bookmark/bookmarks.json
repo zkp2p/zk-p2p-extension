@@ -6,6 +6,11 @@
     "type": "xmlhttprequest",
     "title": "Registration",
     "description": "Generate proof of a Wise account required to complete registration",
+    "skipRequestHeaders": [
+    ],
+    "includeRequestCookies": [
+
+    ],
     "secretResponseSelector": [
       "(?<=\"title\":\"Account details\",\"modules\":\\[)[^\\]]+"
     ],
@@ -23,6 +28,11 @@
     "type": "xmlhttprequest",
     "title": "New Depositor",
     "description": "Generate proof of a past Wise transfer required to enable deposits",
+    "skipRequestHeaders": [
+    ],
+    "includeRequestCookies": [
+
+    ],
     "secretResponseSelector": [
       "(?<=\"userId\":)\\d+"
     ],
@@ -48,6 +58,23 @@
     "type": "xmlhttprequest",
     "title": "On-Ramp",
     "description": "Generate proof of your completed Wise transfer to complete onramp",
+    "skipRequestHeaders": [
+      "sec-ch-ua",
+      "sec-ch-ua-model",
+      "sec-ch-ua-platform",
+      "sec-ch-ua-platform-version",
+      "Sec-GPC",
+      "Referer",
+      "X-Visual-Context",
+      "Sec-Fetch-Dest",
+      "Sec-Fetch-Mode"
+    ],
+    "includeRequestCookies": [
+      "userSecurityData",
+      "appToken",
+      "oauthToken",
+      "userToken"
+    ],
     "secretResponseSelector": [
       "(?<=\"userId\":)\\d+"
     ],
