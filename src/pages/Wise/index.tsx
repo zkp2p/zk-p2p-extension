@@ -32,6 +32,8 @@ interface ActionSettings {
   bookmark_data: {
     secretResponseSelector: string[];
     metaDataSelector: string[];
+    skipRequestHeaders: string[];
+    includeRequestCookies: string[];
   }
 }
 
@@ -216,11 +218,14 @@ const Wise: React.FC<WiseProps> = ({
 
     console.log('Attempting to notarize', selectedIndex);
 
+    // Replay request because we need to remove values from the response
     const requestLog = requests[selectedIndex];
     const responseBody = requestLog.responseBody;
     const responseHeaders = requestLog.responseHeaders;
     if (!responseBody || !responseHeaders) return;
 
+
+    // Add "ALL" headers to secretHeaders, So all of them will be redacted
     const secretHeaders = requestLog.requestHeaders
       .map((headers) => {
         return `${headers.name.toLowerCase()}: ${headers.value || ''}` || '';
@@ -229,6 +234,7 @@ const Wise: React.FC<WiseProps> = ({
 
     const secretResps = [] as string[];
 
+    // Add certain fields in the response to secretResps to redact them
     actionSettings.bookmark_data.secretResponseSelector.forEach((secretResponseSelector) => {
       const regex = new RegExp(secretResponseSelector, 'g');
 
@@ -256,9 +262,12 @@ const Wise: React.FC<WiseProps> = ({
     const notaryUrl = 'http://0.0.0.0:7047'; // 'https://notary-california.zkp2p.xyz' // await get(NOTARY_API_LS_KEY);
     const websocketProxyUrl = 'ws://localhost:55688'; // 'wss://proxy-california.zkp2p.xyz' // await get(PROXY_API_LS_KEY);
 
+    // Skip the headers to make the request in MPC-TLS lighter
     const headers: { [k: string]: string } = requestLog.requestHeaders.reduce(
       (acc: any, h) => {
-        acc[h.name] = h.value;
+        if (!actionSettings.bookmark_data.skipRequestHeaders.includes(h.name)) {
+          acc[h.name] = h.value;
+        }
         return acc;
       },
       { Host: hostname },
@@ -296,6 +305,9 @@ const Wise: React.FC<WiseProps> = ({
         // console.log('metadataResp', metadataResp);
       }
     });
+
+    // console.log('Headers being sent for notarization', headers)
+    // console.log('maxRecvData', maxRecvData)
 
     const notarizeRequestParams = {
       url: requestLog.url,
@@ -357,6 +369,8 @@ const Wise: React.FC<WiseProps> = ({
         settingsObject.bookmark_data = {
           secretResponseSelector: registrationBookmark.secretResponseSelector,
           metaDataSelector: registrationBookmark.metaDataSelector,
+          skipRequestHeaders: registrationBookmark.skipRequestHeaders,
+          includeRequestCookies: registrationBookmark.includeRequestCookies
         };
         break;
 
@@ -372,6 +386,8 @@ const Wise: React.FC<WiseProps> = ({
         settingsObject.bookmark_data = {
           secretResponseSelector: depositorRegistrationBookmark.secretResponseSelector,
           metaDataSelector: depositorRegistrationBookmark.metaDataSelector,
+          skipRequestHeaders: depositorRegistrationBookmark.skipRequestHeaders,
+          includeRequestCookies: depositorRegistrationBookmark.includeRequestCookies
         };
         break;
 
@@ -386,6 +402,8 @@ const Wise: React.FC<WiseProps> = ({
         settingsObject.bookmark_data = {
           secretResponseSelector: transferBookmark.secretResponseSelector,
           metaDataSelector: transferBookmark.metaDataSelector,
+          skipRequestHeaders: transferBookmark.skipRequestHeaders,
+          includeRequestCookies: transferBookmark.includeRequestCookies
         };
         break;
     }
