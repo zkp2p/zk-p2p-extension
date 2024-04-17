@@ -15,8 +15,9 @@ import { urlify } from '../../utils/misc';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
 import { useDispatch } from 'react-redux';
 
-const maxSentData = 4000;
-const maxRecvData = 4000;
+// I believe this file is not being used any more.
+export const maxSentData = 500;
+export const maxRecvData = 2100;
 
 export default function Notarize(): ReactElement {
   const params = useParams<{ requestId: string }>();

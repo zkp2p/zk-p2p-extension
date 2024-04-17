@@ -36,6 +36,11 @@ const API_CONFIGURATIONS = [
     name: 'Paris',
     notary: 'https://notary-paris.zkp2p.xyz',
     proxy: 'wss://proxy-california.zkp2p.xyz'
+  },
+  {
+    name: 'Frankfurt (PSE)',
+    notary: 'https://notary.pse.dev/v0.1.0-alpha.5',
+    proxy: 'wss://proxy-california.zkp2p.xyz'
   }
 ];
 
