@@ -34,6 +34,12 @@ window.addEventListener('message', function (event) {
 
     chrome.runtime.sendMessage({ action: 'request_transfer_history_background' });
   }
+
+  if (event.data.type && event.data.type == 'open_sidebar') {
+    // console.log('Content received open_sidebar');
+
+    chrome.runtime.sendMessage({ action: 'open_sidebar_background' });
+  }
 });
 
 /*

@@ -119,6 +119,14 @@ chrome.runtime.onMessage.addListener((message) => {
       });
     });
   }
+
+  if (message.action === 'open_sidebar_background') {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (!tabs[0] || !tabs[0].id) return;
+      // @ts-ignore
+      chrome.sidePanel.open({ tabId: tabs[0].id });
+    });
+  }
 });
 
 chrome.runtime.onInstalled.addListener((details) => {
