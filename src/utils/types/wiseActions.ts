@@ -33,3 +33,17 @@ export const WiseRequest = {
 }
 
 export type WiseRequestType = typeof WiseRequest[keyof typeof WiseRequest];
+
+
+export interface Intent {
+  onRamper: string;
+  deposit: string;
+  amount: string;
+  timestamp: string;
+  to: string;
+}
+
+export interface OnRamperIntent {
+  depositorVenmoId: string;
+  intent: Intent;
+}

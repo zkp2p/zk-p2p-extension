@@ -7,18 +7,18 @@ import browser from 'webextension-polyfill';
 
 import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests } from '../../reducers/requests';
 import { useHistoryOrder } from '../../reducers/history';
-import { RequestHistory, RequestLog } from '../../entries/Background/rpc';
+import { BackgroundActiontype, RequestHistory, RequestLog } from '../../entries/Background/rpc';
 
 import NotarizationTable from '@newcomponents/Notarizations/Table';
 import RequestTable from '@newcomponents/Requests/Table';
 import { InstructionTitle } from '@newcomponents/Instructions/Title';
 import { Button } from '@newcomponents/common/Button';
-import { WiseAction, WiseActionType, WiseStep, WiseRequest } from '@utils/types';
+import { OnRamperIntent, WiseAction, WiseActionType, WiseStep, WiseRequest } from '@utils/types';
 import { urlify } from '@utils/misc';
-import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '@utils/storage';
 
 import bookmarks from '../../../utils/bookmark/bookmarks.json';
 
+const WISE_PLATFORM = 'wise';
 
 interface ActionSettings {
   action_url: string;
@@ -61,6 +61,7 @@ const Wise: React.FC<WiseProps> = ({
    */
 
   const [originalTabId, setOriginalTabId] = useState<number | null>(null);
+  const [onramperIntent, setOnramperIntent] = useState<OnRamperIntent | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [validNotarizationExists, setValidNotarizationExists] = useState<boolean>(false);
 
@@ -79,6 +80,23 @@ const Wise: React.FC<WiseProps> = ({
       setSelectedIndex(0);
     }
   }, [requests, selectedIndex]);
+
+  useEffect(() => {
+    (async () => {
+      if (onramperIntent) return;
+
+      const onramperIntentData = await browser.runtime.sendMessage({
+        type: BackgroundActiontype.get_onramper_intent,
+        data: WISE_PLATFORM,
+      });
+
+      if (onramperIntentData) {
+        setOnramperIntent(onramperIntentData);
+      } else {
+        setOnramperIntent(null);
+      }
+    })();
+  }, [onramperIntent]);
 
   useEffect(() => {
     if (notarizations) {
@@ -114,8 +132,22 @@ const Wise: React.FC<WiseProps> = ({
             return request.requestType === WiseRequest.PAYMENT_PROFILE;
 
           case WiseAction.DEPOSITOR_REGISTRATION:
-          case WiseAction.TRANSFER:
             return request.requestType === WiseRequest.TRANSFER_DETAILS;
+          case WiseAction.TRANSFER:
+            if (request.requestType === WiseRequest.TRANSFER_DETAILS) {
+              const jsonResponseBody = JSON.parse(request.responseBody as string);
+              if (jsonResponseBody && onramperIntent) {
+                // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
+                return (
+                  jsonResponseBody.actor === "SENDER" &&
+                  parseInt(jsonResponseBody.stateHistory[0].date) / 1000 >= parseInt(onramperIntent.intent.timestamp)
+                )
+              }
+              // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users
+              return true;
+            }
+            // Non-transfer requests are always filtered out
+            return false;
 
           default:
             return false;
