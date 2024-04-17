@@ -279,6 +279,8 @@ async function handleProveRequestStart(
       method,
       headers,
       body,
+      maxSentData,
+      maxRecvData,
       notaryUrl,
       websocketProxyUrl,
       secretHeaders,
