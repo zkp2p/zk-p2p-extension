@@ -97,7 +97,7 @@ chrome.runtime.onMessage.addListener((message) => {
       // console.log(new Date().toISOString(), 'Successfully fetched:', notaryRequests);
 
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        if (!tabs[0].id) return;
+        if (!tabs[0] || !tabs[0].id) return;
         return chrome.tabs.sendMessage(tabs[0].id, {
           action: 'request_profile_history_response',
           data: { notaryRequests },
@@ -111,7 +111,7 @@ chrome.runtime.onMessage.addListener((message) => {
       // console.log(new Date().toISOString(), 'Successfully fetched:', notaryRequests);
 
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        if (!tabs[0].id) return;
+        if (!tabs[0] || !tabs[0].id) return;
         return chrome.tabs.sendMessage(tabs[0].id, {
           action: 'request_transfer_history_response',
           data: { notaryRequests },
@@ -123,9 +123,8 @@ chrome.runtime.onMessage.addListener((message) => {
 
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === "install") {
-    console.log("Extension just installed.");
-    
-    // Define the URL patterns from your manifest's content_scripts section
+    // console.log("Extension just installed.");
+
     const urlPatterns = [
       "http://localhost:3000/*",
       "https://staging-testnet.zkp2p.xyz/*",
@@ -133,7 +132,6 @@ chrome.runtime.onInstalled.addListener((details) => {
       "https://zkp2p.xyz/*"
     ];
 
-    // Query only the tabs that match your specified URLs
     chrome.tabs.query({url: urlPatterns}, (tabs) => {
       tabs.forEach(tab => {
         if (!tab.id) return;
