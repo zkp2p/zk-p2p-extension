@@ -16,11 +16,11 @@ import { Button } from '@newcomponents/common/Button';
 import { WiseAction, WiseActionType, WiseStep } from '@utils/types';
 import { replayRequest, urlify } from '@utils/misc';
 import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '@utils/storage';
+import { parse as parseCookie } from 'cookie';
+import { maxSentData, maxRecvData } from '../Notarize/index'
 
 import bookmarks from '../../../utils/bookmark/bookmarks.json';
 
-const maxSentData = 4000;
-const maxRecvData = 4000;
 
 
 interface ActionSettings {
@@ -36,6 +36,8 @@ interface ActionSettings {
     metaDataSelector: string[];
     skipRequestHeaders: string[];
     includeRequestCookies: string[];
+    maxSentData: Number,
+    maxRecvData: Number
   }
 }
 
@@ -170,8 +172,9 @@ const Wise: React.FC<WiseProps> = ({
 
     // Replay request because we need to remove values from the response
     const requestLog = requests[selectedIndex];
-    console.log('requestLog', requestLog)
+    console.log('requestLog', requestLog);
     const response = await replayRequest(requestLog);
+    console.log('response', response);
 
     // Add "ALL" headers to secretHeaders, So all of them will be redacted
     const secretHeaders = requestLog.requestHeaders
@@ -221,6 +224,12 @@ const Wise: React.FC<WiseProps> = ({
       { Host: hostname },
     );
 
+    // Include only the cookies that are specified in config
+    let cookies = parseCookie(headers['Cookie']);
+    const filteredCookies = actionSettings.bookmark_data.includeRequestCookies.map(cookie => {
+      return `${cookie}=${cookies[cookie]}`;
+    }).join(`; `);
+    headers['Cookie'] = filteredCookies;
     headers['Accept-Encoding'] = 'identity';
     headers['Connection'] = 'close';
 
@@ -257,13 +266,14 @@ const Wise: React.FC<WiseProps> = ({
     // console.log('Headers being sent for notarization', headers)
     // console.log('maxRecvData', maxRecvData)
 
+    
     const notarizeRequestParams = {
       url: requestLog.url,
       method: requestLog.method,
       headers: headers,
       body: requestLog.requestBody,
-      maxSentData,
-      maxRecvData,
+      maxSentData: actionSettings.bookmark_data.maxSentData,
+      maxRecvData: actionSettings.bookmark_data.maxRecvData,
       notaryUrl,
       websocketProxyUrl,
       secretHeaders,
@@ -301,7 +311,9 @@ const Wise: React.FC<WiseProps> = ({
           secretResponseSelector: registrationBookmark.secretResponseSelector,
           metaDataSelector: registrationBookmark.metaDataSelector,
           skipRequestHeaders: registrationBookmark.skipRequestHeaders,
-          includeRequestCookies: registrationBookmark.includeRequestCookies
+          includeRequestCookies: registrationBookmark.includeRequestCookies,
+          maxSentData: registrationBookmark.maxSentData,
+          maxRecvData: registrationBookmark.maxRecvData
         };
         break;
 
@@ -318,7 +330,9 @@ const Wise: React.FC<WiseProps> = ({
           secretResponseSelector: depositorRegistrationBookmark.secretResponseSelector,
           metaDataSelector: depositorRegistrationBookmark.metaDataSelector,
           skipRequestHeaders: depositorRegistrationBookmark.skipRequestHeaders,
-          includeRequestCookies: depositorRegistrationBookmark.includeRequestCookies
+          includeRequestCookies: depositorRegistrationBookmark.includeRequestCookies,
+          maxSentData: depositorRegistrationBookmark.maxSentData,
+          maxRecvData: depositorRegistrationBookmark.maxRecvData
         };
         break;
 
@@ -334,7 +348,9 @@ const Wise: React.FC<WiseProps> = ({
           secretResponseSelector: transferBookmark.secretResponseSelector,
           metaDataSelector: transferBookmark.metaDataSelector,
           skipRequestHeaders: transferBookmark.skipRequestHeaders,
-          includeRequestCookies: transferBookmark.includeRequestCookies
+          includeRequestCookies: transferBookmark.includeRequestCookies,
+          maxSentData: transferBookmark.maxSentData,
+          maxRecvData: transferBookmark.maxRecvData
         };
         break;
     }
