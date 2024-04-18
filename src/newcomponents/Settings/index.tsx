@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useRef, useReducer, useState } from 'react';
-import { Settings as SettingsIcon, Check } from 'react-feather';
+import { Settings as SettingsIcon, Check, RefreshCw } from 'react-feather';
 import styled from 'styled-components';
 
 import { useOnClickOutside } from '@hooks/useOnClickOutside';
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
+import { measureLatency } from '../../utils/misc';
 import { set, get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
 import { Overlay } from '@newcomponents/common/Overlay';
-
 
 const CLIENT_VERSION = '0.0.1';
 const API_CONFIGURATIONS = [
@@ -45,6 +45,7 @@ export const Settings = () => {
 
   const [notary, setNotary] = useState('https://notary-california.zkp2p.xyz');
   const [proxy, setProxy] = useState('wss://proxy-california.zkp2p.xyz');
+  const [latencyResults, setLatencyResults] = useState<string[] | null>(null);
 
   /*
    * Hooks
@@ -62,6 +63,14 @@ export const Settings = () => {
     })();
   }, []);
 
+  useEffect(() => {
+    if (!latencyResults) {
+      handleMeasureLatency();
+    }
+
+    console.log('latencyResults', latencyResults);
+  }, [latencyResults]);
+
   /*
    * Handler
    */
@@ -77,7 +86,14 @@ export const Settings = () => {
     await set(PROXY_API_LS_KEY, newProxy);
   }, []);
 
-  // no-op
+  const handleMeasureLatency = useCallback(async () => {
+    try {
+      const results = await Promise.all(API_CONFIGURATIONS.map(config => measureLatency(new URL(`${config.notary}/info`))))
+      setLatencyResults(results);
+    } catch (error) {
+      console.error('Error fetching the URL:', error);
+    }
+  }, [latencyResults]);
 
   /*
    * Component
@@ -95,13 +111,18 @@ export const Settings = () => {
 
           <DropdownContainer>
             <NotarySettingContainer>
-              <ThemedText.LabelSmall textAlign="left">
-                Notary
-              </ThemedText.LabelSmall>
+              <SettingsLabelContainer>
+                <ThemedText.LabelSmall textAlign="left">
+                  Notary
+                </ThemedText.LabelSmall>
+                
+                <StyledRefresh onClick={handleMeasureLatency} />
+              </SettingsLabelContainer>
               
               <NotaryOptionsContainer>
                 {API_CONFIGURATIONS.map((config, index) => (
                   <NotaryOptionRow
+                    key={index}
                     topRow={index === 0}
                     lastRow={index === API_CONFIGURATIONS.length - 1}
                     onClick={() => handleApiChange(config.notary, config.proxy)}
@@ -110,8 +131,12 @@ export const Settings = () => {
                       {`${config.name}`}
                     </NotaryOptionTitle>
 
-                    {notary === config.notary && (
+                    {notary === config.notary ? (
                       <StyledCheck />
+                    ) : (
+                      <NotaryLatencySubtitle>
+                        {`${latencyResults?.[index]} ms`}
+                      </NotaryLatencySubtitle>
                     )}
                   </NotaryOptionRow>
                 ))}
@@ -159,7 +184,7 @@ const DropdownAndOverlayContainer = styled.div`
 const DropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 184px;
+  width: 256px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 1rem 1.25rem;
@@ -176,6 +201,12 @@ const NotarySettingContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+`;
+
+const SettingsLabelContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 `;
 
 const NotaryOptionsContainer = styled.div`
@@ -213,11 +244,26 @@ const NotaryOptionTitle = styled.div`
   color: #ffffff;
 `;
 
+const NotaryLatencySubtitle = styled.div`
+  padding-left: 0.5rem;
+  font-size: 11px;
+  color: #ffffff;
+`;
+
 const StyledCheck = styled(Check)`
   margin-right: 0.5rem;
   color: ${colors.white};
   height: 16px;
   width: 16px;
+`;
+
+const StyledRefresh = styled(RefreshCw)`
+  height: 16px;
+  width: 16px;
+
+  &:hover:not([disabled]) {
+    color: #495057;
+  }
 `;
 
 const IconRow = styled.div`
