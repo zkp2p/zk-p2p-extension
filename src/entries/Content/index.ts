@@ -40,6 +40,12 @@ window.addEventListener('message', function (event) {
 
     chrome.runtime.sendMessage({ action: 'open_sidebar_background' });
   }
+
+  if (event.data.type && event.data.type == 'post_onramper_intent') {
+    // console.log('Content received post_onramper_intent');
+
+    chrome.runtime.sendMessage({ action: 'post_onramper_intent_background', data: event.data });
+  }
 });
 
 /*

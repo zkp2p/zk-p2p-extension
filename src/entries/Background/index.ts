@@ -1,6 +1,6 @@
 import browser from 'webextension-polyfill';
 
-import { deleteCacheByTabId } from './cache';
+import { deleteCacheByTabId, getCacheByPlatformType } from './cache';
 import { onBeforeRequest, onResponseStarted, onSendHeaders } from './handlers';
 import { getNotaryRequests } from './db';
 
@@ -126,6 +126,14 @@ chrome.runtime.onMessage.addListener((message) => {
       // @ts-ignore
       chrome.sidePanel.open({ tabId: tabs[0].id });
     });
+  }
+
+  if (message.action === 'post_onramper_intent_background') {
+    const { platform, onramperIntent: onramperIntentString, fiatToSend } = message.data;
+    const onramperIntent = JSON.parse(onramperIntentString);    
+    const cache = getCacheByPlatformType(platform);
+
+    cache.set(platform, { ...onramperIntent, fiatToSend });
   }
 });
 

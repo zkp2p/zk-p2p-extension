@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import { clearCache, getCacheByTabId } from './cache';
+import { clearRequestsLogsCache, getCacheByTabId, getCacheByPlatformType } from './cache';
 import { addRequestHistory } from '../../reducers/history';
 import {
   getNotaryRequests,
@@ -11,7 +11,7 @@ import {
   setNotaryRequestVerification,
   removeNotaryRequest,
 } from './db';
-import { WiseRequestType } from '@utils/types/wiseActions';
+import { OnRamperIntent, WiseRequestType } from '@utils/types';
 
 export enum BackgroundActiontype {
   get_requests = 'get_requests',
@@ -25,6 +25,7 @@ export enum BackgroundActiontype {
   verify_proof = 'verify_proof',
   delete_prove_request = 'delete_prove_request',
   retry_prove_request = 'retry_prove_request',
+  get_onramper_intent = 'get_onramper_intent',
 }
 
 export type BackgroundAction = {
@@ -83,7 +84,7 @@ export const initRPC = () => {
         return handleGetRequests(request, sendResponse);
 
       case BackgroundActiontype.clear_requests:
-        clearCache();
+        clearRequestsLogsCache();
         return sendResponse();
 
       case BackgroundActiontype.get_prove_requests:
@@ -101,6 +102,9 @@ export const initRPC = () => {
 
       case BackgroundActiontype.prove_request_start:
         return handleProveRequestStart(request, sendResponse);
+
+      case BackgroundActiontype.get_onramper_intent:
+        return handleGetOnramperIntent(request, sendResponse);
 
       default:
         break;
@@ -284,4 +288,15 @@ async function handleProveRequestStart(
   });
 
   return sendResponse();
+}
+
+async function handleGetOnramperIntent(
+  request: BackgroundAction,
+  sendResponse: (data?: any) => void,
+) {
+  const platform = request.data;
+  const cache = getCacheByPlatformType(platform);
+  const onramperIntent: OnRamperIntent = cache.get(platform) as OnRamperIntent;
+
+  return onramperIntent;
 }

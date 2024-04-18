@@ -55,7 +55,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
    * Helpers
    */
 
-  function parseTimestamp(timestamp: number): string {
+  function parseTimestamp(timestamp: number, addPreposition = false): string {
     const date = new Date(timestamp);
     const now = new Date();
 
@@ -64,16 +64,20 @@ export const RequestTable: React.FC<RequestTableProps> = ({
                     date.getFullYear() === now.getFullYear();
 
     if (isToday) {
-      return date.toLocaleTimeString('en-US', {
+      const preposition = "at ";
+      const dateString = date.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
         hour12: true
       });
+      return addPreposition ? preposition + dateString : dateString;
     } else {
-      return date.toLocaleDateString('en-US', {
+      const preposition = "on ";
+      const dateString = date.toLocaleDateString('en-US', {
         month: 'numeric',
         day: 'numeric'
       });
+      return addPreposition ? preposition + dateString : dateString;
     }
   };
 
@@ -87,7 +91,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
 
   useEffect(() => {
     const newRequests = requests.map((request) => {
-      console.log("JSON Response Body", JSON.parse(request.responseBody as string));
+      // console.log("JSON Response Body", JSON.parse(request.responseBody as string));
       const jsonResponseBody = JSON.parse(request.responseBody as string);
 
       let subject = '';
@@ -99,7 +103,8 @@ export const RequestTable: React.FC<RequestTableProps> = ({
   
           case WiseAction.DEPOSITOR_REGISTRATION:
           case WiseAction.TRANSFER:
-            subject = `${jsonResponseBody.actor} of ${jsonResponseBody.targetAmount} ${jsonResponseBody.targetCurrency}`;
+            const transferDate = parseTimestamp(parseInt(jsonResponseBody.stateHistory[0].date), true);
+            subject = `Sent ${jsonResponseBody.targetAmount} ${jsonResponseBody.targetCurrency} ${transferDate}`;
             break;
   
           default:
@@ -154,7 +159,6 @@ export const RequestTable: React.FC<RequestTableProps> = ({
             <RequestRow
               key={index}
               subjectText={notarization.subject}
-              dateText={notarization.date}
               isSelected={selectedIndex === (index + currentPage * ROWS_PER_PAGE)}
               isLastRow={index === loadedRequests.length - 1}
               onRowClick={() => handleRowClick(index)}
