@@ -5,6 +5,35 @@ window.onerror = (error) => {
   // console.log(error);
 };
 
+function waitForElements(selector: any, callback: any) {
+  const interval = setInterval(() => {
+    const elements = document.querySelectorAll(selector);
+    if (elements.length) {
+      clearInterval(interval);
+      callback(elements);
+    }
+  }, 100);
+}
+
+function handleFoundElements(elements: any) {
+  console.log("Elements found:", elements[0]);
+  elements[0].classList.add('test');
+
+  const icon = document.createElement('img');
+  icon.src = 'https://static.debank.com/image/matic_token/logo_url/matic/6f5a6b6f0732a7a235131bd7804d357c.png';
+  icon.alt = 'Icon';
+  icon.style.width = '24px';
+  icon.style.height = '24px';
+  elements[0].insertAdjacentElement('afterend', icon);
+}
+
+const selector = '[data-testid="activity-summary"]';
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => waitForElements(selector, handleFoundElements));
+} else {
+  waitForElements(selector, handleFoundElements);
+}
+
 window.addEventListener('message', function (event) {
   if (event.source != window) {
     return;

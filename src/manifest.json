@@ -25,6 +25,7 @@
   "content_scripts": [
     {
       "matches": [
+        "https://wise.com/*",
         "http://localhost:3000/*",
         "https://staging-testnet.zkp2p.xyz/*",
         "https://staging-app.zkp2p.xyz/*",
