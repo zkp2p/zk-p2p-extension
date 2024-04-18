@@ -46,7 +46,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@babel/core@npm:^7.12.3, @babel/core@npm:^7.16.0, @babel/core@npm:^7.20.12":
+=======
+"@babel/core@npm:^7.16.0, @babel/core@npm:^7.20.12":
+>>>>>>> f598ef5 (add ping helper function)
   version: 7.24.4
   resolution: "@babel/core@npm:7.24.4"
   dependencies:
@@ -208,7 +212,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@babel/helper-module-imports@npm:^7.0.0, @babel/helper-module-imports@npm:^7.16.7, @babel/helper-module-imports@npm:^7.22.15, @babel/helper-module-imports@npm:^7.22.5, @babel/helper-module-imports@npm:^7.24.1, @babel/helper-module-imports@npm:^7.24.3":
+=======
+"@babel/helper-module-imports@npm:^7.0.0, @babel/helper-module-imports@npm:^7.22.15, @babel/helper-module-imports@npm:^7.22.5, @babel/helper-module-imports@npm:^7.24.1, @babel/helper-module-imports@npm:^7.24.3":
+>>>>>>> f598ef5 (add ping helper function)
   version: 7.24.3
   resolution: "@babel/helper-module-imports@npm:7.24.3"
   dependencies:
@@ -1218,6 +1226,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@babel/plugin-transform-react-constant-elements@npm:^7.12.1":
   version: 7.24.1
   resolution: "@babel/plugin-transform-react-constant-elements@npm:7.24.1"
@@ -1229,6 +1238,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@babel/plugin-transform-react-display-name@npm:^7.16.0, @babel/plugin-transform-react-display-name@npm:^7.24.1":
   version: 7.24.1
   resolution: "@babel/plugin-transform-react-display-name@npm:7.24.1"
@@ -1434,7 +1445,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@babel/preset-env@npm:^7.12.1, @babel/preset-env@npm:^7.16.4, @babel/preset-env@npm:^7.20.2":
+=======
+"@babel/preset-env@npm:^7.16.4, @babel/preset-env@npm:^7.20.2":
+>>>>>>> f598ef5 (add ping helper function)
   version: 7.24.4
   resolution: "@babel/preset-env@npm:7.24.4"
   dependencies:
@@ -1538,7 +1553,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@babel/preset-react@npm:^7.12.5, @babel/preset-react@npm:^7.16.0, @babel/preset-react@npm:^7.18.6":
+=======
+"@babel/preset-react@npm:^7.16.0, @babel/preset-react@npm:^7.18.6":
+>>>>>>> f598ef5 (add ping helper function)
   version: 7.24.1
   resolution: "@babel/preset-react@npm:7.24.1"
   dependencies:
@@ -1576,7 +1595,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.23.9, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+=======
+"@babel/runtime@npm:^7.12.1, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
+>>>>>>> f598ef5 (add ping helper function)
   version: 7.24.4
   resolution: "@babel/runtime@npm:7.24.4"
   dependencies:
@@ -1614,7 +1637,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@babel/types@npm:^7.12.6, @babel/types@npm:^7.22.15, @babel/types@npm:^7.22.19, @babel/types@npm:^7.22.5, @babel/types@npm:^7.23.0, @babel/types@npm:^7.23.4, @babel/types@npm:^7.24.0, @babel/types@npm:^7.4.4, @babel/types@npm:^7.7.0, @babel/types@npm:^7.8.3":
+=======
+"@babel/types@npm:^7.22.15, @babel/types@npm:^7.22.19, @babel/types@npm:^7.22.5, @babel/types@npm:^7.23.0, @babel/types@npm:^7.23.4, @babel/types@npm:^7.24.0, @babel/types@npm:^7.4.4, @babel/types@npm:^7.7.0, @babel/types@npm:^7.8.3":
+>>>>>>> f598ef5 (add ping helper function)
   version: 7.24.0
   resolution: "@babel/types@npm:7.24.0"
   dependencies:
@@ -2082,6 +2109,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@emotion/babel-plugin@npm:^11.11.0":
   version: 11.11.0
   resolution: "@emotion/babel-plugin@npm:11.11.0"
@@ -2101,6 +2129,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@emotion/cache@npm:^10.0.27":
   version: 10.0.29
   resolution: "@emotion/cache@npm:10.0.29"
@@ -2113,6 +2143,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@emotion/cache@npm:^11.11.0":
   version: 11.11.0
   resolution: "@emotion/cache@npm:11.11.0"
@@ -2126,6 +2157,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@emotion/core@npm:^10.0.0":
   version: 10.3.1
   resolution: "@emotion/core@npm:10.3.1"
@@ -2160,6 +2193,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@emotion/hash@npm:^0.9.1":
   version: 0.9.1
   resolution: "@emotion/hash@npm:0.9.1"
@@ -2167,6 +2201,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@emotion/is-prop-valid@npm:0.8.8, @emotion/is-prop-valid@npm:^0.8.1":
   version: 0.8.8
   resolution: "@emotion/is-prop-valid@npm:0.8.8"
@@ -2206,6 +2242,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@emotion/react@npm:^11.11.4":
   version: 11.11.4
   resolution: "@emotion/react@npm:11.11.4"
@@ -2227,6 +2264,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@emotion/serialize@npm:^0.11.15, @emotion/serialize@npm:^0.11.16":
   version: 0.11.16
   resolution: "@emotion/serialize@npm:0.11.16"
@@ -2240,6 +2279,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@emotion/serialize@npm:^1.1.2, @emotion/serialize@npm:^1.1.3":
   version: 1.1.4
   resolution: "@emotion/serialize@npm:1.1.4"
@@ -2253,6 +2293,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@emotion/sheet@npm:0.9.4":
   version: 0.9.4
   resolution: "@emotion/sheet@npm:0.9.4"
@@ -2260,6 +2302,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@emotion/sheet@npm:^1.2.2":
   version: 1.2.2
   resolution: "@emotion/sheet@npm:1.2.2"
@@ -2267,6 +2310,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@emotion/styled-base@npm:^10.3.0":
   version: 10.3.0
   resolution: "@emotion/styled-base@npm:10.3.0"
@@ -2309,6 +2354,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@emotion/unitless@npm:^0.8.1":
   version: 0.8.1
   resolution: "@emotion/unitless@npm:0.8.1"
@@ -2325,6 +2371,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@emotion/utils@npm:0.11.3":
   version: 0.11.3
   resolution: "@emotion/utils@npm:0.11.3"
@@ -2332,6 +2380,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@emotion/utils@npm:^1.2.1":
   version: 1.2.1
   resolution: "@emotion/utils@npm:1.2.1"
@@ -2339,6 +2388,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@emotion/weak-memoize@npm:0.2.5":
   version: 0.2.5
   resolution: "@emotion/weak-memoize@npm:0.2.5"
@@ -2346,6 +2397,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@emotion/weak-memoize@npm:^0.3.1":
   version: 0.3.1
   resolution: "@emotion/weak-memoize@npm:0.3.1"
@@ -2353,6 +2405,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@eslint-community/eslint-utils@npm:^4.2.0":
   version: 4.4.0
   resolution: "@eslint-community/eslint-utils@npm:4.4.0"
@@ -2395,6 +2449,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@floating-ui/core@npm:^1.0.0":
   version: 1.6.0
   resolution: "@floating-ui/core@npm:1.6.0"
@@ -2433,6 +2488,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@fortawesome/fontawesome-free@npm:^6.4.2":
   version: 6.5.2
   resolution: "@fortawesome/fontawesome-free@npm:6.5.2"
@@ -2538,6 +2595,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@mui/base@npm:5.0.0-beta.40":
   version: 5.0.0-beta.40
   resolution: "@mui/base@npm:5.0.0-beta.40"
@@ -2696,6 +2754,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1":
   version: 5.1.1-v1
   resolution: "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1"
@@ -2807,6 +2867,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@popperjs/core@npm:^2.11.8":
   version: 2.11.8
   resolution: "@popperjs/core@npm:2.11.8"
@@ -2834,6 +2895,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@remix-run/router@npm:1.15.3":
   version: 1.15.3
   resolution: "@remix-run/router@npm:1.15.3"
@@ -2975,6 +3038,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@svgr/babel-plugin-add-jsx-attribute@npm:^5.4.0":
   version: 5.4.0
   resolution: "@svgr/babel-plugin-add-jsx-attribute@npm:5.4.0"
@@ -3106,6 +3170,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@types/body-parser@npm:*":
   version: 1.19.5
   resolution: "@types/body-parser@npm:1.19.5"
@@ -3338,13 +3404,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@types/prop-types@npm:*, @types/prop-types@npm:^15.7.11":
+=======
+"@types/prop-types@npm:*":
+>>>>>>> f598ef5 (add ping helper function)
   version: 15.7.12
   resolution: "@types/prop-types@npm:15.7.12"
   checksum: ac16cc3d0a84431ffa5cfdf89579ad1e2269549f32ce0c769321fdd078f84db4fbe1b461ed5a1a496caf09e637c0e367d600c541435716a55b1d9713f5035dfe
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@types/q@npm:^1.5.1":
   version: 1.5.8
   resolution: "@types/q@npm:1.5.8"
@@ -3352,6 +3423,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@types/qs@npm:*":
   version: 6.9.15
   resolution: "@types/qs@npm:6.9.15"
@@ -3396,6 +3469,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "@types/react-transition-group@npm:^4.4.10":
   version: 4.4.10
   resolution: "@types/react-transition-group@npm:4.4.10"
@@ -3405,6 +3479,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "@types/react@npm:*, @types/react@npm:^18.0.26":
   version: 18.2.79
   resolution: "@types/react@npm:18.2.79"
@@ -4122,6 +4198,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "argparse@npm:^1.0.7":
   version: 1.0.10
   resolution: "argparse@npm:1.0.10"
@@ -4131,6 +4208,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "argparse@npm:^2.0.1":
   version: 2.0.1
   resolution: "argparse@npm:2.0.1"
@@ -4253,6 +4332,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "array.prototype.reduce@npm:^1.0.6":
   version: 1.0.7
   resolution: "array.prototype.reduce@npm:1.0.7"
@@ -4268,6 +4348,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "array.prototype.toreversed@npm:^1.1.2":
   version: 1.1.2
   resolution: "array.prototype.toreversed@npm:1.1.2"
@@ -4637,7 +4719,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "boolbase@npm:^1.0.0, boolbase@npm:~1.0.0":
+=======
+"boolbase@npm:^1.0.0":
+>>>>>>> f598ef5 (add ping helper function)
   version: 1.0.0
   resolution: "boolbase@npm:1.0.0"
   checksum: 3e25c80ef626c3a3487c73dbfc70ac322ec830666c9ad915d11b701142fab25ec1e63eff2c450c74347acfd2de854ccde865cd79ef4db1683f7c7b046ea43bb0
@@ -4793,6 +4879,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "camelcase@npm:^6.2.0":
   version: 6.3.0
   resolution: "camelcase@npm:6.3.0"
@@ -4800,6 +4887,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "camelize@npm:^1.0.0":
   version: 1.0.1
   resolution: "camelize@npm:1.0.1"
@@ -4828,7 +4917,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "chalk@npm:^2.4.1, chalk@npm:^2.4.2":
+=======
+"chalk@npm:^2.4.2":
+>>>>>>> f598ef5 (add ping helper function)
   version: 2.4.2
   resolution: "chalk@npm:2.4.2"
   dependencies:
@@ -4955,6 +5048,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "clsx@npm:^2.1.0":
   version: 2.1.0
   resolution: "clsx@npm:2.1.0"
@@ -4973,6 +5067,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "color-convert@npm:^1.9.0":
   version: 1.9.3
   resolution: "color-convert@npm:1.9.3"
@@ -5342,6 +5438,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "css-select-base-adapter@npm:^0.1.1":
   version: 0.1.1
   resolution: "css-select-base-adapter@npm:0.1.1"
@@ -5361,6 +5458,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "css-select@npm:^4.1.3":
   version: 4.3.0
   resolution: "css-select@npm:4.3.0"
@@ -5385,6 +5484,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "css-tree@npm:1.0.0-alpha.37":
   version: 1.0.0-alpha.37
   resolution: "css-tree@npm:1.0.0-alpha.37"
@@ -5412,6 +5512,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "css-what@npm:^6.0.1":
   version: 6.1.0
   resolution: "css-what@npm:6.1.0"
@@ -5435,6 +5537,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "csso@npm:^4.0.2":
   version: 4.2.0
   resolution: "csso@npm:4.2.0"
@@ -5444,6 +5547,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "csstype@npm:^2.5.7":
   version: 2.6.21
   resolution: "csstype@npm:2.6.21"
@@ -5451,7 +5556,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "csstype@npm:^3.0.2, csstype@npm:^3.1.3":
+=======
+"csstype@npm:^3.0.2":
+>>>>>>> f598ef5 (add ping helper function)
   version: 3.1.3
   resolution: "csstype@npm:3.1.3"
   checksum: 8db785cc92d259102725b3c694ec0c823f5619a84741b5c7991b8ad135dfaa66093038a1cc63e03361a6cd28d122be48f2106ae72334e067dd619a51f49eddf7
@@ -5551,6 +5660,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "deepmerge@npm:^4.2.2":
   version: 4.3.1
   resolution: "deepmerge@npm:4.3.1"
@@ -5558,6 +5668,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "default-gateway@npm:^6.0.3":
   version: 6.0.3
   resolution: "default-gateway@npm:6.0.3"
@@ -5712,6 +5824,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "dom-helpers@npm:^5.0.1":
   version: 5.2.1
   resolution: "dom-helpers@npm:5.2.1"
@@ -5732,6 +5845,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "dom-serializer@npm:^1.0.1":
   version: 1.4.1
   resolution: "dom-serializer@npm:1.4.1"
@@ -5743,6 +5858,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "domelementtype@npm:1":
   version: 1.3.1
   resolution: "domelementtype@npm:1.3.1"
@@ -5750,6 +5866,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "domelementtype@npm:^2.0.1, domelementtype@npm:^2.2.0":
   version: 2.3.0
   resolution: "domelementtype@npm:2.3.0"
@@ -5766,6 +5884,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "domutils@npm:^1.7.0":
   version: 1.7.0
   resolution: "domutils@npm:1.7.0"
@@ -5776,6 +5895,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "domutils@npm:^2.5.2, domutils@npm:^2.8.0":
   version: 2.8.0
   resolution: "domutils@npm:2.8.0"
@@ -5930,7 +6051,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "es-abstract@npm:^1.17.2, es-abstract@npm:^1.22.1, es-abstract@npm:^1.22.3, es-abstract@npm:^1.23.0, es-abstract@npm:^1.23.1, es-abstract@npm:^1.23.2":
+=======
+"es-abstract@npm:^1.22.1, es-abstract@npm:^1.22.3, es-abstract@npm:^1.23.0, es-abstract@npm:^1.23.1, es-abstract@npm:^1.23.2":
+>>>>>>> f598ef5 (add ping helper function)
   version: 1.23.3
   resolution: "es-abstract@npm:1.23.3"
   dependencies:
@@ -5984,6 +6109,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "es-array-method-boxes-properly@npm:^1.0.0":
   version: 1.0.0
   resolution: "es-array-method-boxes-properly@npm:1.0.0"
@@ -5991,6 +6117,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "es-define-property@npm:^1.0.0":
   version: 1.0.0
   resolution: "es-define-property@npm:1.0.0"
@@ -6414,6 +6542,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "esprima@npm:^4.0.0":
   version: 4.0.1
   resolution: "esprima@npm:4.0.1"
@@ -6424,6 +6553,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "esquery@npm:^1.4.2":
   version: 1.5.0
   resolution: "esquery@npm:1.5.0"
@@ -7166,7 +7297,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "has-symbols@npm:^1.0.1, has-symbols@npm:^1.0.2, has-symbols@npm:^1.0.3":
+=======
+"has-symbols@npm:^1.0.2, has-symbols@npm:^1.0.3":
+>>>>>>> f598ef5 (add ping helper function)
   version: 1.0.3
   resolution: "has-symbols@npm:1.0.3"
   checksum: a054c40c631c0d5741a8285010a0777ea0c068f99ed43e5d6eb12972da223f8af553a455132fdb0801bdcfa0e0f443c0c03a68d8555aa529b3144b446c3f2410
@@ -7200,7 +7335,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "hoist-non-react-statics@npm:^3.0.0, hoist-non-react-statics@npm:^3.3.0, hoist-non-react-statics@npm:^3.3.1, hoist-non-react-statics@npm:^3.3.2":
+=======
+"hoist-non-react-statics@npm:^3.0.0, hoist-non-react-statics@npm:^3.3.0, hoist-non-react-statics@npm:^3.3.2":
+>>>>>>> f598ef5 (add ping helper function)
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
   dependencies:
@@ -7461,6 +7600,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "immer@npm:^10.0.3":
   version: 10.0.4
   resolution: "immer@npm:10.0.4"
@@ -7468,6 +7608,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "immutable@npm:^4.0.0":
   version: 4.3.5
   resolution: "immutable@npm:4.3.5"
@@ -8004,6 +8146,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "js-yaml@npm:^3.13.1":
   version: 3.14.1
   resolution: "js-yaml@npm:3.14.1"
@@ -8016,6 +8159,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "js-yaml@npm:^4.1.0":
   version: 4.1.0
   resolution: "js-yaml@npm:4.1.0"
@@ -8406,6 +8551,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "mdn-data@npm:2.0.14":
   version: 2.0.14
   resolution: "mdn-data@npm:2.0.14"
@@ -8420,6 +8566,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "media-typer@npm:0.3.0":
   version: 0.3.0
   resolution: "media-typer@npm:0.3.0"
@@ -8631,6 +8779,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "mkdirp@npm:~0.5.1":
   version: 0.5.6
   resolution: "mkdirp@npm:0.5.6"
@@ -8642,6 +8791,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "module-error@npm:^1.0.1, module-error@npm:^1.0.2":
   version: 1.0.2
   resolution: "module-error@npm:1.0.2"
@@ -8835,6 +8986,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "nth-check@npm:^1.0.2":
   version: 1.0.2
   resolution: "nth-check@npm:1.0.2"
@@ -8844,6 +8996,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "nth-check@npm:^2.0.1":
   version: 2.1.1
   resolution: "nth-check@npm:2.1.1"
@@ -8923,6 +9077,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "object.getownpropertydescriptors@npm:^2.1.0":
   version: 2.1.8
   resolution: "object.getownpropertydescriptors@npm:2.1.8"
@@ -8938,6 +9093,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "object.groupby@npm:^1.0.1":
   version: 1.0.3
   resolution: "object.groupby@npm:1.0.3"
@@ -8960,7 +9117,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "object.values@npm:^1.1.0, object.values@npm:^1.1.6, object.values@npm:^1.1.7":
+=======
+"object.values@npm:^1.1.6, object.values@npm:^1.1.7":
+>>>>>>> f598ef5 (add ping helper function)
   version: 1.2.0
   resolution: "object.values@npm:1.2.0"
   dependencies:
@@ -9895,7 +10056,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+=======
+"prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+>>>>>>> f598ef5 (add ping helper function)
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -9937,6 +10102,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "q@npm:^1.1.2":
   version: 1.5.1
   resolution: "q@npm:1.5.1"
@@ -9944,6 +10110,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "qs@npm:6.11.0":
   version: 6.11.0
   resolution: "qs@npm:6.11.0"
@@ -10025,7 +10193,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "react-is@npm:^18.0.0, react-is@npm:^18.2.0":
+=======
+"react-is@npm:^18.0.0":
+>>>>>>> f598ef5 (add ping helper function)
   version: 18.2.0
   resolution: "react-is@npm:18.2.0"
   checksum: e72d0ba81b5922759e4aff17e0252bd29988f9642ed817f56b25a3e217e13eea8a7f2322af99a06edb779da12d5d636e9fda473d620df9a3da0df2a74141d53e
@@ -10105,6 +10277,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "react-transition-group@npm:^4.4.5":
   version: 4.4.5
   resolution: "react-transition-group@npm:4.4.5"
@@ -10120,6 +10293,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "react@npm:^18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
@@ -10209,6 +10384,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "redux-thunk@npm:^3.1.0":
   version: 3.1.0
   resolution: "redux-thunk@npm:3.1.0"
@@ -10218,6 +10394,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "redux@npm:^4.2.1":
   version: 4.2.1
   resolution: "redux@npm:4.2.1"
@@ -10227,7 +10405,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "redux@npm:^5.0.0, redux@npm:^5.0.1":
+=======
+"redux@npm:^5.0.0":
+>>>>>>> f598ef5 (add ping helper function)
   version: 5.0.1
   resolution: "redux@npm:5.0.1"
   checksum: e74affa9009dd5d994878b9a1ce30d6569d986117175056edb003de2651c05b10fe7819d6fa94aea1a94de9a82f252f986547f007a2fbeb35c317a2e5f5ecf2c
@@ -10395,6 +10577,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "reselect@npm:^5.0.1":
   version: 5.1.0
   resolution: "reselect@npm:5.1.0"
@@ -10402,6 +10585,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "resolve-cwd@npm:^3.0.0":
   version: 3.0.0
   resolution: "resolve-cwd@npm:3.0.0"
@@ -10619,6 +10804,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "sax@npm:~1.2.4":
   version: 1.2.4
   resolution: "sax@npm:1.2.4"
@@ -10626,6 +10812,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "scheduler@npm:^0.23.0":
   version: 0.23.0
   resolution: "scheduler@npm:0.23.0"
@@ -10956,7 +11144,11 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "source-map@npm:^0.6.0, source-map@npm:^0.6.1, source-map@npm:~0.6.0":
+=======
+"source-map@npm:^0.6.0, source-map@npm:~0.6.0":
+>>>>>>> f598ef5 (add ping helper function)
   version: 0.6.1
   resolution: "source-map@npm:0.6.1"
   checksum: 59ce8640cf3f3124f64ac289012c2b8bd377c238e316fb323ea22fbfe83da07d81e000071d7242cad7a23cd91c7de98e4df8830ec3f133cb6133a5f6e9f67bc2
@@ -11004,6 +11196,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "sprintf-js@npm:~1.0.2":
   version: 1.0.3
   resolution: "sprintf-js@npm:1.0.3"
@@ -11011,6 +11204,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "sshpk@npm:^1.7.0":
   version: 1.18.0
   resolution: "sshpk@npm:1.18.0"
@@ -11041,6 +11236,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "stable@npm:^0.1.8":
   version: 0.1.8
   resolution: "stable@npm:0.1.8"
@@ -11048,6 +11244,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "stackframe@npm:^1.3.4":
   version: 1.3.4
   resolution: "stackframe@npm:1.3.4"
@@ -11261,6 +11459,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "stylis@npm:4.2.0":
   version: 4.2.0
   resolution: "stylis@npm:4.2.0"
@@ -11268,6 +11467,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "sucrase@npm:^3.32.0":
   version: 3.35.0
   resolution: "sucrase@npm:3.35.0"
@@ -11320,6 +11521,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "svg-parser@npm:^2.0.2":
   version: 2.0.4
   resolution: "svg-parser@npm:2.0.4"
@@ -11350,6 +11552,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "synckit@npm:^0.8.6":
   version: 0.8.8
   resolution: "synckit@npm:0.8.8"
@@ -11796,6 +12000,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "unquote@npm:~1.1.1":
   version: 1.1.1
   resolution: "unquote@npm:1.1.1"
@@ -11803,6 +12008,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "update-browserslist-db@npm:^1.0.13":
   version: 1.0.13
   resolution: "update-browserslist-db@npm:1.0.13"
@@ -11852,6 +12059,7 @@ __metadata:
   languageName: node
   linkType: hard
 
+<<<<<<< HEAD
 "util.promisify@npm:~1.0.0":
   version: 1.0.1
   resolution: "util.promisify@npm:1.0.1"
@@ -11864,6 +12072,8 @@ __metadata:
   languageName: node
   linkType: hard
 
+=======
+>>>>>>> f598ef5 (add ping helper function)
 "utila@npm:~0.4":
   version: 0.4.0
   resolution: "utila@npm:0.4.0"
@@ -12351,12 +12561,17 @@ __metadata:
     "@babel/plugin-proposal-class-properties": ^7.18.6
     "@babel/preset-env": ^7.20.2
     "@babel/preset-react": ^7.18.6
+<<<<<<< HEAD
     "@emotion/react": ^11.11.4
     "@fortawesome/fontawesome-free": ^6.4.2
     "@mui/material": ^5.15.15
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
     "@reduxjs/toolkit": ^2.2.3
     "@svgr/webpack": 5.5.0
+=======
+    "@fortawesome/fontawesome-free": ^6.4.2
+    "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
+>>>>>>> f598ef5 (add ping helper function)
     "@types/chrome": ^0.0.202
     "@types/cookie": ^0.6.0
     "@types/node": ^20.4.10

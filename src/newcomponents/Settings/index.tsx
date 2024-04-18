@@ -62,6 +62,14 @@ export const Settings = () => {
     }
   }, [latencies, notary]);
 
+  useEffect(() => {
+    if (!latencyResults) {
+      handleMeasureLatency();
+    }
+
+    console.log('latencyResults', latencyResults);
+  }, [latencyResults]);
+
   /*
    * Handler
    */
@@ -177,7 +185,7 @@ const DropdownAndOverlayContainer = styled.div`
 const DropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 184px;
+  width: 256px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 1rem 1.25rem;
@@ -203,6 +211,15 @@ const ConnectedNotaryContainer = styled.div`
 const ConnectedLabel = styled.div`
   font-weight: 700;
   font-size: 16px;
+`;
+
+const StyledRefresh = styled(RefreshCw)`
+  height: 16px;
+  width: 16px;
+
+  &:hover:not([disabled]) {
+    color: #495057;
+  }
 `;
 
 const IconRow = styled.div`
