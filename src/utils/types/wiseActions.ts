@@ -46,4 +46,5 @@ export interface Intent {
 export interface OnRamperIntent {
   depositorVenmoId: string;
   intent: Intent;
+  fiatToSend: string;
 }

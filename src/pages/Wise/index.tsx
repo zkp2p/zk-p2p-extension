@@ -73,7 +73,7 @@ const Wise: React.FC<WiseProps> = ({
    */
 
   useEffect(() => {
-    const requestsRetrieved = requests.length > 0;
+    const requestsRetrieved = loadedRequests.length > 0;
     const indexNotSelected = selectedIndex === null;
 
     if (requestsRetrieved && indexNotSelected) {
@@ -127,20 +127,28 @@ const Wise: React.FC<WiseProps> = ({
   
     if (requests) {
       const filteredRequests = requests.filter(request => {
+        const jsonResponseBody = JSON.parse(request.responseBody as string);
+
         switch (action) {
           case WiseAction.REGISTRATION:
             return request.requestType === WiseRequest.PAYMENT_PROFILE;
 
           case WiseAction.DEPOSITOR_REGISTRATION:
-            return request.requestType === WiseRequest.TRANSFER_DETAILS;
+            if (!jsonResponseBody) return false;
+            return (
+              request.requestType === WiseRequest.TRANSFER_DETAILS &&
+              jsonResponseBody.actor === "SENDER"
+            );
           case WiseAction.TRANSFER:
-            if (request.requestType === WiseRequest.TRANSFER_DETAILS) {
+            if (!jsonResponseBody) return false;
+            if (request.requestType === WiseRequest.TRANSFER_DETAILS && jsonResponseBody.actor === "SENDER") {
               const jsonResponseBody = JSON.parse(request.responseBody as string);
-              if (jsonResponseBody && onramperIntent) {
+              if (onramperIntent) {
                 // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
                 return (
                   jsonResponseBody.actor === "SENDER" &&
-                  parseInt(jsonResponseBody.stateHistory[0].date) / 1000 >= parseInt(onramperIntent.intent.timestamp)
+                  parseInt(jsonResponseBody.stateHistory[0].date) / 1000 >= parseInt(onramperIntent.intent.timestamp) &&// Adjust for timestamp
+                  parseInt(jsonResponseBody.targetAmount) >= parseInt(onramperIntent.fiatToSend)
                 )
               }
               // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users

@@ -129,11 +129,11 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 
   if (message.action === 'post_onramper_intent_background') {
-    const { platform, onramperIntent: onramperIntentString } = message.data;
+    const { platform, onramperIntent: onramperIntentString, fiatToSend } = message.data;
     const onramperIntent = JSON.parse(onramperIntentString);    
     const cache = getCacheByPlatformType(platform);
 
-    cache.set(platform, onramperIntent);
+    cache.set(platform, { ...onramperIntent, fiatToSend });
   }
 });
 
