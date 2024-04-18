@@ -146,7 +146,6 @@ const Wise: React.FC<WiseProps> = ({
               if (onramperIntent) {
                 // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
                 return (
-                  jsonResponseBody.actor === "SENDER" &&
                   parseInt(jsonResponseBody.stateHistory[0].date) / 1000 >= parseInt(onramperIntent.intent.timestamp) &&// Adjust for timestamp
                   parseInt(jsonResponseBody.targetAmount) >= parseInt(onramperIntent.fiatToSend)
                 )
