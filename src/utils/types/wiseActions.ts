@@ -48,3 +48,5 @@ export interface OnRamperIntent {
   intent: Intent;
   fiatToSend: string;
 }
+
+export const WISE_PLATFORM = 'wise';

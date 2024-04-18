@@ -13,12 +13,10 @@ import NotarizationTable from '@newcomponents/Notarizations/Table';
 import RequestTable from '@newcomponents/Requests/Table';
 import { InstructionTitle } from '@newcomponents/Instructions/Title';
 import { Button } from '@newcomponents/common/Button';
-import { OnRamperIntent, WiseAction, WiseActionType, WiseStep, WiseRequest } from '@utils/types';
+import { OnRamperIntent, WiseAction, WiseActionType, WiseStep, WiseRequest, WISE_PLATFORM } from '@utils/types';
 import { urlify } from '@utils/misc';
 
 import bookmarks from '../../../utils/bookmark/bookmarks.json';
-
-const WISE_PLATFORM = 'wise';
 
 interface ActionSettings {
   action_url: string;

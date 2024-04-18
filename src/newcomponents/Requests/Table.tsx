@@ -159,7 +159,6 @@ export const RequestTable: React.FC<RequestTableProps> = ({
             <RequestRow
               key={index}
               subjectText={notarization.subject}
-              dateText={notarization.date}
               isSelected={selectedIndex === (index + currentPage * ROWS_PER_PAGE)}
               isLastRow={index === loadedRequests.length - 1}
               onRowClick={() => handleRowClick(index)}

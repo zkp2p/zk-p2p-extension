@@ -1,2 +1,2 @@
-export { WiseAction, wiseActions, WiseStep, wiseSteps, WiseRequest } from './wiseActions';
+export { WiseAction, wiseActions, WiseStep, wiseSteps, WiseRequest, WISE_PLATFORM } from './wiseActions';
 export type { OnRamperIntent, Intent, WiseActionType, WiseStepType, WiseRequestType } from './wiseActions';
