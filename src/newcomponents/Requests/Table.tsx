@@ -103,7 +103,6 @@ export const RequestTable: React.FC<RequestTableProps> = ({
   
           case WiseAction.DEPOSITOR_REGISTRATION:
           case WiseAction.TRANSFER:
-            console.log(request.timestamp, jsonResponseBody.stateHistory[0].date);
             const transferDate = parseTimestamp(parseInt(jsonResponseBody.stateHistory[0].date), true);
             subject = `Sent ${jsonResponseBody.targetAmount} ${jsonResponseBody.targetCurrency} ${transferDate}`;
             break;
