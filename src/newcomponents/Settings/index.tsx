@@ -17,20 +17,20 @@ const API_CONFIGURATIONS = [
     proxy: 'ws://localhost:55688',
   },
   {
-    name: 'Mumbai',
-    notary: 'https://notary-mumbai.zkp2p.xyz',
-    proxy: 'wss://proxy-mumbai.zkp2p.xyz',
-  },
-  {
-    name: 'Ohio',
-    notary: 'https://notary-ohio.zkp2p.xyz',
-    proxy: 'wss://proxy-ohio.zkp2p.xyz',
-  },
-  {
     name: 'California',
     notary: 'https://notary-california.zkp2p.xyz',
     proxy: 'wss://proxy-california.zkp2p.xyz',
   },
+  {
+    name: 'Paris',
+    notary: 'https://notary-paris.zkp2p.xyz',
+    proxy: 'wss://proxy-california.zkp2p.xyz'
+  },
+  {
+    name: 'Frankfurt (PSE)',
+    notary: 'https://notary.pse.dev/v0.1.0-alpha.5',
+    proxy: 'wss://proxy-california.zkp2p.xyz'
+  }
 ];
 
 export const Settings = () => {
@@ -52,8 +52,13 @@ export const Settings = () => {
 
   useEffect(() => {
     (async () => {
-      setNotary(await get(NOTARY_API_LS_KEY));
-      setProxy(await get(PROXY_API_LS_KEY));
+      const storedNotaryUrl = await get(NOTARY_API_LS_KEY);
+      const storedProxyUrl = await get(PROXY_API_LS_KEY);
+
+      if (storedNotaryUrl && storedProxyUrl) {
+        setNotary(storedNotaryUrl);
+        setProxy(storedProxyUrl);
+      };
     })();
   }, []);
 

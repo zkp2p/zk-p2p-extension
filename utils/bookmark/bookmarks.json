@@ -6,6 +6,25 @@
     "type": "xmlhttprequest",
     "title": "Registration",
     "description": "Generate proof of a Wise account required to complete registration",
+    "skipRequestHeaders": [
+      "sec-ch-ua",
+      "sec-ch-ua-mobile",
+      "X-Visual-Context",
+      "sec-ch-ua-platform-version",
+      "sec-ch-ua-model",
+      "sec-ch-ua-platform",
+      "Sec-GPC",
+      "Sec-Fetch-Mode",
+      "Sec-Fetch-Dest",
+      "Referer",
+      "Accept-Encoding"
+    ],
+    "includeRequestCookies": [
+      "userSecurityData",
+      "appToken",
+      "oauthToken",
+      "userToken"
+    ],
     "secretResponseSelector": [
       "(?<=\"title\":\"Account details\",\"modules\":\\[)[^\\]]+"
     ],
@@ -14,7 +33,9 @@
     ],
     "valueTransform": [
       "\"description\":%s"
-    ]
+    ],
+    "maxSentData": 700,
+    "maxRecvData": 3200
   },
   {
     "url": "https://wise.com/gateway/v3/profiles/\\d+/transfers/\\d+",
@@ -23,6 +44,26 @@
     "type": "xmlhttprequest",
     "title": "New Depositor",
     "description": "Generate proof of a past Wise transfer required to enable deposits",
+    "skipRequestHeaders": [
+      "sec-ch-ua",
+      "sec-ch-ua-model",
+      "sec-ch-ua-mobile",
+      "sec-ch-ua-platform",
+      "sec-ch-ua-platform-version",
+      "Sec-GPC",
+      "Referer",
+      "X-Visual-Context",
+      "Sec-Fetch-Dest",
+      "Sec-Fetch-Mode",
+      "Accept-Encoding",
+      "User-Agent"
+    ],
+    "includeRequestCookies": [
+      "userSecurityData",
+      "appToken",
+      "oauthToken",
+      "userToken"
+    ],
     "secretResponseSelector": [
       "(?<=\"userId\":)\\d+"
     ],
@@ -39,7 +80,9 @@
       "\"date\":%s",
       "\"state\":%s",
       "\"actor\":%s"
-    ]
+    ],
+    "maxSentData": 500,
+    "maxRecvData": 2100
   },
   {
     "url": "https://wise.com/gateway/v3/profiles/\\d+/transfers/\\d+",
@@ -48,6 +91,26 @@
     "type": "xmlhttprequest",
     "title": "On-Ramp",
     "description": "Generate proof of your completed Wise transfer to complete onramp",
+    "skipRequestHeaders": [
+      "sec-ch-ua",
+      "sec-ch-ua-model",
+      "sec-ch-ua-mobile",
+      "sec-ch-ua-platform",
+      "sec-ch-ua-platform-version",
+      "Sec-GPC",
+      "Referer",
+      "X-Visual-Context",
+      "Sec-Fetch-Dest",
+      "Sec-Fetch-Mode",
+      "Accept-Encoding",
+      "User-Agent"
+    ],
+    "includeRequestCookies": [
+      "userSecurityData",
+      "appToken",
+      "oauthToken",
+      "userToken"
+    ],
     "secretResponseSelector": [
       "(?<=\"userId\":)\\d+"
     ],
@@ -64,6 +127,8 @@
       "\"date\":%s",
       "\"state\":%s",
       "\"actor\":%s"
-    ]
+    ],
+    "maxSentData": 500,
+    "maxRecvData": 2762
   }
 ]
