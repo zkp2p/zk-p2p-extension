@@ -62,16 +62,21 @@ const Container = styled.div<{ selected: boolean; isLastRow: boolean }>`
       box-shadow: none;
     }
   `}
+
+  cursor: pointer;
 `;
 
 const IndexLabel = styled.label`
   text-align: left;
+  cursor: pointer;
 `;
 
 const SubjectLabel = styled.label`
   text-align: left;
+  cursor: pointer;
 `;
 
 const DateLabel = styled.label`
   text-align: right;
+  cursor: pointer;
 `;
