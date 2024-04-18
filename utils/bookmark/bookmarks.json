@@ -34,7 +34,7 @@
     "valueTransform": [
       "\"description\":%s"
     ],
-    "maxSentData": 700,
+    "maxSentData": 750,
     "maxRecvData": 3200
   },
   {

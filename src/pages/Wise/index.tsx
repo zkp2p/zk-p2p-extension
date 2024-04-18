@@ -80,7 +80,7 @@ const Wise: React.FC<WiseProps> = ({
    */
 
   useEffect(() => {
-    const requestsRetrieved = loadedRequests.length > 0;
+    const requestsRetrieved = requests.length > 0;
     const indexNotSelected = selectedIndex === null;
 
     if (requestsRetrieved && indexNotSelected) {
