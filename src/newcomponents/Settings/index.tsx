@@ -11,22 +11,11 @@ import { Overlay } from '@newcomponents/common/Overlay';
 
 const CLIENT_VERSION = '0.0.1';
 const API_CONFIGURATIONS = [
-  // Only add V5 notaries here
   {
     name: 'Local',
     notary: 'http://0.0.0.0:7047',
     proxy: 'ws://localhost:55688',
   },
-  // {
-  //   name: 'Mumbai',
-  //   notary: 'https://notary-mumbai.zkp2p.xyz',
-  //   proxy: 'wss://proxy-mumbai.zkp2p.xyz',
-  // },
-  // {
-  //   name: 'Ohio',
-  //   notary: 'https://notary-ohio.zkp2p.xyz',
-  //   proxy: 'wss://proxy-ohio.zkp2p.xyz',
-  // },
   {
     name: 'California',
     notary: 'https://notary-california.zkp2p.xyz',
@@ -63,8 +52,13 @@ export const Settings = () => {
 
   useEffect(() => {
     (async () => {
-      setNotary(await get(NOTARY_API_LS_KEY));
-      setProxy(await get(PROXY_API_LS_KEY));
+      const storedNotaryUrl = await get(NOTARY_API_LS_KEY);
+      const storedProxyUrl = await get(PROXY_API_LS_KEY);
+
+      if (storedNotaryUrl && storedProxyUrl) {
+        setNotary(storedNotaryUrl);
+        setProxy(storedProxyUrl);
+      };
     })();
   }, []);
 
