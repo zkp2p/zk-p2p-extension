@@ -37,14 +37,20 @@ export default function Options(): ReactElement {
 
   useEffect(() => {
     (async () => {
-      setNotary(await get(NOTARY_API_LS_KEY));
-      setProxy(await get(PROXY_API_LS_KEY));
+      const storedNotaryUrl = await get(NOTARY_API_LS_KEY);
+      const storedProxyUrl = await get(PROXY_API_LS_KEY);
+
+      if (storedNotaryUrl && storedProxyUrl) {
+        setNotary(storedNotaryUrl);
+        setProxy(storedProxyUrl);
+      };
     })();
   }, []);
 
   const onSave = useCallback(async () => {
     await set(NOTARY_API_LS_KEY, notary);
     await set(PROXY_API_LS_KEY, proxy);
+    
     setDirty(false);
   }, [notary, proxy]);
 
