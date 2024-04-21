@@ -66,9 +66,7 @@ export const Settings = () => {
     if (!latencyResults) {
       handleMeasureLatency();
     }
-
-    console.log('latencyResults', latencyResults);
-  }, [latencyResults]);
+  }, [dispatch, notaryName, notary]);
 
   /*
    * Handler
@@ -185,7 +183,7 @@ const DropdownAndOverlayContainer = styled.div`
 const DropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 256px;
+  width: 184px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 1rem 1.25rem;
