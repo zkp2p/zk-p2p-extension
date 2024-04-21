@@ -1,75 +1,49 @@
-import React, { useCallback, useEffect, useRef, useReducer, useState } from 'react';
-import { Settings as SettingsIcon, Check, RefreshCw } from 'react-feather';
+import React, { useEffect, useRef, useReducer, useState } from 'react';
+import { Settings as SettingsIcon, Circle, Edit, Repeat } from 'react-feather';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
 import { useOnClickOutside } from '@hooks/useOnClickOutside';
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
-import { measureLatency } from '../../utils/misc';
-import { set, get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
+import { SVGIconThemed } from '@newcomponents/SVGIcon/SVGIconThemed';
 import { Overlay } from '@newcomponents/common/Overlay';
+import { AppDispatch } from '@utils/store';
+import { API_CONFIGURATIONS } from '@utils/types';
+import { AppRootState } from 'reducers';
+import { fetchApiUrls } from '../../reducers/settings';
 
 const CLIENT_VERSION = '0.0.1';
-const API_CONFIGURATIONS = [
-  {
-    name: 'Local',
-    notary: 'http://0.0.0.0:7047',
-    proxy: 'ws://localhost:55688',
-  },
-  {
-    name: 'California',
-    notary: 'https://notary-california.zkp2p.xyz',
-    proxy: 'wss://proxy-california.zkp2p.xyz',
-  },
-  {
-    name: 'Paris',
-    notary: 'https://notary-paris.zkp2p.xyz',
-    proxy: 'wss://proxy-california.zkp2p.xyz'
-  },
-  {
-    name: 'Frankfurt (PSE)',
-    notary: 'https://notary.pse.dev/v0.1.0-alpha.5',
-    proxy: 'wss://proxy-california.zkp2p.xyz'
-  }
-];
 
 export const Settings = () => {
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
 
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
+  const { notary } = useSelector((state: AppRootState) => state.settings);
+  
   /*
    * State
    */
+  const [notaryName, setNotaryName] = useState<string | null>(null);
 
-  const [notary, setNotary] = useState('https://notary-california.zkp2p.xyz');
-  const [proxy, setProxy] = useState('wss://proxy-california.zkp2p.xyz');
-  const [latencyResults, setLatencyResults] = useState<string[] | null>(null);
-
-  /*
+  /* 
    * Hooks
    */
-
   useEffect(() => {
-    (async () => {
-      const storedNotaryUrl = await get(NOTARY_API_LS_KEY);
-      const storedProxyUrl = await get(PROXY_API_LS_KEY);
+    dispatch(fetchApiUrls());
 
-      if (storedNotaryUrl && storedProxyUrl) {
-        setNotary(storedNotaryUrl);
-        setProxy(storedProxyUrl);
-      };
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (!latencyResults) {
-      handleMeasureLatency();
+    if (notary) {
+      const fetchNotaryName = API_CONFIGURATIONS.find((config) => config.notary === notary);
+      if (fetchNotaryName) {
+        setNotaryName(fetchNotaryName.name);
+      }
     }
-
-    console.log('latencyResults', latencyResults);
-  }, [latencyResults]);
+  }, [dispatch, notaryName, notary]);
 
   /*
    * Handler
@@ -79,21 +53,14 @@ export const Settings = () => {
     toggleOpen();
   };
 
-  const handleApiChange = useCallback(async (newNotary, newProxy) => {
-    setNotary(newNotary);
-    setProxy(newProxy);
-    await set(NOTARY_API_LS_KEY, newNotary);
-    await set(PROXY_API_LS_KEY, newProxy);
-  }, []);
-
-  const handleMeasureLatency = useCallback(async () => {
-    try {
-      const results = await Promise.all(API_CONFIGURATIONS.map(config => measureLatency(new URL(`${config.notary}/info`))))
-      setLatencyResults(results);
-    } catch (error) {
-      console.error('Error fetching the URL:', error);
-    }
-  }, [latencyResults]);
+  const jumpToMedia = (url: string) => {
+    window.open(url, '_blank');
+  };
+  
+  const handleUpdateNotaryClick = () => {
+    toggleOpen();
+    navigate('/settings');
+  };
 
   /*
    * Component
@@ -110,40 +77,51 @@ export const Settings = () => {
           <Overlay onClick={handleOverlayClick} />
 
           <DropdownContainer>
-            <NotarySettingContainer>
-              <SettingsLabelContainer>
-                <ThemedText.LabelSmall textAlign="left">
-                  Notary
-                </ThemedText.LabelSmall>
-                
-                <StyledRefresh onClick={handleMeasureLatency} />
-              </SettingsLabelContainer>
-              
-              <NotaryOptionsContainer>
-                {API_CONFIGURATIONS.map((config, index) => (
-                  <NotaryOptionRow
-                    key={index}
-                    topRow={index === 0}
-                    lastRow={index === API_CONFIGURATIONS.length - 1}
-                    onClick={() => handleApiChange(config.notary, config.proxy)}
-                  >
-                    <NotaryOptionTitle>
-                      {`${config.name}`}
-                    </NotaryOptionTitle>
+            <ConnectedNotaryContainer>
+              <ConnectedContainer>
+                <ConnectedLabel>
+                  Connected
+                </ConnectedLabel>
+                <StyledCircle fill={colors.successGreen} />
+              </ConnectedContainer>
 
-                    {notary === config.notary ? (
-                      <StyledCheck />
-                    ) : (
-                      <NotaryLatencySubtitle>
-                        {`${latencyResults?.[index]} ms`}
-                      </NotaryLatencySubtitle>
-                    )}
-                  </NotaryOptionRow>
-                ))}
-              </NotaryOptionsContainer>
-            </NotarySettingContainer>
+              <CurrentNotaryContainer>
+                <CurrentNotaryLink onClick={() => window.open(`${notary}/info`, '_blank')}>
+                  {notaryName} ↗
+                </CurrentNotaryLink>
+              </CurrentNotaryContainer>
+
+            </ConnectedNotaryContainer>
+
+            <DropdownItemsContainer>
+              <ItemAndIconContainer onClick={handleUpdateNotaryClick}>
+                <StyledEdit />
+                <DropdownItem>
+                  Configure
+                </DropdownItem>
+              </ItemAndIconContainer>
+
+              <ItemAndIconContainer onClick={() => window.open('https://zkp2p.xyz/', '_blank')}>
+                <StyledRepeat />
+                <DropdownItem>
+                  App ↗
+                </DropdownItem>
+              </ItemAndIconContainer>
+            </DropdownItemsContainer>
 
             <IconRow>
+              <Icon
+                icon={'twitter'}
+                onClick={() => jumpToMedia('https://twitter.com/zkp2p')}
+              />
+              <Icon
+                icon={'github'}
+                onClick={() => jumpToMedia('https://github.com/zkp2p')}
+              />
+              <Icon
+                icon={'telegram'}
+                onClick={() => jumpToMedia('https://t.me/+XDj9FNnW-xs5ODNl')}
+              />
               <VersionLabel>
                 v{CLIENT_VERSION}
               </VersionLabel>
@@ -184,7 +162,7 @@ const DropdownAndOverlayContainer = styled.div`
 const DropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 256px;
+  width: 184px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 1rem 1.25rem;
@@ -197,73 +175,19 @@ const DropdownContainer = styled.div`
   color: #FFFFFF;
 `;
 
-const NotarySettingContainer = styled.div`
+const ConnectedNotaryContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-`;
-
-const SettingsLabelContainer = styled.div`
-  display: flex;
+  gap: 0.75rem;
+  white-space: nowrap;
   align-items: center;
-  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid ${colors.defaultBorderColor};
 `;
 
-const NotaryOptionsContainer = styled.div`
-  width: 100%;
-  padding: 0rem 0.25rem;
-`;
-
-const NotaryOptionRow = styled.div<{ topRow: boolean, lastRow: boolean}>`
-  display: flex;
-  justify-content: space-between;
-  padding: 0.55rem 0.5rem 0.45rem 0.5rem;
-  background-color: ${colors.appBackground};
-
-  border-left: 1px solid ${colors.defaultBorderColor};
-  border-right: 1px solid ${colors.defaultBorderColor};
-  border-top: ${({ topRow }) => topRow || !topRow ? '1px solid' : 'none'} ${colors.defaultBorderColor};
-  border-bottom: ${({ lastRow }) => lastRow ? '1px solid' : 'none'} ${colors.defaultBorderColor};
-
-  border-radius: ${({ topRow, lastRow }) => {
-    if (topRow && lastRow) {
-      return '8px 8px 8px 8px';
-    } else if (topRow) {
-      return '8px 8px 0 0';
-    } else if (lastRow) {
-      return '0 0 8px 8px';
-    } else {
-      return '0';
-    }
-  }};
-`;
-
-const NotaryOptionTitle = styled.div`
-  padding-left: 0.5rem;
-  font-size: 13px;
-  color: #ffffff;
-`;
-
-const NotaryLatencySubtitle = styled.div`
-  padding-left: 0.5rem;
-  font-size: 11px;
-  color: #ffffff;
-`;
-
-const StyledCheck = styled(Check)`
-  margin-right: 0.5rem;
-  color: ${colors.white};
-  height: 16px;
-  width: 16px;
-`;
-
-const StyledRefresh = styled(RefreshCw)`
-  height: 16px;
-  width: 16px;
-
-  &:hover:not([disabled]) {
-    color: #495057;
-  }
+const ConnectedLabel = styled.div`
+  font-weight: 700;
+  font-size: 16px;
 `;
 
 const IconRow = styled.div`
@@ -271,6 +195,96 @@ const IconRow = styled.div`
   flex-direction: row;
   gap: 1rem;
   align-items: center;
+`;
+
+const Icon = styled(SVGIconThemed)`
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+
+  &:hover {
+    opacity: 0.6;
+  }
+`;
+
+const DropdownItemsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0rem 0.25rem;
+  cursor: pointer;
+  line-height: 1;
+`;
+
+const StyledCircle = styled(Circle)`
+  color: ${colors.successGreen};
+  height: 8px;
+  width: 8px;
+`;
+
+const StyledEdit = styled(Edit)`
+  color: ${colors.white};
+  height: 16px;
+  width: 16px;
+`;
+
+const StyledRepeat = styled(Repeat)`
+  color: ${colors.white};
+  height: 16px;
+  width: 16px;
+`;
+
+const ItemAndIconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-direction: flex-start;
+
+  &:hover {
+    color: #6C757D;
+    box-shadow: none;
+    ${StyledRepeat},
+    ${StyledEdit} {
+      color: #6C757D;
+    }
+  }
+
+  padding: 16px 0px;
+`;
+
+const DropdownItem = styled.div`
+  color: inherit;
+  text-decoration: none;
+  padding-top: 2px;
+`;
+
+const CurrentNotaryContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+`;
+
+const CurrentNotaryLink = styled.div`
+  color: #1976D2;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+
+  &:hover {
+    text-decoration: none;
+  }
+`;
+
+const ConnectedContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
 `;
 
 const VersionLabel = styled.div`

@@ -17,6 +17,7 @@ import History from '../../pages/History';
 import ProofUploader from '../../pages/ProofUploader';
 
 import Wise from '../../pages/Wise';
+import NotarySettings from '../../pages/NotarySettings';
 import { WiseAction } from '@utils/types';
 
 
@@ -84,6 +85,7 @@ const SidePanel = () => {
         <Route path="/registration" element={<Wise action={WiseAction.REGISTRATION}/>} />
         <Route path="/deposit" element={<Wise action={WiseAction.DEPOSITOR_REGISTRATION}/>} />
         <Route path="/onramp" element={<Wise action={WiseAction.TRANSFER}/>} />
+        <Route path="/settings" element={<NotarySettings/>} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </AppContainer>
