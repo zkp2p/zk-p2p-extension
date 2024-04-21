@@ -8,7 +8,7 @@ interface ApiUrlsState {
 }
 
 const initialState: ApiUrlsState = {
-  notary: 'https://notary.pse.dev/v0.1.0-alpha.5',
+  notary: 'https://notary-us-east-1.zkp2p.xyz',
   proxy: 'wss://notary-us-east-1.zkp2p.xyz/proxy',
   latencies: {}
 };
