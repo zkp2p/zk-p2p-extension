@@ -85,16 +85,3 @@ export async function replayRequest(
 
   return { response: resp, text: text };
 }
-
-export async function measureLatency(url: URL) {
-  const startTime = performance.now();
-  return fetch(url)
-    .then(response => {
-      if (!response.ok) {
-          throw new Error('Network response was not ok');
-      }
-      const endTime = performance.now();
-      const latency = endTime - startTime;
-      return latency.toFixed(2);  // Returning both URL and latency
-    });
-}

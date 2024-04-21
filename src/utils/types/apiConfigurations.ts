@@ -5,12 +5,12 @@ export const API_CONFIGURATIONS = [
     proxy: 'ws://localhost:55688',
     shouldPing: false,
   },
-  {
-    name: 'N. Virginia 1',
-    notary: 'https://notary-us-east-1.zkp2p.xyz',
-    proxy: 'wss://notary-us-east-1.zkp2p.xyz/proxy',
-    shouldPing: false,
-  },
+  // {
+  //   name: 'N. Virginia 1',
+  //   notary: 'https://notary-us-east-1.zkp2p.xyz',
+  //   proxy: 'wss://notary-us-east-1.zkp2p.xyz/proxy',
+  //   shouldPing: true,
+  // },
   // {
   //   name: 'Paris',
   //   notary: 'https://notary-paris.zkp2p.xyz',

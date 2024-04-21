@@ -7,13 +7,8 @@ interface ApiUrlsState {
   latencies: { [key: string]: string };
 }
 
-interface LatencyPayload {
-  url: string;
-  latency: string;
-}
-
 const initialState: ApiUrlsState = {
-  notary: 'https://notary-us-east-1.zkp2p.xyz',
+  notary: 'https://notary.pse.dev/v0.1.0-alpha.5',
   proxy: 'wss://notary-us-east-1.zkp2p.xyz/proxy',
   latencies: {}
 };
@@ -38,18 +33,31 @@ export const setApiUrls = createAsyncThunk(
 
 export const measureLatency = createAsyncThunk(
   'settings/measureLatency',
-  async (url: string, { rejectWithValue }) => {
-    const startTime = performance.now();
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+  async (urls: string[], { rejectWithValue }) => {
+    const measureSingleLatency = async (url: string) => {
+      const startTime = performance.now();
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const endTime = performance.now();
+        const latency = (endTime - startTime).toFixed(2);
+        return { url, latency };
+      } catch (error) {
+        console.error(`Failed to measure latency for ${url}: ${error}`);
+        return { url, latency: '-' };
       }
-      const endTime = performance.now();
-      const latency = (endTime - startTime).toFixed(2);
-      return { url, latency };
+    };
+
+    try {
+      const results = await Promise.all(urls.map(url => measureSingleLatency(url)));
+      return results.reduce((acc: { [key: string]: string }, result) => {
+        acc[result.url] = result.latency;
+        return acc;
+      }, {});
     } catch (error) {
-      return rejectWithValue('Failed to measure latency');
+      return rejectWithValue('Failed to measure latencies');
     }
   }
 );
@@ -68,9 +76,8 @@ const settingsSlice = createSlice({
         state.notary = action.payload.notary;
         state.proxy = action.payload.proxy;
       })
-      .addCase(measureLatency.fulfilled, (state, action: PayloadAction<LatencyPayload>) => {
-        const { url, latency } = action.payload;
-        state.latencies[url] = latency;
+      .addCase(measureLatency.fulfilled, (state, action: PayloadAction<{ [key: string]: string }>) => {
+        state.latencies = { ...state.latencies, ...action.payload };
       });
   },
 });

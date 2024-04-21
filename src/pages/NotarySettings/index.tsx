@@ -30,7 +30,7 @@ const Settings: React.FC = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       handleMeasureLatency();
-    }, 1000);
+    }, 3000);
   
     return () => {
       clearTimeout(timeout);
@@ -48,13 +48,8 @@ const Settings: React.FC = () => {
 
   const handleMeasureLatency = useCallback(async () => {
     setLoadingLatency(true);
-    // We check ping one by one vs at the same time for more accurate results
     try {
-      for (const config of API_CONFIGURATIONS) {
-        if (config.shouldPing) {
-          await dispatch(measureLatency(`${config.notary}/info`));
-        }
-      }
+      await dispatch(measureLatency(API_CONFIGURATIONS.map(config => `${config.notary}/info`)));
     } catch (error) {
       console.error('Error measuring latency:', error);
     }
