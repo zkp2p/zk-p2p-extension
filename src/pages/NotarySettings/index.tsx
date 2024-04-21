@@ -17,6 +17,7 @@ const Settings: React.FC = () => {
   */
   const dispatch = useDispatch<AppDispatch>();
   const { notary, latencies } = useSelector((state: AppRootState) => state.settings);
+  const [loadingLatency, setLoadingLatency] = useState(true);
 
   /*
    * Hooks
@@ -27,8 +28,14 @@ const Settings: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    handleMeasureLatency();
-    console.log('latencyResults', latencies);
+    const timeout = setTimeout(() => {
+      handleMeasureLatency();
+    }, 1000);
+  
+    return () => {
+      clearTimeout(timeout);
+      setLoadingLatency(false);
+    };
   }, []);
 
   /*
@@ -40,13 +47,19 @@ const Settings: React.FC = () => {
   }, [dispatch]);
 
   const handleMeasureLatency = useCallback(async () => {
+    setLoadingLatency(true);
     // We check ping one by one vs at the same time for more accurate results
-    for (const config of API_CONFIGURATIONS) {
-      if (config.shouldPing) {
-        dispatch(measureLatency(`${config.notary}/info`))
+    try {
+      for (const config of API_CONFIGURATIONS) {
+        if (config.shouldPing) {
+          await dispatch(measureLatency(`${config.notary}/info`));
+        }
       }
+    } catch (error) {
+      console.error('Error measuring latency:', error);
     }
-  }, [dispatch]);
+    setLoadingLatency(false);
+  }, [dispatch, loadingLatency]);
 
   /*
    * Component
@@ -84,7 +97,10 @@ const Settings: React.FC = () => {
                 </NotaryOptionTitle>
 
                 <NotaryLatencySubtitle>
-                  {config.shouldPing ? `${latencies[`${config.notary}/info`]} ms` : 'N/A'}
+                  {loadingLatency ?
+                    'Loading...' : 
+                    (config.shouldPing ? `${latencies[`${config.notary}/info`]} ms` : 'N/A')
+                  }
                 </NotaryLatencySubtitle>
 
                 <StyledCheck visibility={notary === config.notary ? 'visible' : 'hidden'} />
