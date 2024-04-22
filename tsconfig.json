@@ -21,6 +21,7 @@
       "@utils/*": ["utils/*"],
       "@hooks/*": ["hooks/*"],
       "@reducers/*": ["reducers/*"],
+      "@helpers/*": ["helpers/*"],
     },
   },
   "include": ["src"],

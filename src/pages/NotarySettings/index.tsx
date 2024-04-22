@@ -8,7 +8,8 @@ import { ThemedText } from '@theme/text';
 import { AppDispatch } from '@utils/store';
 import { API_CONFIGURATIONS } from '@utils/types';
 import { AppRootState } from 'reducers';
-import { fetchApiUrls, setApiUrls, measureLatency } from '../../reducers/settings';
+import { setApiUrls, measureLatency, useBestLatency } from '../../reducers/settings';
+import { LabeledSwitch } from '@newcomponents/common/LabeledSwitch';
 
 const Settings: React.FC = () => {
   
@@ -16,16 +17,14 @@ const Settings: React.FC = () => {
   * Contexts
   */
   const dispatch = useDispatch<AppDispatch>();
-  const { notary, latencies } = useSelector((state: AppRootState) => state.settings);
-  const [loadingLatency, setLoadingLatency] = useState(false);
+  const { notary, proxy, latencies } = useSelector((state: AppRootState) => state.settings);
+  const bestLatency = useBestLatency();
 
   /*
-   * Hooks
+   * State
    */
-
-  useEffect(() => {
-    dispatch(fetchApiUrls());
-  }, [dispatch]);
+  const [loadingLatency, setLoadingLatency] = useState(false);
+  const [shouldAutoselect, setShouldAutoselect] = useState<boolean>(false);
 
   /*
    * Handler
@@ -33,6 +32,7 @@ const Settings: React.FC = () => {
 
   const handleApiChange = useCallback((newNotary: string, newProxy: string) => {
     dispatch(setApiUrls({ notary: newNotary, proxy: newProxy, autoSelect: "false" })); // TODO: add toggle
+    setShouldAutoselect(false);
   }, [dispatch]);
 
   const handleMeasureLatency = useCallback(async () => {
@@ -44,6 +44,24 @@ const Settings: React.FC = () => {
     }
     setLoadingLatency(false);
   }, [dispatch, loadingLatency]);
+
+  const handleAutoselectChange = useCallback((checked: boolean) => {
+    const bestApiConfiguration = API_CONFIGURATIONS.find((config) => config.notary === notary);
+
+    console.log('bestApiConfiguration', bestApiConfiguration);
+    console.log('notary', notary);
+    console.log('proxy', proxy);
+    
+    if (bestApiConfiguration) {
+      dispatch(setApiUrls({
+        notary: checked ? bestLatency.url : notary,
+        proxy: checked ? bestApiConfiguration.proxy : proxy,
+        autoSelect: checked ? "true" : "false" 
+      }));
+      setShouldAutoselect(checked);
+    }
+
+  }, [dispatch, notary, proxy, bestLatency]);
 
   /*
    * Component
@@ -60,6 +78,13 @@ const Settings: React.FC = () => {
               </ThemedText.LabelSmall>
               
               <StyledRefresh onClick={handleMeasureLatency} />
+
+              <LabeledSwitch
+                switchChecked={shouldAutoselect}
+                checkedLabel={"Auto"}
+                uncheckedLabel={"Manual"}
+                onSwitchChange={(checked: boolean) => handleAutoselectChange(checked)}
+              /> 
             </SettingsLabelContainer>
 
           </NotarySettingContainer>
@@ -138,7 +163,7 @@ const SettingsLabelContainer = styled.div`
   gap: 1rem;
 `;
 
-const NotaryOptionRow = styled.div<{ lastRow: boolean}>`
+const NotaryOptionRow = styled.div<{ lastRow: boolean }>`
   display: grid;
   grid-template-columns: 0.75fr 0.75fr 24px;
   gap: 24px;

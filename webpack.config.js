@@ -17,6 +17,8 @@ var alias = {
   '@newcomponents': path.resolve(__dirname, './src/newcomponents/'),
   '@utils': path.resolve(__dirname, './src/utils/'),
   '@hooks': path.resolve(__dirname, './src/hooks/'),
+  '@reducers': path.resolve(__dirname, './src/reducers/'),
+  '@helpers': path.resolve(__dirname, './src/helpers/'),
 };
 
 // load the secrets
