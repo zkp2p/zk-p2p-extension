@@ -26,7 +26,7 @@ const Settings: React.FC = () => {
   const [shouldAutoselect, setShouldAutoselect] = useState<boolean>(false);
 
   /*
-   * Hooks
+   * State
    */
 
   useEffect(() => {
