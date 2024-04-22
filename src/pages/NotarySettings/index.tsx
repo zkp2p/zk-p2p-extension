@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { Check, RefreshCw } from 'react-feather';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { colors } from '@theme/colors';
 import { ThemedText } from '@theme/text';
@@ -17,7 +16,7 @@ const Settings: React.FC = () => {
   * Contexts
   */
   const dispatch = useDispatch<AppDispatch>();
-  const { notary, proxy, latencies } = useSelector((state: AppRootState) => state.settings);
+  const { notary, proxy, latencies, autoSelect } = useSelector((state: AppRootState) => state.settings);
   const bestLatency = useBestLatency();
 
   /*
@@ -27,11 +26,23 @@ const Settings: React.FC = () => {
   const [shouldAutoselect, setShouldAutoselect] = useState<boolean>(false);
 
   /*
+   * Hooks
+   */
+
+  useEffect(() => {
+    if (autoSelect === "autoselect") {
+      setShouldAutoselect(true);
+    } else {
+      setShouldAutoselect(false);
+    }
+  }, [autoSelect]);
+
+  /*
    * Handler
    */
 
   const handleApiChange = useCallback((newNotary: string, newProxy: string) => {
-    dispatch(setApiUrls({ notary: newNotary, proxy: newProxy, autoSelect: "false" })); // TODO: add toggle
+    dispatch(setApiUrls({ notary: newNotary, proxy: newProxy, autoSelect: "manual" }));
     setShouldAutoselect(false);
   }, [dispatch]);
 
@@ -47,21 +58,17 @@ const Settings: React.FC = () => {
 
   const handleAutoselectChange = useCallback((checked: boolean) => {
     const bestApiConfiguration = API_CONFIGURATIONS.find((config) => config.notary === notary);
-
-    console.log('bestApiConfiguration', bestApiConfiguration);
-    console.log('notary', notary);
-    console.log('proxy', proxy);
     
     if (bestApiConfiguration) {
       dispatch(setApiUrls({
         notary: checked ? bestLatency.url : notary,
         proxy: checked ? bestApiConfiguration.proxy : proxy,
-        autoSelect: checked ? "true" : "false" 
+        autoSelect: checked ? "autoselect" : "manual" 
       }));
       setShouldAutoselect(checked);
     }
 
-  }, [dispatch, notary, proxy, bestLatency]);
+  }, [dispatch, notary, proxy, autoSelect]);
 
   /*
    * Component
@@ -73,11 +80,13 @@ const Settings: React.FC = () => {
         <BodyStepContainer>
           <NotarySettingContainer>
             <SettingsLabelContainer>
-              <ThemedText.LabelSmall textAlign="left">
-                Notary
-              </ThemedText.LabelSmall>
-              
-              <StyledRefresh onClick={handleMeasureLatency} />
+              <SettingsAndRefreshContainer>
+                <ThemedText.LabelSmall textAlign="left">
+                  Notary
+                </ThemedText.LabelSmall>
+                
+                <StyledRefresh onClick={handleMeasureLatency} />
+              </SettingsAndRefreshContainer>
 
               <LabeledSwitch
                 switchChecked={shouldAutoselect}
@@ -155,9 +164,18 @@ const NotarySettingContainer = styled.div`
   gap: 0.5rem;
   text-align: center;
   color: ${colors.white};
+  width: 100%;
 `;
 
 const SettingsLabelContainer = styled.div`
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
+`;
+
+const SettingsAndRefreshContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;

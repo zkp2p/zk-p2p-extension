@@ -7,14 +7,14 @@ interface ApiUrlsState {
   notary: string;
   proxy: string;
   latencies: { [key: string]: string };
-  autoSelect: string;
+  autoSelect: 'autoselect' | 'manual';
 }
 
 const initialState: ApiUrlsState = {
   notary: 'https://notary-us-east-1.zkp2p.xyz',
   proxy: 'wss://notary-us-east-1.zkp2p.xyz/proxy',
   latencies: {},
-  autoSelect: "true"
+  autoSelect: "autoselect"
 };
 
 export const fetchApiUrls = createAsyncThunk(
@@ -29,10 +29,10 @@ export const fetchApiUrls = createAsyncThunk(
 
 export const setApiUrls = createAsyncThunk(
   'settings/setApiUrls',
-  async ({ notary, proxy, autoSelect }: { notary: string; proxy: string, autoSelect: string }) => {
+  async ({ notary, proxy, autoSelect }: { notary: string; proxy: string, autoSelect: 'autoselect' | 'manual' }) => {
     await set(NOTARY_API_LS_KEY, notary);
     await set(PROXY_API_LS_KEY, proxy);
-    await set(AUTOSELECT_LS_KEY, autoSelect)
+    await set(AUTOSELECT_LS_KEY, autoSelect);
     return { notary, proxy, autoSelect };
   }
 );
@@ -74,13 +74,15 @@ const settingsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchApiUrls.fulfilled, (state, action: PayloadAction<{ notary: string; proxy: string }>) => {
+      .addCase(fetchApiUrls.fulfilled, (state, action: PayloadAction<{ notary: string; proxy: string; autoSelect: 'autoselect' | 'manual' }>) => {
         state.notary = action.payload.notary;
         state.proxy = action.payload.proxy;
+        state.autoSelect = action.payload.autoSelect;
       })
-      .addCase(setApiUrls.fulfilled, (state, action: PayloadAction<{ notary: string; proxy: string }>) => {
+      .addCase(setApiUrls.fulfilled, (state, action: PayloadAction<{ notary: string; proxy: string, autoSelect: 'autoselect' | 'manual' }>) => {
         state.notary = action.payload.notary;
         state.proxy = action.payload.proxy;
+        state.autoSelect = action.payload.autoSelect;
       })
       .addCase(measureLatency.fulfilled, (state, action: PayloadAction<{ [key: string]: string }>) => {
         state.latencies = { ...state.latencies, ...action.payload };

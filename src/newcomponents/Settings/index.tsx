@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
 import { useOnClickOutside } from '@hooks/useOnClickOutside';
-import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
 import { SVGIconThemed } from '@newcomponents/SVGIcon/SVGIconThemed';
 import { Overlay } from '@newcomponents/common/Overlay';
@@ -17,7 +16,7 @@ import { fetchApiUrls } from '../../reducers/settings';
 const CLIENT_VERSION = '0.0.1';
 
 interface StyledCircleProps {
-  connectionStatus: 'green' | 'yellow' | 'red' | null;
+  connection: 'green' | 'yellow' | 'red' | null;
 }
 
 export const Settings = () => {
@@ -103,7 +102,7 @@ export const Settings = () => {
               <CurrentNotaryContainer>
               <ConnectedContainer>
                 {notaryName}
-                <StyledCircle connectionStatus={status} />
+                <StyledCircle connection={status} />
               </ConnectedContainer>
               </CurrentNotaryContainer>
 
@@ -241,8 +240,8 @@ const StyledCircle = styled(Circle)<StyledCircleProps>`
   height: 8px;
   width: 8px;
 
-  fill: ${({ connectionStatus }) => {
-    switch (connectionStatus) {
+  fill: ${({ connection }) => {
+    switch (connection) {
       case 'green':
         return colors.successGreen;
       case 'yellow':
@@ -254,8 +253,8 @@ const StyledCircle = styled(Circle)<StyledCircleProps>`
     }
   }};
 
-  color: ${({ connectionStatus }) => {
-    switch (connectionStatus) {
+  color: ${({ connection }) => {
+    switch (connection) {
       case 'green':
         return colors.successGreen;
       case 'yellow':

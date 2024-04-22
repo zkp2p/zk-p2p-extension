@@ -64,7 +64,7 @@ const SidePanel = () => {
   }, []);
 
   useEffect(() => {
-    if (bestLatency && !autoSelect) {
+    if (bestLatency && autoSelect === "autoselect") {
       const apiConfiguration = API_CONFIGURATIONS.find((config) => config.notary === bestLatency.url);
       if (apiConfiguration) {
         dispatch(setApiUrls({ notary: bestLatency.url, proxy: apiConfiguration.proxy, autoSelect: autoSelect }));

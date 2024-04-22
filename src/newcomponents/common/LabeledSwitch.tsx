@@ -2,15 +2,11 @@ import React from 'react';
 import { Switch } from '@mui/material';
 import styled from 'styled-components';
 
-// import QuestionHelper from '@newcomponents/common/QuestionHelper';
-
-
 interface LabeledSwitchProps {
   switchChecked: boolean;
   onSwitchChange: (checked: boolean) => void;
   checkedLabel?: string;
   uncheckedLabel?: string;
-  helperText?: string;
 }
 
 export const LabeledSwitch: React.FC<LabeledSwitchProps> = ({
@@ -18,7 +14,6 @@ export const LabeledSwitch: React.FC<LabeledSwitchProps> = ({
   onSwitchChange,
   checkedLabel = 'Checked Label',
   uncheckedLabel = 'Unchecked Label',
-  helperText = 'Fill me out'
 }) => {
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onSwitchChange(event.target.checked);
@@ -29,12 +24,6 @@ export const LabeledSwitch: React.FC<LabeledSwitchProps> = ({
       <SwitchLabel>
         {switchChecked ? checkedLabel : uncheckedLabel}
       </SwitchLabel>
-      
-      {/* <HelperContainer>
-        <QuestionHelper
-          text={helperText}
-        />
-      </HelperContainer> */}
 
       <Switch
         checked={switchChecked}
@@ -54,8 +43,4 @@ const Container = styled.div`
 const SwitchLabel = styled.span`
   color: '#888888';
   padding-right: 4px;
-`;
-
-const HelperContainer = styled.div`
-  padding-top: 4px;
 `;
