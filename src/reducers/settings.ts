@@ -1,5 +1,7 @@
+import { useSelector } from 'react-redux';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { get, set, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../utils/storage';
+import { AppRootState } from './index';
 
 interface ApiUrlsState {
   notary: string;
@@ -33,11 +35,11 @@ export const setApiUrls = createAsyncThunk(
 
 export const measureLatency = createAsyncThunk(
   'settings/measureLatency',
-  async (urls: string[], { rejectWithValue }) => {
+  async (notaryUrls: string[], { rejectWithValue }) => {
     const measureSingleLatency = async (url: string) => {
       const startTime = performance.now();
       try {
-        const response = await fetch(url);
+        const response = await fetch(`${url}/info`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -51,7 +53,7 @@ export const measureLatency = createAsyncThunk(
     };
 
     try {
-      const results = await Promise.all(urls.map(url => measureSingleLatency(url)));
+      const results = await Promise.all(notaryUrls.map(notaryUrl => measureSingleLatency(notaryUrl)));
       return results.reduce((acc: { [key: string]: string }, result) => {
         acc[result.url] = result.latency;
         return acc;
@@ -83,3 +85,20 @@ const settingsSlice = createSlice({
 });
 
 export default settingsSlice.reducer;
+
+export const useBestLatency = () => {
+  const latencies = useSelector((state: AppRootState) => state.settings.latencies);
+
+  let bestLatency = Infinity;
+  let bestUrl = '';
+
+  Object.entries(latencies).forEach(([url, latency]) => {
+      const numericLatency = parseFloat(latency);
+      if (!isNaN(numericLatency) && numericLatency < bestLatency) {
+          bestLatency = numericLatency;
+          bestUrl = url;
+      }
+  });
+
+  return { url: bestUrl, latency: bestLatency === Infinity ? null : bestLatency.toFixed(2) };
+};

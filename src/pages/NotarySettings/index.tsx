@@ -49,7 +49,7 @@ const Settings: React.FC = () => {
   const handleMeasureLatency = useCallback(async () => {
     setLoadingLatency(true);
     try {
-      await dispatch(measureLatency(API_CONFIGURATIONS.map(config => `${config.notary}/info`)));
+      await dispatch(measureLatency(API_CONFIGURATIONS.map(config => config.notary)));
     } catch (error) {
       console.error('Error measuring latency:', error);
     }
@@ -94,7 +94,7 @@ const Settings: React.FC = () => {
                 <NotaryLatencySubtitle>
                   {loadingLatency ?
                     'Loading...' : 
-                    (config.shouldPing ? `${latencies[`${config.notary}/info`]} ms` : 'N/A')
+                    (config.shouldPing ? `${latencies[config.notary]} ms` : 'N/A')
                   }
                 </NotaryLatencySubtitle>
 

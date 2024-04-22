@@ -78,17 +78,15 @@ export const Settings = () => {
 
           <DropdownContainer>
             <ConnectedNotaryContainer>
-              <ConnectedContainer>
                 <ConnectedLabel>
-                  Connected
+                  Notary
                 </ConnectedLabel>
-                <StyledCircle fill={colors.successGreen} />
-              </ConnectedContainer>
 
               <CurrentNotaryContainer>
-                <CurrentNotaryLink onClick={() => window.open(`${notary}/info`, '_blank')}>
-                  {notaryName} ↗
-                </CurrentNotaryLink>
+              <ConnectedContainer>
+                {notaryName}
+                <StyledCircle fill={colors.successGreen} />
+              </ConnectedContainer>
               </CurrentNotaryContainer>
 
             </ConnectedNotaryContainer>
@@ -97,7 +95,7 @@ export const Settings = () => {
               <ItemAndIconContainer onClick={handleUpdateNotaryClick}>
                 <StyledEdit />
                 <DropdownItem>
-                  Configure
+                  Edit
                 </DropdownItem>
               </ItemAndIconContainer>
 
@@ -267,17 +265,6 @@ const CurrentNotaryContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
-`;
-
-const CurrentNotaryLink = styled.div`
-  color: #1976D2;
-  cursor: pointer;
-  text-decoration: underline;
-  font-size: 14px;
-
-  &:hover {
-    text-decoration: none;
-  }
 `;
 
 const ConnectedContainer = styled.div`

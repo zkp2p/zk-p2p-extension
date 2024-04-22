@@ -5,6 +5,8 @@ import browser from 'webextension-polyfill';
 import styled from 'styled-components';
 
 import { setActiveTab, setRequests, useActiveTab, useActiveTabUrl } from '../../reducers/requests';
+import { measureLatency, useBestLatency } from '../../reducers/settings';
+import { API_CONFIGURATIONS } from '@utils/types';
 import { BackgroundActiontype } from '../Background/rpc';
 import Requests from '../../pages/Requests';
 import Options from '../../pages/Options';
@@ -27,10 +29,11 @@ import { colors } from '@theme/colors';
 
 
 const SidePanel = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const activeTab = useActiveTab();
   const url = useActiveTabUrl();
   const navigate = useNavigate();
+  const bestLatency = useBestLatency();
 
   useEffect(() => {
     (async () => {
@@ -52,8 +55,18 @@ const SidePanel = () => {
         type: BackgroundActiontype.get_prove_requests,
         data: tab?.id,
       });
+
+      dispatch(measureLatency(API_CONFIGURATIONS.map(config => `${config.notary}/info`)));
     })();
   }, []);
+
+  useEffect(() => {
+    if (bestLatency) {
+      console.log('bestLatency', bestLatency);
+
+      
+    }
+  }, [bestLatency]);
 
   return (
     <AppContainer>
