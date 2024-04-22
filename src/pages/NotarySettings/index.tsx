@@ -17,7 +17,7 @@ const Settings: React.FC = () => {
   */
   const dispatch = useDispatch<AppDispatch>();
   const { notary, latencies } = useSelector((state: AppRootState) => state.settings);
-  const [loadingLatency, setLoadingLatency] = useState(true);
+  const [loadingLatency, setLoadingLatency] = useState(false);
 
   /*
    * Hooks
@@ -27,23 +27,12 @@ const Settings: React.FC = () => {
     dispatch(fetchApiUrls());
   }, [dispatch]);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      handleMeasureLatency();
-    }, 3000);
-  
-    return () => {
-      clearTimeout(timeout);
-      setLoadingLatency(false);
-    };
-  }, []);
-
   /*
    * Handler
    */
 
   const handleApiChange = useCallback((newNotary: string, newProxy: string) => {
-    dispatch(setApiUrls({ notary: newNotary, proxy: newProxy }));
+    dispatch(setApiUrls({ notary: newNotary, proxy: newProxy, autoSelect: "false" })); // TODO: add toggle
   }, [dispatch]);
 
   const handleMeasureLatency = useCallback(async () => {

@@ -1,18 +1,20 @@
 import { useSelector } from 'react-redux';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { get, set, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../utils/storage';
+import { get, set, AUTOSELECT_LS_KEY, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../utils/storage';
 import { AppRootState } from './index';
 
 interface ApiUrlsState {
   notary: string;
   proxy: string;
   latencies: { [key: string]: string };
+  autoSelect: string;
 }
 
 const initialState: ApiUrlsState = {
   notary: 'https://notary-us-east-1.zkp2p.xyz',
   proxy: 'wss://notary-us-east-1.zkp2p.xyz/proxy',
-  latencies: {}
+  latencies: {},
+  autoSelect: "true"
 };
 
 export const fetchApiUrls = createAsyncThunk(
@@ -20,16 +22,18 @@ export const fetchApiUrls = createAsyncThunk(
   async () => {
     const notary = await get(NOTARY_API_LS_KEY);
     const proxy = await get(PROXY_API_LS_KEY);
-    return { notary, proxy };
+    const autoSelect = await get(AUTOSELECT_LS_KEY);
+    return { notary, proxy, autoSelect };
   }
 );
 
 export const setApiUrls = createAsyncThunk(
   'settings/setApiUrls',
-  async ({ notary, proxy }: { notary: string; proxy: string }) => {
+  async ({ notary, proxy, autoSelect }: { notary: string; proxy: string, autoSelect: string }) => {
     await set(NOTARY_API_LS_KEY, notary);
     await set(PROXY_API_LS_KEY, proxy);
-    return { notary, proxy };
+    await set(AUTOSELECT_LS_KEY, autoSelect)
+    return { notary, proxy, autoSelect };
   }
 );
 

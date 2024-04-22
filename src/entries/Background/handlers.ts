@@ -117,7 +117,7 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
     };
 
     const response = await replayRequest(newLog);
-    console.log('response', response);
+    // console.log('response', response);
 
     const newLogWithResponseBody: RequestLog = {
       ...newLog,

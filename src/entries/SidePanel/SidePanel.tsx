@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import browser from 'webextension-polyfill';
 import styled from 'styled-components';
 
 import { setActiveTab, setRequests, useActiveTab, useActiveTabUrl } from '../../reducers/requests';
-import { measureLatency, useBestLatency } from '../../reducers/settings';
+import { fetchApiUrls, measureLatency, setApiUrls, useBestLatency } from '../../reducers/settings';
 import { API_CONFIGURATIONS } from '@utils/types';
 import { BackgroundActiontype } from '../Background/rpc';
 import Requests from '../../pages/Requests';
@@ -21,7 +21,7 @@ import ProofUploader from '../../pages/ProofUploader';
 import Wise from '../../pages/Wise';
 import NotarySettings from '../../pages/NotarySettings';
 import { WiseAction } from '@utils/types';
-
+import { AppRootState } from 'reducers';
 
 import logo from '../../assets/img/icon-48.png';
 import { TopNav } from '@newcomponents/TopNav/TopNav';
@@ -34,6 +34,7 @@ const SidePanel = () => {
   const url = useActiveTabUrl();
   const navigate = useNavigate();
   const bestLatency = useBestLatency();
+  const { autoSelect } = useSelector((state: AppRootState) => state.settings);
 
   useEffect(() => {
     (async () => {
@@ -56,17 +57,20 @@ const SidePanel = () => {
         data: tab?.id,
       });
 
-      dispatch(measureLatency(API_CONFIGURATIONS.map(config => `${config.notary}/info`)));
+      dispatch(fetchApiUrls());
+
+      dispatch(measureLatency(API_CONFIGURATIONS.map(config => config.notary)));
     })();
   }, []);
 
   useEffect(() => {
-    if (bestLatency) {
-      console.log('bestLatency', bestLatency);
-
-      
+    if (bestLatency && !autoSelect) {
+      const apiConfiguration = API_CONFIGURATIONS.find((config) => config.notary === bestLatency.url);
+      if (apiConfiguration) {
+        dispatch(setApiUrls({ notary: bestLatency.url, proxy: apiConfiguration.proxy, autoSelect: autoSelect }));
+      }
     }
-  }, [bestLatency]);
+  }, [bestLatency, autoSelect]);
 
   return (
     <AppContainer>

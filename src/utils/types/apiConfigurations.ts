@@ -77,4 +77,16 @@ export const API_CONFIGURATIONS = [
     proxy: 'wss://notary-eu-south-2.zkp2p.xyz/proxy',
     shouldPing: true,
   },
+  {
+    name: 'Mumbai',
+    notary: 'https://notary-ap-south-1.zkp2p.xyz',
+    proxy: 'wss://notary-ap-south-1.zkp2p.xyz/proxy',
+    shouldPing: true,
+  },
+  {
+    name: 'Singapore',
+    notary: 'https://notary-ap-southeast-1.zkp2p.xyz',
+    proxy: 'wss://notary-ap-southeast-1.zkp2p.xyz/proxy',
+    shouldPing: true,
+  },
 ];

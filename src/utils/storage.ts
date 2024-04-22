@@ -1,3 +1,4 @@
+export const AUTOSELECT_LS_KEY = 'auto-select';
 export const NOTARY_API_LS_KEY = 'notary-api';
 export const PROXY_API_LS_KEY = 'proxy-api';
 export const HISTORY_LS_KEY = 'history';

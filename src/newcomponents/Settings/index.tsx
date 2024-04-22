@@ -16,6 +16,10 @@ import { fetchApiUrls } from '../../reducers/settings';
 
 const CLIENT_VERSION = '0.0.1';
 
+interface StyledCircleProps {
+  connectionStatus: 'green' | 'yellow' | 'red' | null;
+}
+
 export const Settings = () => {
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
 
@@ -24,12 +28,13 @@ export const Settings = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { notary } = useSelector((state: AppRootState) => state.settings);
+  const { latencies, notary } = useSelector((state: AppRootState) => state.settings);
   
   /*
    * State
    */
   const [notaryName, setNotaryName] = useState<string | null>(null);
+  const [status, setStatus] = useState<'green' | 'yellow' | 'red' | null>(null);
 
   /* 
    * Hooks
@@ -44,6 +49,19 @@ export const Settings = () => {
       }
     }
   }, [dispatch, notaryName, notary]);
+  
+  useEffect(() => {
+    if (latencies && latencies[notary]) {
+      const currentLatencyInt = parseInt(latencies[notary]);
+      if (currentLatencyInt > 160) {
+        setStatus('red');
+      } else if (currentLatencyInt > 100) {
+        setStatus('yellow');
+      } else {
+        setStatus('green');
+      }
+    }
+  }, [latencies, notary]);
 
   /*
    * Handler
@@ -85,7 +103,7 @@ export const Settings = () => {
               <CurrentNotaryContainer>
               <ConnectedContainer>
                 {notaryName}
-                <StyledCircle fill={colors.successGreen} />
+                <StyledCircle connectionStatus={status} />
               </ConnectedContainer>
               </CurrentNotaryContainer>
 
@@ -219,10 +237,35 @@ const DropdownItemsContainer = styled.div`
   line-height: 1;
 `;
 
-const StyledCircle = styled(Circle)`
-  color: ${colors.successGreen};
+const StyledCircle = styled(Circle)<StyledCircleProps>`
   height: 8px;
   width: 8px;
+
+  fill: ${({ connectionStatus }) => {
+    switch (connectionStatus) {
+      case 'green':
+        return colors.successGreen;
+      case 'yellow':
+        return "yellow";
+      case 'red':
+        return colors.warningRed;
+      default:
+        return colors.successGreen;
+    }
+  }};
+
+  color: ${({ connectionStatus }) => {
+    switch (connectionStatus) {
+      case 'green':
+        return colors.successGreen;
+      case 'yellow':
+        return "yellow";
+      case 'red':
+        return colors.warningRed;
+      default:
+        return colors.successGreen;
+    }
+  }};
 `;
 
 const StyledEdit = styled(Edit)`
