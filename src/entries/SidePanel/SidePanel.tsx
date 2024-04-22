@@ -5,7 +5,11 @@ import browser from 'webextension-polyfill';
 import styled from 'styled-components';
 
 import { setActiveTab, setRequests, useActiveTab, useActiveTabUrl } from '../../reducers/requests';
+<<<<<<< HEAD
 import { fetchApiUrls, measureLatency, setApiUrls, useBestLatency } from '../../reducers/settings';
+=======
+import { measureLatency, useBestLatency } from '../../reducers/settings';
+>>>>>>> 95fe30e (update styling)
 import { API_CONFIGURATIONS } from '@utils/types';
 import { BackgroundActiontype } from '../Background/rpc';
 import Requests from '../../pages/Requests';
@@ -34,7 +38,10 @@ const SidePanel = () => {
   const url = useActiveTabUrl();
   const navigate = useNavigate();
   const bestLatency = useBestLatency();
+<<<<<<< HEAD
   const { autoSelect } = useSelector((state: AppRootState) => state.settings);
+=======
+>>>>>>> 95fe30e (update styling)
 
   useEffect(() => {
     (async () => {
@@ -57,13 +64,18 @@ const SidePanel = () => {
         data: tab?.id,
       });
 
+<<<<<<< HEAD
       dispatch(fetchApiUrls());
 
       dispatch(measureLatency(API_CONFIGURATIONS.map(config => config.notary)));
+=======
+      dispatch(measureLatency(API_CONFIGURATIONS.map(config => `${config.notary}/info`)));
+>>>>>>> 95fe30e (update styling)
     })();
   }, []);
 
   useEffect(() => {
+<<<<<<< HEAD
     if (bestLatency && autoSelect === "autoselect") {
       const apiConfiguration = API_CONFIGURATIONS.find((config) => config.notary === bestLatency.url);
       if (apiConfiguration) {
@@ -71,6 +83,14 @@ const SidePanel = () => {
       }
     }
   }, [bestLatency, autoSelect]);
+=======
+    if (bestLatency) {
+      console.log('bestLatency', bestLatency);
+
+      
+    }
+  }, [bestLatency]);
+>>>>>>> 95fe30e (update styling)
 
   return (
     <AppContainer>
