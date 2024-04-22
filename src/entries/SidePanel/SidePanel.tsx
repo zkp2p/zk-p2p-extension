@@ -91,10 +91,14 @@ const SidePanel = () => {
   useEffect(() => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (bestLatency && autoSelect === "autoselect") {
 =======
     if (bestLatency && !autoSelect) {
 >>>>>>> 30e9fcc (add auto routing)
+=======
+    if (bestLatency && autoSelect === "autoselect") {
+>>>>>>> 7c9447f (fix redux state)
       const apiConfiguration = API_CONFIGURATIONS.find((config) => config.notary === bestLatency.url);
       if (apiConfiguration) {
         dispatch(setApiUrls({ notary: bestLatency.url, proxy: apiConfiguration.proxy, autoSelect: autoSelect }));
