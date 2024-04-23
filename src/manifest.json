@@ -41,7 +41,7 @@
     }
   ],
   "host_permissions": [
-    "https://wise.com/*",
+    "https://app.revolut.com/*",
     "http://localhost:3000/*",
     "https://staging-testnet.zkp2p.xyz/*",
     "https://staging-app.zkp2p.xyz/*",

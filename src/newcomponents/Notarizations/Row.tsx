@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Trash2, X, Check } from 'react-feather';
+import { Trash2, X, Check, Download } from 'react-feather';
 
 import { colors } from '@theme/colors';
 import Spinner from '@newcomponents/common/Spinner';
-
+import { download } from '@utils/misc';
 
 interface NotarizationRowProps {
   subjectText: string;
@@ -14,6 +14,8 @@ interface NotarizationRowProps {
   rowIndex: number;
   isProving?: boolean;
   isFailed?: boolean;
+  requestHistoryId: string;
+  proof: { session: any; substrings: any };
   onDeleteClicked?: () => void;
 }
 
@@ -25,7 +27,9 @@ export const NotarizationRow: React.FC<NotarizationRowProps> = ({
   rowIndex,
   isProving = false,
   isFailed = false,
-  onDeleteClicked
+  onDeleteClicked,
+  requestHistoryId,
+  proof
 }: NotarizationRowProps) => {
   NotarizationRow.displayName = 'NotarizationRow';
 
@@ -37,11 +41,19 @@ export const NotarizationRow: React.FC<NotarizationRowProps> = ({
       <IndexLabel> {rowIndex} </IndexLabel>
       <SubjectLabel> {subjectLabel} </SubjectLabel>
       {isProving ? (
-        <SpinnerContainer>
-          <Spinner size={20}/>
-        </SpinnerContainer>
+        <IconsContainer>
+          <StyledTrashIcon onClick={(e) => {
+            e.stopPropagation();
+            if (onDeleteClicked) {
+              onDeleteClicked(); 
+            }
+          }} />
+          <SpinnerContainer>
+            <Spinner size={16}/>
+          </SpinnerContainer>
+        </IconsContainer>
       ) : isFailed ? (
-        <FailedIconsContainer>
+        <IconsContainer>
           <StyledTrashIcon onClick={(e) => {
             e.stopPropagation();
             if (onDeleteClicked) {
@@ -50,12 +62,15 @@ export const NotarizationRow: React.FC<NotarizationRowProps> = ({
           }} />
 
           <StyledXIcon/>
-        </FailedIconsContainer>
+        </IconsContainer>
       ) : (
         // <DateLabel>{dateLabel}</DateLabel>
-        <CheckContainer>
-          <StyledCheck />
-        </CheckContainer>
+        <IconsContainer>
+          <StyledDownloadIcon onClick={() => download(`${requestHistoryId}.json`, JSON.stringify(proof))} />
+          <CheckContainer>
+            <StyledCheck />
+          </CheckContainer>
+        </IconsContainer>
       )}
     </Container>
   );
@@ -90,7 +105,7 @@ const DateLabel = styled.label`
   text-align: right;
 `;
 
-const FailedIconsContainer = styled.div`
+const IconsContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -110,6 +125,15 @@ const StyledCheck = styled(Check)`
 `;
 
 const StyledTrashIcon = styled(Trash2)`
+  height: 16px;
+  width: 16px;
+
+  &:hover:not([disabled]) {
+    color: #495057;
+  }
+`;
+
+const StyledDownloadIcon = styled(Download)`
   height: 16px;
   width: 16px;
 

@@ -10,8 +10,8 @@ import { getNotaryRequests } from './db';
     onSendHeaders,
     {
       urls: [
-        'https://wise.com/gateway/v1/payments',
-        'https://wise.com/gateway/v3/profiles/*/transfers/*'
+        'https://app.revolut.com/api/retail/user/current',
+        'https://app.revolut.com/api/retail/transaction/*' 
       ],
     },
     ['requestHeaders', 'extraHeaders'],
@@ -21,8 +21,8 @@ import { getNotaryRequests } from './db';
     onBeforeRequest,
     {
       urls: [
-        'https://wise.com/gateway/v1/payments',
-        'https://wise.com/gateway/v3/profiles/*/transfers/*'
+        'https://app.revolut.com/api/retail/user/current',
+        'https://app.revolut.com/api/retail/transaction/*' 
       ],
     },
     ['requestBody'],
@@ -32,8 +32,8 @@ import { getNotaryRequests } from './db';
     onResponseStarted,
     {
       urls: [
-        'https://wise.com/gateway/v1/payments',
-        'https://wise.com/gateway/v3/profiles/*/transfers/*'
+        'https://app.revolut.com/api/retail/user/current',
+        'https://app.revolut.com/api/retail/transaction/*' 
       ],
     },
     ['responseHeaders', 'extraHeaders'],

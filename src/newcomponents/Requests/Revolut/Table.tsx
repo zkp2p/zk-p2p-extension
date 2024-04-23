@@ -5,8 +5,8 @@ import { UserX } from 'react-feather';
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
 import { RequestRow } from '@newcomponents/Requests/Row';
-import { WiseAction, WiseActionType } from '@utils/types';
-import { BackgroundActiontype, RequestLog } from '../../entries/Background/rpc';
+import { RevolutAction, RevolutActionType } from '@utils/types';
+import { BackgroundActiontype, RequestLog } from '@entries/Background/rpc';
 
 
 const ROWS_PER_PAGE = 2;
@@ -17,7 +17,7 @@ type RequestRowData = {
 };
 
 type RequestTableProps = {
-  action: WiseActionType;
+  action: RevolutActionType;
   requests: RequestLog[];
   setSelectedIndex: (index: number | null) => void;
   selectedIndex: number | null;
@@ -91,25 +91,26 @@ export const RequestTable: React.FC<RequestTableProps> = ({
 
   useEffect(() => {
     const newRequests = requests.map((request) => {
-      // console.log("JSON Response Body", JSON.parse(request.responseBody as string));
-      const jsonResponseBody = JSON.parse(request.responseBody as string);
-
+      console.log("JSON Response Body", JSON.parse(request.responseBody as string));
       let subject = '';
-      if (jsonResponseBody) {
+      try {
+        const jsonResponseBody = JSON.parse(request.responseBody as string);
         switch (action) {
-          case WiseAction.REGISTRATION:
-            subject = `Detected: ${jsonResponseBody.sections[2].modules[0].description}`;
+          case RevolutAction.REGISTRATION:
+            subject = `Detected: ${jsonResponseBody.user.username}`;
             break;
   
-          case WiseAction.DEPOSITOR_REGISTRATION:
-          case WiseAction.TRANSFER:
-            const transferDate = parseTimestamp(parseInt(jsonResponseBody.stateHistory[0].date), true);
-            subject = `Sent ${jsonResponseBody.targetAmount} ${jsonResponseBody.targetCurrency} ${transferDate}`;
+          case RevolutAction.TRANSFER:
+            const transferDate = parseTimestamp(parseInt(jsonResponseBody[0].completedDate), true);
+            const parsedAmount = jsonResponseBody[0].amount / 100 * -1;
+            subject = `Sent ${parsedAmount} ${jsonResponseBody[0].currency} ${transferDate}`;
             break;
   
           default:
             subject = '';
         }
+      } catch {
+        subject = '';
       }
 
       return {
@@ -127,15 +128,12 @@ export const RequestTable: React.FC<RequestTableProps> = ({
 
   const emptyRequestCopy = (): string => {
     switch (action) {
-      case WiseAction.REGISTRATION:
-        return 'No Wisetags found. Open the Payments page on Wise.';
+      case RevolutAction.REGISTRATION:
+        return 'No Revtags found. Open the Home page on Revolut.';
 
-      case WiseAction.DEPOSITOR_REGISTRATION:
-        return 'No past payment found. Open any past outgoing Wise transfer.';
-
-      case WiseAction.TRANSFER:
+      case RevolutAction.TRANSFER:
       default:
-        return 'No payment found. Open the details for the Wise transaction.';
+        return 'No payment found. Open the details for the Revolut transaction.';
     }
   };
 

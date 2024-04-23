@@ -6,9 +6,9 @@ import { useDispatch } from 'react-redux';
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
 import { NotarizationRow } from '@newcomponents/Notarizations/Row';
-import { WiseAction, WiseActionType, WiseRequest } from '@utils/types';
-import { BackgroundActiontype, RequestHistory } from '../../entries/Background/rpc';
-import { deleteRequestHistory } from '../../reducers/history';
+import { RevolutAction, RevolutActionType, RevolutRequest } from '@utils/types';
+import { BackgroundActiontype, RequestHistory } from '@entries/Background/rpc';
+import { deleteRequestHistory } from '@reducers/history';
 
 
 const ROWS_PER_PAGE = 2;
@@ -20,10 +20,11 @@ type NotarizationRowData = {
   date: string;
   isProving: boolean;
   isFailed: boolean;
+  proof: { session: any; substrings: any };
 };
 
 type NotarizationTableProps = {
-  action: WiseActionType;
+  action: RevolutActionType;
   notarizations: RequestHistory[];
 };
 
@@ -95,9 +96,8 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
 
   const emptyNotarizationsCopy = (): string => {
     switch (action) {
-      case WiseAction.REGISTRATION:
-      case WiseAction.DEPOSITOR_REGISTRATION:
-      case WiseAction.TRANSFER:
+      case RevolutAction.REGISTRATION:
+      case RevolutAction.TRANSFER:
       default:
         return 'No stored proofs found. Follow the steps to generate a valid proof.';
     }
@@ -112,35 +112,38 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
 
       let subject, metadata, timestamp = "";
 
-      switch (notarization.requestType) {
-        case WiseRequest.PAYMENT_PROFILE:
-          const [notarizationTimestamp, wiseTag] = notarization.metadata;
-          const wiseTagStripped = wiseTag.split('@')[1];
+      if (notarization.metadata) {
+        switch (notarization.requestType) {
+          case RevolutRequest.PAYMENT_PROFILE:
+            const [notarizationTimestampProfile, revTag] = notarization.metadata;
+    
+            subject = `Revtag: ${revTag}`;
+            metadata = revTag;
+            timestamp = notarizationTimestampProfile;
+            break;
   
-          subject = `Wisetag: ${wiseTag}`;
-          metadata = wiseTagStripped;
-          timestamp = notarizationTimestamp;
-          break;
-
-        case WiseRequest.TRANSFER_DETAILS:
-          const [notarizationTimestamp, amount, currency] = notarization.metadata;
-        
-          subject = `Sent ${amount} ${currency}`;
-          metadata = amount;
-          timestamp = notarizationTimestamp;
-          break;
-
-        default:
-          const [notarizationTimestamp] = notarization.metadata;
-        
-          subject = `Unrecognized (or outdated)`;
-          metadata = '';
-          timestamp = notarizationTimestamp;
-          break;
+          case RevolutRequest.TRANSFER_DETAILS:
+            const [notarizationTimestampTransfer, amount, currency, username] = notarization.metadata;
+          
+            const amountString = parseInt(amount) / 100 * -1;
+            subject = `Sent ${amountString} ${currency} to ${username}`;
+            metadata = amount;
+            timestamp = notarizationTimestampTransfer;
+            break;
+  
+          default:
+            const [notarizationTimestampDefault] = notarization.metadata;
+          
+            subject = `Unrecognized (or outdated)`;
+            metadata = '';
+            timestamp = notarizationTimestampDefault;
+            break;
+        }
       }
 
       return {
         requestHistoryId: notarization.id,
+        proof: notarization.proof,
         metadata: metadata,
         subject: subject,
         date: parseTimestamp(timestamp),
@@ -172,6 +175,8 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
             <NotarizationRow
               key={index}
               subjectText={notarization.subject}
+              requestHistoryId={notarization.requestHistoryId}
+              proof={notarization.proof}
               dateText={notarization.date}
               isLastRow={index === loadedNotarizations.length - 1}
               onRowClick={() => handleRowClick(index)}

@@ -1,3 +1,4 @@
+import { parse as parseCookie } from 'cookie';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -5,23 +6,16 @@ import deepEqual from 'fast-deep-equal';
 import { AppRootState } from 'reducers';
 import browser from 'webextension-polyfill';
 
-import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests } from '../../reducers/requests';
-import { useHistoryOrder } from '../../reducers/history';
-import { BackgroundActiontype, RequestHistory, RequestLog } from '../../entries/Background/rpc';
-
-import NotarizationTable from '@newcomponents/Notarizations/Table';
-import RequestTable from '@newcomponents/Requests/Table';
-import { InstructionTitle } from '@newcomponents/Instructions/Title';
+import { BackgroundActiontype, RequestHistory, RequestLog } from '@entries/Background/rpc';
 import { Button } from '@newcomponents/common/Button';
-import { OnRamperIntent, WiseAction, WiseActionType, WiseStep, WiseRequest, WISE_PLATFORM } from '@utils/types';
+import { InstructionTitle } from '@newcomponents/Instructions/Title';
+import NotarizationTable from '@newcomponents/Notarizations/Revolut/Table';
+import RequestTable from '@newcomponents/Requests/Revolut/Table';
+import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests } from '@reducers/requests';
+import { useHistoryOrder } from '@reducers/history';
 import { urlify } from '@utils/misc';
-
-import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '@utils/storage';
-import { parse as parseCookie } from 'cookie';
-
-
-import bookmarks from '../../../utils/bookmark/bookmarks.json';
-
+import { OnRamperIntent, RevolutAction, RevolutActionType, RevolutStep, RevolutRequest, REVOLUT_PLATFORM } from '@utils/types';
+import bookmarks from '../../../utils/bookmark/revolut.json';
 
 interface ActionSettings {
   action_url: string;
@@ -42,11 +36,11 @@ interface ActionSettings {
 }
 
 
-interface WiseProps {
-  action: WiseActionType;
+interface RevolutProps {
+  action: RevolutActionType;
 }
 
-const Wise: React.FC<WiseProps> = ({
+const Revolut: React.FC<RevolutProps> = ({
   action
 }) => {
   const dispatch = useDispatch();
@@ -80,7 +74,7 @@ const Wise: React.FC<WiseProps> = ({
    */
 
   useEffect(() => {
-    const requestsRetrieved = requests.length > 0;
+    const requestsRetrieved = loadedRequests.length > 0;
     const indexNotSelected = selectedIndex === null;
 
     if (requestsRetrieved && indexNotSelected) {
@@ -94,7 +88,7 @@ const Wise: React.FC<WiseProps> = ({
 
       const onramperIntentData = await browser.runtime.sendMessage({
         type: BackgroundActiontype.get_onramper_intent,
-        data: WISE_PLATFORM,
+        data: REVOLUT_PLATFORM,
       });
 
       if (onramperIntentData) {
@@ -109,12 +103,11 @@ const Wise: React.FC<WiseProps> = ({
     if (notarizations) {
       const filteredNotarizations = notarizations.filter(notarization => {
         switch (action) {
-          case WiseAction.REGISTRATION:
-            return notarization.requestType === WiseRequest.PAYMENT_PROFILE;
+          case RevolutAction.REGISTRATION:
+            return notarization.requestType === RevolutRequest.PAYMENT_PROFILE;
 
-          case WiseAction.DEPOSITOR_REGISTRATION:
-          case WiseAction.TRANSFER:
-            return notarization.requestType === WiseRequest.TRANSFER_DETAILS;
+          case RevolutAction.TRANSFER:
+            return notarization.requestType === RevolutRequest.TRANSFER_DETAILS;
 
           default:
             return false;
@@ -134,34 +127,38 @@ const Wise: React.FC<WiseProps> = ({
   
     if (requests) {
       const filteredRequests = requests.filter(request => {
-        const jsonResponseBody = JSON.parse(request.responseBody as string);
-
         switch (action) {
-          case WiseAction.REGISTRATION:
-            return request.requestType === WiseRequest.PAYMENT_PROFILE;
-
-          case WiseAction.DEPOSITOR_REGISTRATION:
-            if (!jsonResponseBody) return false;
+          case RevolutAction.REGISTRATION:
+            const jsonResponseBody = JSON.parse(request.responseBody as string);
             return (
-              request.requestType === WiseRequest.TRANSFER_DETAILS &&
-              jsonResponseBody.actor === "SENDER"
+              request.requestType === RevolutRequest.PAYMENT_PROFILE &&
+              !jsonResponseBody.code
             );
-          case WiseAction.TRANSFER:
-            if (!jsonResponseBody) return false;
-            if (request.requestType === WiseRequest.TRANSFER_DETAILS && jsonResponseBody.actor === "SENDER") {
+
+          case RevolutAction.TRANSFER:
+            try {
               const jsonResponseBody = JSON.parse(request.responseBody as string);
-              if (onramperIntent) {
-                // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
-                return (
-                  parseInt(jsonResponseBody.stateHistory[0].date) / 1000 >= parseInt(onramperIntent.intent.timestamp) && // Adjust Wise timestamp
-                  parseInt(jsonResponseBody.targetAmount) >= parseInt(onramperIntent.fiatToSend)
-                )
+              const amountParsed = jsonResponseBody[0].amount / 100 * -1;
+              if (
+                request.requestType === RevolutRequest.TRANSFER_DETAILS &&
+                amountParsed > 0 && // Filter receive funds
+                !jsonResponseBody[0].beneficiary // Filter bank withdrawals
+              ) {
+                if (onramperIntent) {
+                  // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
+                  return (
+                    parseInt(jsonResponseBody[0].completedDate) / 1000 >= parseInt(onramperIntent.intent.timestamp) && // Adjust Revolut timestamp
+                    amountParsed >= parseInt(onramperIntent.fiatToSend) // TODO: we can filter revtag matches too if client sends this
+                  )
+                }
+                // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users
+                return true;
               }
-              // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users
-              return true;
+              return false;
+            } catch (e) {
+              console.error('Error parsing response body:', e);
+              return false;
             }
-            // Non-transfer requests are always filtered out
-            return false;
 
           default:
             return false;
@@ -347,13 +344,10 @@ const Wise: React.FC<WiseProps> = ({
 
   const urlForAction = useMemo(() => {
     switch (action) {
-      case WiseAction.REGISTRATION:
+      case RevolutAction.REGISTRATION:
         return 'https://zkp2p.xyz/register';
       
-        case WiseAction.DEPOSITOR_REGISTRATION:
-        return 'https://zkp2p.xyz/deposits';
-      
-        case WiseAction.TRANSFER:
+        case RevolutAction.TRANSFER:
         return 'https://zkp2p.xyz/swap';
       
         default:
@@ -363,16 +357,16 @@ const Wise: React.FC<WiseProps> = ({
 
   const actionSettings = useMemo(() => {
     const settingsObject = {
-      navigate_title: 'Navigate to Wise',
+      navigate_title: 'Navigate to Revolut',
       review_title: 'Use Proofs',
     } as ActionSettings;
 
     switch (action) {
-      case WiseAction.REGISTRATION:
-        settingsObject.request_title = 'Prove Wisetag';
-        settingsObject.action_url = 'https://wise.com/account/payments';
-        settingsObject.navigate_instruction = 'Go to the Payments page on Wise to load your account\'s Wisetag';
-        settingsObject.request_instruction = 'Notarize the Wisetag, this will take approximately 20 seconds';
+      case RevolutAction.REGISTRATION:
+        settingsObject.request_title = 'Prove RevTag';
+        settingsObject.action_url = 'https://app.revolut.com/home';
+        settingsObject.navigate_instruction = 'Go to the Account page on Revolut to load your account\'s RevTag';
+        settingsObject.request_instruction = 'Notarize the RevTag, this will take approximately 30 seconds';
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to register';
 
         const registrationBookmark = bookmarks[0];
@@ -386,33 +380,14 @@ const Wise: React.FC<WiseProps> = ({
         };
         break;
 
-
-      case WiseAction.DEPOSITOR_REGISTRATION:
-        settingsObject.request_title = 'Prove Past Payment';
-        settingsObject.action_url = 'https://wise.com/all-transactions?direction=OUTGOING';
-        settingsObject.navigate_instruction = 'Go to the Transactions page on Wise and open a past outgoing transaction'
-        settingsObject.request_instruction = 'Notarize the transaction, this will take approximately 20 seconds'
-        settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to register'
-
-        const depositorRegistrationBookmark = bookmarks[1];
-        settingsObject.bookmark_data = {
-          secretResponseSelector: depositorRegistrationBookmark.secretResponseSelector,
-          metaDataSelector: depositorRegistrationBookmark.metaDataSelector,
-          skipRequestHeaders: depositorRegistrationBookmark.skipRequestHeaders,
-          includeRequestCookies: depositorRegistrationBookmark.includeRequestCookies,
-          maxSentData: depositorRegistrationBookmark.maxSentData,
-          maxRecvData: depositorRegistrationBookmark.maxRecvData
-        };
-        break;
-
-      case WiseAction.TRANSFER:
+      case RevolutAction.TRANSFER:
         settingsObject.request_title = 'Prove Payment Sent';
-        settingsObject.action_url = 'https://wise.com/all-transactions?direction=OUTGOING';
-        settingsObject.navigate_instruction = 'Go to the Transaction details page on Wise to view the send payment'
+        settingsObject.action_url = 'https://app.revolut.com/home';
+        settingsObject.navigate_instruction = 'Go to the Transaction details page on Revolut to view the send payment'
         settingsObject.request_instruction = 'Notarize the transaction, this will take approximately 20 seconds'
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to on-ramp'
 
-        const transferBookmark = bookmarks[2];
+        const transferBookmark = bookmarks[1];
         settingsObject.bookmark_data = {
           secretResponseSelector: transferBookmark.secretResponseSelector,
           metaDataSelector: transferBookmark.metaDataSelector,
@@ -438,7 +413,7 @@ const Wise: React.FC<WiseProps> = ({
           <InstructionTitle
             title={actionSettings.navigate_title}
             description={actionSettings.navigate_instruction}
-            step={WiseStep.NAVIGATE}
+            step={RevolutStep.NAVIGATE}
           />
 
           <ButtonContainer>
@@ -448,7 +423,7 @@ const Wise: React.FC<WiseProps> = ({
               height={40}
               fontSize={14}
             >
-              Go to Wise.com
+              Go to Revolut
             </Button>
           </ButtonContainer>
         </BodyStepContainer>
@@ -457,7 +432,7 @@ const Wise: React.FC<WiseProps> = ({
           <InstructionTitle
             title={actionSettings.request_title}
             description={actionSettings.request_instruction}
-            step={WiseStep.PROVE}
+            step={RevolutStep.PROVE}
           />
 
           <RequestTableAndButtonContainer>
@@ -470,7 +445,7 @@ const Wise: React.FC<WiseProps> = ({
 
             <ButtonContainer>
               <Button
-                disabled={selectedIndex === null}
+                disabled={loadedRequests.length === 0}
                 onClick={() => handleNotarizePressed()}
                 width={164}
                 height={40}
@@ -486,7 +461,7 @@ const Wise: React.FC<WiseProps> = ({
           <InstructionTitle
             title={actionSettings.review_title}
             description={actionSettings.review_instruction}
-            step={WiseStep.REVIEW}
+            step={RevolutStep.REVIEW}
           />
 
           <NotarizationTable
@@ -542,4 +517,4 @@ const ButtonContainer = styled.div`
   margin: auto;
 `;
 
-export default Wise;
+export default Revolut;

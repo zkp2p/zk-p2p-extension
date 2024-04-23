@@ -4,7 +4,7 @@ import { UserPlus, Pocket, DollarSign } from 'react-feather';
 import styled from 'styled-components';
 
 import { useActiveTabUrl, useRequests } from '../../reducers/requests';
-import bookmarks from '../../../utils/bookmark/bookmarks.json';
+import revolut from '../../../utils/bookmark/revolut.json';
 
 import { colors } from '@theme/colors';
 import { ThemedText } from '@theme/text';
@@ -26,9 +26,6 @@ export default function Home(): ReactElement {
         return navigate(`/registration`);
 
       case 1:
-        return navigate(`/deposit`);
-
-      case 2:
       default:
         return navigate(`/onramp`);
     }
@@ -85,15 +82,15 @@ export default function Home(): ReactElement {
           Options
         </NavButton> */}
 
-      <WiseContainer>
-        <WiseTitle>
+      <RevolutContainer>
+        <RevolutTitle>
           <ThemedText.ModalHeadline textAlign="left">
-            Wise
+            Revolut
           </ThemedText.ModalHeadline>
-        </WiseTitle>
+        </RevolutTitle>
 
         <ActionsGrid>
-          {bookmarks.map((bm, i) => {
+          {revolut.map((bm, i) => {
             return (
               <ActionCard
                 key={i}
@@ -110,14 +107,14 @@ export default function Home(): ReactElement {
             );
           })}
         </ActionsGrid>
-      </WiseContainer>
+      </RevolutContainer>
 
       <ComingSoonContainer>
-        <WiseTitle>
+        <RevolutTitle>
           <ThemedText.ModalHeadline textAlign="left">
             Coming Soon
           </ThemedText.ModalHeadline>
-        </WiseTitle>
+        </RevolutTitle>
 
         <ComingSoonDescription>
           <ThemedText.SubHeaderSmall textAlign="left">
@@ -155,7 +152,7 @@ const IntroductionDescription = styled.div`
   font-size: 15px;
 `;
 
-const WiseContainer = styled.div`
+const RevolutContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 1rem;
@@ -166,7 +163,7 @@ const WiseContainer = styled.div`
 // border-radius: 12px;
 // border: 1px solid ${colors.defaultBorderColor};
 
-const WiseTitle = styled.div`
+const RevolutTitle = styled.div`
   padding-left: 0.75rem;
   color: ${colors.white};
 `;

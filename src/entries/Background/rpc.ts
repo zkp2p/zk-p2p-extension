@@ -11,7 +11,7 @@ import {
   setNotaryRequestVerification,
   removeNotaryRequest,
 } from './db';
-import { OnRamperIntent, WiseRequestType } from '@utils/types';
+import { OnRamperIntent, RevolutRequestType } from '@utils/types';
 
 export enum BackgroundActiontype {
   get_requests = 'get_requests',
@@ -49,7 +49,7 @@ export type RequestLog = {
   };
   responseHeaders?: browser.WebRequest.HttpHeaders;
   timestamp: number;
-  requestType: WiseRequestType;
+  requestType: RevolutRequestType;
   responseBody?: string;
 };
 
@@ -75,7 +75,7 @@ export type RequestHistory = {
   secretResps?: string[];
   metadata?: string[];
   originalTabId?: number | null;
-  requestType: WiseRequestType;
+  requestType: RevolutRequestType;
 };
 
 export const initRPC = () => {
