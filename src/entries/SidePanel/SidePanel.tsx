@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import browser from 'webextension-polyfill';
 import styled from 'styled-components';
 
 import { setActiveTab, setRequests, useActiveTab, useActiveTabUrl } from '../../reducers/requests';
+import { fetchApiUrls, measureLatency, setApiUrls, useBestLatency } from '../../reducers/settings';
+import { API_CONFIGURATIONS } from '@utils/types';
 import { BackgroundActiontype } from '../Background/rpc';
 import Requests from '../../pages/Requests';
 import Options from '../../pages/Options';
@@ -17,8 +19,9 @@ import History from '../../pages/History';
 import ProofUploader from '../../pages/ProofUploader';
 
 import Wise from '../../pages/Wise';
+import NotarySettings from '../../pages/NotarySettings';
 import { WiseAction } from '@utils/types';
-
+import { AppRootState } from 'reducers';
 
 import logo from '../../assets/img/icon-48.png';
 import { TopNav } from '@newcomponents/TopNav/TopNav';
@@ -26,10 +29,12 @@ import { colors } from '@theme/colors';
 
 
 const SidePanel = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const activeTab = useActiveTab();
   const url = useActiveTabUrl();
   const navigate = useNavigate();
+  const bestLatency = useBestLatency();
+  const { autoSelect } = useSelector((state: AppRootState) => state.settings);
 
   useEffect(() => {
     (async () => {
@@ -51,8 +56,21 @@ const SidePanel = () => {
         type: BackgroundActiontype.get_prove_requests,
         data: tab?.id,
       });
+
+      dispatch(fetchApiUrls());
+
+      dispatch(measureLatency(API_CONFIGURATIONS.map(config => config.notary)));
     })();
   }, []);
+
+  useEffect(() => {
+    if (bestLatency && autoSelect === "autoselect") {
+      const apiConfiguration = API_CONFIGURATIONS.find((config) => config.notary === bestLatency.url);
+      if (apiConfiguration) {
+        dispatch(setApiUrls({ notary: bestLatency.url, proxy: apiConfiguration.proxy, autoSelect: autoSelect }));
+      }
+    }
+  }, [bestLatency, autoSelect]);
 
   return (
     <AppContainer>
@@ -84,6 +102,7 @@ const SidePanel = () => {
         <Route path="/registration" element={<Wise action={WiseAction.REGISTRATION}/>} />
         <Route path="/deposit" element={<Wise action={WiseAction.DEPOSITOR_REGISTRATION}/>} />
         <Route path="/onramp" element={<Wise action={WiseAction.TRANSFER}/>} />
+        <Route path="/settings" element={<NotarySettings/>} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </AppContainer>

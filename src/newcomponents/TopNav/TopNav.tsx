@@ -26,6 +26,10 @@ export const TopNav: React.FC<{ withoutLinks?: boolean }> = ({ withoutLinks }) =
       case '/onramp':
         selectedItem = 'On-Ramp';
         break;
+      
+      case '/settings':
+        selectedItem = 'Configuration';
+        break;
 
       default:
         selectedItem = 'Home';

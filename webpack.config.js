@@ -17,6 +17,7 @@ var alias = {
   '@newcomponents': path.resolve(__dirname, './src/newcomponents/'),
   '@utils': path.resolve(__dirname, './src/utils/'),
   '@hooks': path.resolve(__dirname, './src/hooks/'),
+  '@reducers': path.resolve(__dirname, './src/reducers/')
 };
 
 // load the secrets
@@ -29,7 +30,6 @@ var fileExtensions = [
   "gif",
   "eot",
   "otf",
-  "svg",
   "ttf",
   "woff",
   "woff2",
@@ -88,6 +88,32 @@ var options = {
             },
           },
         ],
+      },
+      {
+        test: /\.svg$/,
+        use: [
+          {
+            loader: require.resolve('@svgr/webpack'),
+            options: {
+              prettier: false,
+              svgo: false,
+              svgoConfig: {
+                plugins: [{ removeViewBox: false }],
+              },
+              titleProp: true,
+              ref: true,
+            },
+          },
+          {
+            loader: require.resolve('file-loader'),
+            options: {
+              name: 'static/media/[name].[hash].[ext]',
+            },
+          },
+        ],
+        issuer: {
+          and: [/\.(ts|tsx|js|jsx|md|mdx)$/],
+        },
       },
       {
         test: new RegExp(".(" + fileExtensions.join("|") + ")$"),

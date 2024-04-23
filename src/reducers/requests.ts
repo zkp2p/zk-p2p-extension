@@ -38,8 +38,8 @@ export const setRequests = (requests: RequestLog[]): Action<RequestLog[]> => ({
 });
 
 export const notarizeRequest = (options: RequestHistory) => async () => {
-  const notaryUrl = await get(NOTARY_API_LS_KEY, 'https://notary-california.zkp2p.xyz');
-  const websocketProxyUrl = await get(PROXY_API_LS_KEY, 'wss://proxy-california.zkp2p.xyz');
+  const notaryUrl = await get(NOTARY_API_LS_KEY);
+  const websocketProxyUrl = await get(PROXY_API_LS_KEY);
 
   chrome.runtime.sendMessage<any, string>({
     type: BackgroundActiontype.prove_request_start,
