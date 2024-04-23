@@ -7,8 +7,8 @@ import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
 import { NotarizationRow } from '@newcomponents/Notarizations/Row';
 import { WiseAction, WiseActionType, WiseRequest } from '@utils/types';
-import { BackgroundActiontype, RequestHistory } from '../../entries/Background/rpc';
-import { deleteRequestHistory } from '../../reducers/history';
+import { BackgroundActiontype, RequestHistory } from '../../../entries/Background/rpc';
+import { deleteRequestHistory } from '../../../reducers/history';
 
 
 const ROWS_PER_PAGE = 2;

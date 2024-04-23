@@ -1,4 +1,4 @@
-import { WiseRequest } from '@utils/types';
+import { RevolutRequest } from '@utils/types';
 
 window.onerror = (error) => {
   // console.log('error');
@@ -64,7 +64,7 @@ chrome.runtime.onMessage.addListener((message) => {
     if (message.data.notaryRequests && message.data.notaryRequests.length > 0) {
       filteredResponse = message.data.notaryRequests.filter(
         (item: { status: string; requestType: string }) =>
-          item.status === 'success' && item.requestType === WiseRequest.PAYMENT_PROFILE,
+          item.status === 'success' && item.requestType === RevolutRequest.PAYMENT_PROFILE,
       );
     }
 
@@ -89,7 +89,7 @@ chrome.runtime.onMessage.addListener((message) => {
     if (message.data.notaryRequests && message.data.notaryRequests.length > 0) {
       filteredResponse = message.data.notaryRequests.filter(
         (item: { status: string; requestType: string }) =>
-          item.status === 'success' && item.requestType === WiseRequest.TRANSFER_DETAILS,
+          item.status === 'success' && item.requestType === RevolutRequest.TRANSFER_DETAILS,
       );
     }
 

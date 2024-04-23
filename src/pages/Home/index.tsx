@@ -4,7 +4,7 @@ import { UserPlus, Pocket, DollarSign } from 'react-feather';
 import styled from 'styled-components';
 
 import { useActiveTabUrl, useRequests } from '../../reducers/requests';
-import bookmarks from '../../../utils/bookmark/bookmarks.json';
+import revolut_bookmarks from '../../../utils/bookmark/revolut_bookmarks.json';
 
 import { colors } from '@theme/colors';
 import { ThemedText } from '@theme/text';
@@ -26,9 +26,6 @@ export default function Home(): ReactElement {
         return navigate(`/registration`);
 
       case 1:
-        return navigate(`/deposit`);
-
-      case 2:
       default:
         return navigate(`/onramp`);
     }
@@ -88,12 +85,12 @@ export default function Home(): ReactElement {
       <WiseContainer>
         <WiseTitle>
           <ThemedText.ModalHeadline textAlign="left">
-            Wise
+            Revolut
           </ThemedText.ModalHeadline>
         </WiseTitle>
 
         <ActionsGrid>
-          {bookmarks.map((bm, i) => {
+          {revolut_bookmarks.map((bm, i) => {
             return (
               <ActionCard
                 key={i}

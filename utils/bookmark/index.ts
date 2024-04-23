@@ -1,4 +1,4 @@
-import bookmarks from './bookmarks.json';
+import bookmarks from './wise_bookmarks.json';
 import { RequestLog } from '../../src/entries/Background/rpc';
 
 type Bookmark = {

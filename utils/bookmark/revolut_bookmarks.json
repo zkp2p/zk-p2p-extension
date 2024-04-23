@@ -1,0 +1,95 @@
+[
+  {
+    "url": "https://app.revolut.com/api/retail/user/current",
+    "targetUrl": "https://app.revolut.com/home",
+    "method": "GET",
+    "type": "xmlhttprequest",
+    "title": "Registration",
+    "description": "Generate proof of a Revolut account required to complete registration",
+    "skipRequestHeaders": [
+      "sec-ch-ua",
+      "pragma",
+      "x-client-version",
+      "sec-ch-ua-mobile",
+      "x-client-geo-location",
+      "Accept",
+      "cache-control",
+      "sec-ch-ua-platform",
+      "Sec-Fetch-Site",
+      "Sec-Fetch-Mode",
+      "Sec-Fetch-Dest",
+      "Referer",
+      "Accept-Encoding",
+      "Accept-Language"
+    ],
+    "includeRequestCookies": [
+      "revo_device_id",
+      "credentials",
+      "refresh-token"
+    ],
+    "secretResponseSelector": [
+      "(?<=\"address\":{)[^}]+",
+      "(?<=\"birthDate\":\\[)[^\\]]+",
+      "(?<=\"firstName\":\")[^\"]+",
+      "(?<=\"lastName\":\")[^\"]+",
+      "(?<=\"middleName\":\")[^\"]+",
+      "(?<=\"phone\":\")[^\"]+",
+      "(?<=\"email\":\")[^\"]+",
+      "(?<=\"ssn\":\")[^\"]+",
+      "(?<=\"taxResidencies\":\\[)[^\\]]+",
+      "(?<=\"identificationNumbers\":\\[)[^\\]]+"
+    ],
+    "metaDataSelector": [
+      "(?<=\"username\":\")[^\"]+"
+    ],
+    "maxSentData": 500,
+    "maxRecvData": 3700
+  },
+  {
+    "url": "https://app.revolut.com/api/retail/transaction/.*",
+    "targetUrl": "https://app.revolut.com/home",
+    "method": "GET",
+    "type": "xmlhttprequest",
+    "title": "On-Ramp",
+    "description": "Generate proof of your completed Revolut transfer to complete onramp",
+    "skipRequestHeaders": [
+      "sec-ch-ua",
+      "pragma",
+      "x-client-version",
+      "sec-ch-ua-mobile",
+      "x-client-geo-location",
+      "Accept",
+      "cache-control",
+      "sec-ch-ua-platform",
+      "Sec-Fetch-Site",
+      "Sec-Fetch-Mode",
+      "Sec-Fetch-Dest",
+      "Referer",
+      "Accept-Encoding",
+      "Accept-Language"
+    ],
+    "includeRequestCookies": [
+      "revo_device_id",
+      "credentials",
+      "refresh-token"
+    ],
+    "secretResponseSelector": [
+      "(?<=\"balance\":)\\d+",
+      "(?<=\"description\":)[^,]+",
+      "(?<=\"firstName\":)[^,]+",
+      "(?<=\"lastName\":)[^,]+",
+      "(?<=\"country\":)[^,]+",
+      "(?<=\"params\":\\[)[^\\]]+"
+    ],
+    "metaDataSelector": [
+      "(?<=\"amount\":)([\\d.-]+)",
+      "(?<=\"currency\":\")[^\"]+",
+      "(?<=\"username\":\")[^\"]+",
+      "(?<=\"completedDate\":)(\\d+)",
+      "(?<=\"state\":\")[^\"]+",
+      "(?<=\"id\":\")[^\"]+"
+    ],
+    "maxSentData": 800,
+    "maxRecvData": 4000
+  }
+]

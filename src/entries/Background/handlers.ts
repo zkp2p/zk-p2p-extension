@@ -4,7 +4,7 @@ import { getCacheByTabId } from './cache';
 import mutex from './mutex';
 import { BackgroundActiontype, RequestLog } from './rpc';
 import { addRequest } from '../../reducers/requests';
-import { WiseRequest, WiseRequestType } from '@utils/types';
+import { WiseRequest, WiseRequestType, RevolutRequest, RevolutRequestType } from '@utils/types';
 import { replayRequest } from '@utils/misc';
 
 export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsType) => {
@@ -14,20 +14,27 @@ export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsTy
     const fetchUrl = new URL(details.url);
     if (fetchUrl.searchParams.has('replay_request')) return; // Skip processing for replay requests
 
-    if (method !== 'OPTIONS') {
+    if (method !== 'OPTIONS' && method !== 'HEAD') {
       const cache = getCacheByTabId(tabId);
       const existing = cache.get<RequestLog>(requestId);
 
       // Set request type
       const notarizationUrlString = details.url;
-      const wiseTagEndpointRegex = new RegExp('https://wise.com/gateway/v1/payments');
-      const transferEndpointRegex = new RegExp('https://wise.com/gateway/v3/profiles/\\d+/transfers/\\d+');
+      // const wiseTagEndpointRegex = new RegExp('https://wise.com/gateway/v1/payments');
+      // const transferEndpointRegex = new RegExp('https://wise.com/gateway/v3/profiles/\\d+/transfers/\\d+');
+      const revolutTagEndpointRegex = new RegExp('https://app.revolut.com/api/retail/user/current');
+      const revolutTransactionEndpointRegex = new RegExp('https://app.revolut.com/api/retail/transaction/\\S+');
 
-      let requestType: WiseRequestType = "";
-      if (wiseTagEndpointRegex.test(notarizationUrlString)) {
-        requestType = WiseRequest.PAYMENT_PROFILE;
-      } else if (transferEndpointRegex.test(notarizationUrlString)) {
-        requestType = WiseRequest.TRANSFER_DETAILS;
+      let requestType: RevolutRequestType = "";
+      // if (wiseTagEndpointRegex.test(notarizationUrlString)) {
+      //   requestType = WiseRequest.PAYMENT_PROFILE;
+      // } else if (transferEndpointRegex.test(notarizationUrlString)) {
+      //   requestType = WiseRequest.TRANSFER_DETAILS;
+      // }
+      if (revolutTagEndpointRegex.test(notarizationUrlString)) { 
+        requestType = RevolutRequest.PAYMENT_PROFILE;
+      } else if (revolutTransactionEndpointRegex.test(notarizationUrlString)) {
+        requestType = RevolutRequest.TRANSFER_DETAILS;
       }
 
       cache.set(requestId, {
@@ -49,7 +56,7 @@ export const onBeforeRequest = (details: browser.WebRequest.OnBeforeRequestDetai
   mutex.runExclusive(async () => {
     const { method, requestBody, tabId, requestId } = details;
 
-    if (method === 'OPTIONS') return;
+    if (method === 'OPTIONS' || method === 'HEAD') return;
     
     const fetchUrl = new URL(details.url);
     if (fetchUrl.searchParams.has('replay_request')) return; // Skip processing for replay requests
@@ -81,7 +88,7 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
   mutex.runExclusive(async () => {
     const { method, responseHeaders, tabId, requestId } = details;
 
-    if (method === 'OPTIONS') return;
+    if (method === 'OPTIONS' || method === 'HEAD') return;
 
     const fetchUrl = new URL(details.url);
     if (fetchUrl.searchParams.has('replay_request')) return; // Skip processing for replay requests
@@ -92,14 +99,21 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
 
     // Set request type
     const notarizationUrlString = details.url;
-    const wiseTagEndpointRegex = new RegExp('https://wise.com/gateway/v1/payments');
-    const transferEndpointRegex = new RegExp('https://wise.com/gateway/v3/profiles/\\d+/transfers/\\d+');
+    // const wiseTagEndpointRegex = new RegExp('https://wise.com/gateway/v1/payments');
+    // const transferEndpointRegex = new RegExp('https://wise.com/gateway/v3/profiles/\\d+/transfers/\\d+');
+    const revolutTagEndpointRegex = new RegExp('https://app.revolut.com/api/retail/user/current');
+    const revolutTransactionEndpointRegex = new RegExp('https://app.revolut.com/api/retail/transaction/\\S+');
 
-    let requestType: WiseRequestType = "";
-    if (wiseTagEndpointRegex.test(notarizationUrlString)) {
-      requestType = WiseRequest.PAYMENT_PROFILE;
-    } else if (transferEndpointRegex.test(notarizationUrlString)) {
-      requestType = WiseRequest.TRANSFER_DETAILS;
+    let requestType: RevolutRequestType = "";
+    // if (wiseTagEndpointRegex.test(notarizationUrlString)) {
+    //   requestType = WiseRequest.PAYMENT_PROFILE;
+    // } else if (transferEndpointRegex.test(notarizationUrlString)) {
+    //   requestType = WiseRequest.TRANSFER_DETAILS;
+    // }
+    if (revolutTagEndpointRegex.test(notarizationUrlString)) { 
+      requestType = RevolutRequest.PAYMENT_PROFILE;
+    } else if (revolutTransactionEndpointRegex.test(notarizationUrlString)) {
+      requestType = RevolutRequest.TRANSFER_DETAILS;
     }
     
     const newLog: RequestLog = {
@@ -117,7 +131,7 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
     };
 
     const response = await replayRequest(newLog);
-    // console.log('response', response);
+    console.log('response', response);
 
     const newLogWithResponseBody: RequestLog = {
       ...newLog,

@@ -6,7 +6,7 @@ import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
 import { RequestRow } from '@newcomponents/Requests/Row';
 import { WiseAction, WiseActionType } from '@utils/types';
-import { BackgroundActiontype, RequestLog } from '../../entries/Background/rpc';
+import { BackgroundActiontype, RequestLog } from '@entries/Background/rpc';
 
 
 const ROWS_PER_PAGE = 2;
