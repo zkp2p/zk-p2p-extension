@@ -90,3 +90,11 @@ export const API_CONFIGURATIONS = [
     shouldPing: true,
   },
 ];
+
+export const StatusColors = {
+  GREEN: 'GREEN',
+  YELLOW: 'YELLOW',
+  RED: 'RED',
+} as const;
+
+export type StatusColorsType = keyof typeof StatusColors;

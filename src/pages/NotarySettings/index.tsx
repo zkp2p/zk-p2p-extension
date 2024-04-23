@@ -46,7 +46,7 @@ const Settings: React.FC = () => {
     setShouldAutoselect(false);
   }, [dispatch]);
 
-  const handleMeasureLatency = useCallback(async () => {
+  const handleRefreshClicked = useCallback(async () => {
     setLoadingLatency(true);
     try {
       await dispatch(measureLatency(API_CONFIGURATIONS.map(config => config.notary)));
@@ -85,7 +85,7 @@ const Settings: React.FC = () => {
                   Notary
                 </ThemedText.LabelSmall>
                 
-                <StyledRefresh onClick={handleMeasureLatency} />
+                <StyledRefresh onClick={handleRefreshClicked} />
               </SettingsAndRefreshContainer>
 
               <LabeledSwitch

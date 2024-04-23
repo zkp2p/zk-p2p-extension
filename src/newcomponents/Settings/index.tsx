@@ -9,14 +9,14 @@ import { colors } from '@theme/colors';
 import { SVGIconThemed } from '@newcomponents/SVGIcon/SVGIconThemed';
 import { Overlay } from '@newcomponents/common/Overlay';
 import { AppDispatch } from '@utils/store';
-import { API_CONFIGURATIONS } from '@utils/types';
-import { AppRootState } from 'reducers';
-import { fetchApiUrls } from '../../reducers/settings';
+import { API_CONFIGURATIONS, StatusColors, StatusColorsType } from '@utils/types';
+import { AppRootState } from '@reducers/index';
+import { fetchApiUrls } from '@reducers/settings';
 
 const CLIENT_VERSION = '0.0.1';
 
 interface StyledCircleProps {
-  connection: 'green' | 'yellow' | 'red' | null;
+  connection: StatusColorsType | null;
 }
 
 export const Settings = () => {
@@ -33,7 +33,7 @@ export const Settings = () => {
    * State
    */
   const [notaryName, setNotaryName] = useState<string | null>(null);
-  const [status, setStatus] = useState<'green' | 'yellow' | 'red' | null>(null);
+  const [status, setStatus] = useState<StatusColorsType | null>(null);
 
   /* 
    * Hooks
@@ -53,11 +53,11 @@ export const Settings = () => {
     if (latencies && latencies[notary]) {
       const currentLatencyInt = parseInt(latencies[notary]);
       if (currentLatencyInt > 160) {
-        setStatus('red');
+        setStatus(StatusColors.RED);
       } else if (currentLatencyInt > 100) {
-        setStatus('yellow');
+        setStatus(StatusColors.YELLOW);
       } else {
-        setStatus('green');
+        setStatus(StatusColors.GREEN);
       }
     }
   }, [latencies, notary]);
@@ -242,11 +242,11 @@ const StyledCircle = styled(Circle)<StyledCircleProps>`
 
   fill: ${({ connection }) => {
     switch (connection) {
-      case 'green':
+      case StatusColors.GREEN:
         return colors.successGreen;
-      case 'yellow':
+      case StatusColors.YELLOW:
         return "yellow";
-      case 'red':
+      case StatusColors.RED:
         return colors.warningRed;
       default:
         return colors.successGreen;
@@ -255,11 +255,11 @@ const StyledCircle = styled(Circle)<StyledCircleProps>`
 
   color: ${({ connection }) => {
     switch (connection) {
-      case 'green':
+      case StatusColors.GREEN:
         return colors.successGreen;
-      case 'yellow':
+      case StatusColors.YELLOW:
         return "yellow";
-      case 'red':
+      case StatusColors.RED:
         return colors.warningRed;
       default:
         return colors.successGreen;
