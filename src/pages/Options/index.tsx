@@ -54,7 +54,7 @@ export default function Options(): ReactElement {
     setDirty(false);
   }, [notary, proxy]);
 
-  const handleApiChange = useCallback((newNotary, newProxy) => {
+  const handleApiChange = useCallback((newNotary: string, newProxy: string) => {
     setNotary(newNotary);
     setProxy(newProxy);
     setDirty(true);
