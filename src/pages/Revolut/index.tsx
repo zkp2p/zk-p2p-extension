@@ -80,7 +80,7 @@ const Revolut: React.FC<RevolutProps> = ({
    */
 
   useEffect(() => {
-    const requestsRetrieved = requests.length > 0;
+    const requestsRetrieved = loadedRequests.length > 0;
     const indexNotSelected = selectedIndex === null;
 
     if (requestsRetrieved && indexNotSelected) {
@@ -135,13 +135,21 @@ const Revolut: React.FC<RevolutProps> = ({
       const filteredRequests = requests.filter(request => {
         switch (action) {
           case RevolutAction.REGISTRATION:
-            return request.requestType === RevolutRequest.PAYMENT_PROFILE;
+            const jsonResponseBody = JSON.parse(request.responseBody as string);
+            return (
+              request.requestType === RevolutRequest.PAYMENT_PROFILE &&
+              !jsonResponseBody.code
+            );
 
           case RevolutAction.TRANSFER:
             try {
               const jsonResponseBody = JSON.parse(request.responseBody as string);
               const amountParsed = jsonResponseBody[0].amount / 100 * -1;
-              if (request.requestType === RevolutRequest.TRANSFER_DETAILS && amountParsed > 0 && !jsonResponseBody[0].beneficiary) {
+              if (
+                request.requestType === RevolutRequest.TRANSFER_DETAILS &&
+                amountParsed > 0 && // Filter receive funds
+                !jsonResponseBody[0].beneficiary // Filter bank withdrawals
+              ) {
                 if (onramperIntent) {
                   // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
                   return (
@@ -443,7 +451,7 @@ const Revolut: React.FC<RevolutProps> = ({
 
             <ButtonContainer>
               <Button
-                disabled={selectedIndex === null}
+                disabled={loadedRequests.length === 0}
                 onClick={() => handleNotarizePressed()}
                 width={164}
                 height={40}

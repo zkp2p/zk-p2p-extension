@@ -20,6 +20,7 @@ type NotarizationRowData = {
   date: string;
   isProving: boolean;
   isFailed: boolean;
+  proof: { session: any; substrings: any };
 };
 
 type NotarizationTableProps = {
@@ -109,39 +110,40 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
   useEffect(() => {
     const loadingNotarizations = notarizations.map((notarization) => {
 
-      console.log(notarization);
-
       let subject, metadata, timestamp = "";
 
-      switch (notarization.requestType) {
-        case RevolutRequest.PAYMENT_PROFILE:
-          const [notarizationTimestamp, revTag] = notarization.metadata;
+      if (notarization.metadata) {
+        switch (notarization.requestType) {
+          case RevolutRequest.PAYMENT_PROFILE:
+            const [notarizationTimestampProfile, revTag] = notarization.metadata;
+    
+            subject = `Revtag: ${revTag}`;
+            metadata = revTag;
+            timestamp = notarizationTimestampProfile;
+            break;
   
-          subject = `Revtag: ${revTag}`;
-          metadata = revTag;
-          timestamp = notarizationTimestamp;
-          break;
-
-        case RevolutRequest.TRANSFER_DETAILS:
-          const [notarizationTimestamp, amount, currency, username] = notarization.metadata;
-        
-          const amountString = amount / 100 * -1;
-          subject = `Sent ${amountString} ${currency} to ${username}`;
-          metadata = amount;
-          timestamp = notarizationTimestamp;
-          break;
-
-        default:
-          const [notarizationTimestamp] = notarization.metadata;
-        
-          subject = `Unrecognized (or outdated)`;
-          metadata = '';
-          timestamp = notarizationTimestamp;
-          break;
+          case RevolutRequest.TRANSFER_DETAILS:
+            const [notarizationTimestampTransfer, amount, currency, username] = notarization.metadata;
+          
+            const amountString = parseInt(amount) / 100 * -1;
+            subject = `Sent ${amountString} ${currency} to ${username}`;
+            metadata = amount;
+            timestamp = notarizationTimestampTransfer;
+            break;
+  
+          default:
+            const [notarizationTimestampDefault] = notarization.metadata;
+          
+            subject = `Unrecognized (or outdated)`;
+            metadata = '';
+            timestamp = notarizationTimestampDefault;
+            break;
+        }
       }
 
       return {
         requestHistoryId: notarization.id,
+        proof: notarization.proof,
         metadata: metadata,
         subject: subject,
         date: parseTimestamp(timestamp),
@@ -173,6 +175,8 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
             <NotarizationRow
               key={index}
               subjectText={notarization.subject}
+              requestHistoryId={notarization.requestHistoryId}
+              proof={notarization.proof}
               dateText={notarization.date}
               isLastRow={index === loadedNotarizations.length - 1}
               onRowClick={() => handleRowClick(index)}

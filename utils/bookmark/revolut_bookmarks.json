@@ -42,7 +42,7 @@
     "metaDataSelector": [
       "(?<=\"username\":\")[^\"]+"
     ],
-    "maxSentData": 500,
+    "maxSentData": 750,
     "maxRecvData": 3700
   },
   {
