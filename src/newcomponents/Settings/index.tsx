@@ -62,12 +62,6 @@ export const Settings = () => {
     }
   }, [latencies, notary]);
 
-  useEffect(() => {
-    if (!latencyResults) {
-      handleMeasureLatency();
-    }
-  }, [dispatch, notaryName, notary]);
-
   /*
    * Handler
    */
@@ -209,15 +203,6 @@ const ConnectedNotaryContainer = styled.div`
 const ConnectedLabel = styled.div`
   font-weight: 700;
   font-size: 16px;
-`;
-
-const StyledRefresh = styled(RefreshCw)`
-  height: 16px;
-  width: 16px;
-
-  &:hover:not([disabled]) {
-    color: #495057;
-  }
 `;
 
 const IconRow = styled.div`
