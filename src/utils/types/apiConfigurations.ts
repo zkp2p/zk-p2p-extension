@@ -9,7 +9,7 @@ export const API_CONFIGURATIONS = [
     name: 'North Virginia',
     notary: 'https://notary-us-east-1.zkp2p.xyz',
     proxy: 'wss://notary-us-east-1.zkp2p.xyz/proxy',
-    shouldPing: false,
+    shouldPing: true,
   },
   {
     name: 'Ohio',

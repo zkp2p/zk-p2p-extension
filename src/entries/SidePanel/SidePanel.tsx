@@ -5,15 +5,7 @@ import browser from 'webextension-polyfill';
 import styled from 'styled-components';
 
 import { setActiveTab, setRequests, useActiveTab, useActiveTabUrl } from '../../reducers/requests';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { fetchApiUrls, measureLatency, setApiUrls, useBestLatency } from '../../reducers/settings';
-=======
-import { measureLatency, useBestLatency } from '../../reducers/settings';
->>>>>>> 95fe30e (update styling)
-=======
-import { fetchApiUrls, measureLatency, setApiUrls, useBestLatency } from '../../reducers/settings';
->>>>>>> 30e9fcc (add auto routing)
 import { API_CONFIGURATIONS } from '@utils/types';
 import { BackgroundActiontype } from '../Background/rpc';
 import Requests from '../../pages/Requests';
@@ -43,14 +35,7 @@ const SidePanel = () => {
   const url = useActiveTabUrl();
   const navigate = useNavigate();
   const bestLatency = useBestLatency();
-<<<<<<< HEAD
-<<<<<<< HEAD
   const { autoSelect } = useSelector((state: AppRootState) => state.settings);
-=======
->>>>>>> 95fe30e (update styling)
-=======
-  const { autoSelect } = useSelector((state: AppRootState) => state.settings);
->>>>>>> 30e9fcc (add auto routing)
 
   useEffect(() => {
     (async () => {
@@ -73,52 +58,20 @@ const SidePanel = () => {
         data: tab?.id,
       });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
       dispatch(fetchApiUrls());
 
       dispatch(measureLatency(API_CONFIGURATIONS.map(config => config.notary)));
-=======
-      dispatch(measureLatency(API_CONFIGURATIONS.map(config => `${config.notary}/info`)));
->>>>>>> 95fe30e (update styling)
-=======
-      dispatch(fetchApiUrls());
-
-      dispatch(measureLatency(API_CONFIGURATIONS.map(config => config.notary)));
->>>>>>> 30e9fcc (add auto routing)
     })();
   }, []);
 
   useEffect(() => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (bestLatency && autoSelect === "autoselect") {
-=======
-    if (bestLatency && !autoSelect) {
->>>>>>> 30e9fcc (add auto routing)
-=======
-    if (bestLatency && autoSelect === "autoselect") {
->>>>>>> 7c9447f (fix redux state)
       const apiConfiguration = API_CONFIGURATIONS.find((config) => config.notary === bestLatency.url);
       if (apiConfiguration) {
         dispatch(setApiUrls({ notary: bestLatency.url, proxy: apiConfiguration.proxy, autoSelect: autoSelect }));
       }
-<<<<<<< HEAD
     }
   }, [bestLatency, autoSelect]);
-=======
-    if (bestLatency) {
-      console.log('bestLatency', bestLatency);
-
-      
-    }
-  }, [bestLatency]);
->>>>>>> 95fe30e (update styling)
-=======
-    }
-  }, [bestLatency, autoSelect]);
->>>>>>> 30e9fcc (add auto routing)
 
   return (
     <AppContainer>
