@@ -1,3 +1,4 @@
+import { parse as parseCookie } from 'cookie';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -5,23 +6,16 @@ import deepEqual from 'fast-deep-equal';
 import { AppRootState } from 'reducers';
 import browser from 'webextension-polyfill';
 
-import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests } from '@reducers/requests';
-import { useHistoryOrder } from '@reducers/history';
 import { BackgroundActiontype, RequestHistory, RequestLog } from '@entries/Background/rpc';
-
+import { Button } from '@newcomponents/common/Button';
+import { InstructionTitle } from '@newcomponents/Instructions/Title';
 import NotarizationTable from '@newcomponents/Notarizations/Revolut/Table';
 import RequestTable from '@newcomponents/Requests/Revolut/Table';
-import { InstructionTitle } from '@newcomponents/Instructions/Title';
-import { Button } from '@newcomponents/common/Button';
-import { OnRamperIntent, RevolutAction, RevolutActionType, RevolutStep, RevolutRequest, REVOLUT_PLATFORM } from '@utils/types';
+import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests } from '@reducers/requests';
+import { useHistoryOrder } from '@reducers/history';
 import { urlify } from '@utils/misc';
-
-import { get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '@utils/storage';
-import { parse as parseCookie } from 'cookie';
-
-
-import bookmarks from '../../../utils/bookmark/revolut_bookmarks.json';
-
+import { OnRamperIntent, RevolutAction, RevolutActionType, RevolutStep, RevolutRequest, REVOLUT_PLATFORM } from '@utils/types';
+import bookmarks from '../../../utils/bookmark/revolut.json';
 
 interface ActionSettings {
   action_url: string;

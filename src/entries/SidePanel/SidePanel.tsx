@@ -19,9 +19,8 @@ import History from '../../pages/History';
 import ProofUploader from '../../pages/ProofUploader';
 
 import Revolut from '../../pages/Revolut';
-import Wise from '../../pages/Wise';
 import NotarySettings from '../../pages/NotarySettings';
-import { WiseAction, RevolutAction } from '@utils/types';
+import { RevolutAction } from '@utils/types';
 import { AppRootState } from 'reducers';
 
 import logo from '../../assets/img/icon-48.png';
@@ -100,9 +99,6 @@ const SidePanel = () => {
         <Route path="/custom/*" element={<RequestBuilder />} />
         <Route path="/options" element={<Options />} />
         <Route path="/home" element={<Home />} />
-        {/* <Route path="/registration" element={<Wise action={WiseAction.REGISTRATION}/>} />
-        <Route path="/deposit" element={<Wise action={WiseAction.DEPOSITOR_REGISTRATION}/>} />
-        <Route path="/onramp" element={<Wise action={WiseAction.TRANSFER}/>} /> */}
         <Route path="/registration" element={<Revolut action={RevolutAction.REGISTRATION}/>} />
         <Route path="/onramp" element={<Revolut action={RevolutAction.TRANSFER}/>} />
         <Route path="/settings" element={<NotarySettings/>} />

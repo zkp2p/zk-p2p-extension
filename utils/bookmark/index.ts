@@ -1,4 +1,4 @@
-import bookmarks from './wise_bookmarks.json';
+import bookmarks from './revolut.json';
 import { RequestLog } from '../../src/entries/Background/rpc';
 
 type Bookmark = {

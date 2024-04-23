@@ -4,14 +4,14 @@ import { Cpu, Globe, ArrowLeftCircle } from 'react-feather';
 
 import { colors } from '@theme/colors';
 import { ThemedText } from '@theme/text';
-import { WiseStep, WiseStepType } from '@utils/types';
+import { RevolutStep, RevolutStepType } from '@utils/types';
 import { InstructionStep } from '@newcomponents/Instructions/Step';
 
 
 interface InstructionTitleProps {
   title: string,
   description: string,
-  step: WiseStepType
+  step: RevolutStepType
 }
 
 export const InstructionTitle: React.FC<InstructionTitleProps> = ({
@@ -25,13 +25,13 @@ export const InstructionTitle: React.FC<InstructionTitleProps> = ({
    * Helpers
    */
 
-  const getActionIcon = (step: WiseStepType) => {
+  const getActionIcon = (step: RevolutStepType) => {
     switch (step) {
-      case WiseStep.NAVIGATE:
+      case RevolutStep.NAVIGATE:
         return <StyledGlobe />;
-      case WiseStep.PROVE:
+      case RevolutStep.PROVE:
         return <StyledCpu />;
-      case WiseStep.REVIEW:
+      case RevolutStep.REVIEW:
         return <StyledArrowLeft />;
       default:
     }
