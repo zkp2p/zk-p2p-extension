@@ -41,9 +41,17 @@ export const NotarizationRow: React.FC<NotarizationRowProps> = ({
       <IndexLabel> {rowIndex} </IndexLabel>
       <SubjectLabel> {subjectLabel} </SubjectLabel>
       {isProving ? (
-        <SpinnerContainer>
-          <Spinner size={20}/>
-        </SpinnerContainer>
+        <IconsContainer>
+          <StyledTrashIcon onClick={(e) => {
+            e.stopPropagation();
+            if (onDeleteClicked) {
+              onDeleteClicked(); 
+            }
+          }} />
+          <SpinnerContainer>
+            <Spinner size={16}/>
+          </SpinnerContainer>
+        </IconsContainer>
       ) : isFailed ? (
         <IconsContainer>
           <StyledTrashIcon onClick={(e) => {
