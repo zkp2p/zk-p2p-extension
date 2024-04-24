@@ -12,6 +12,12 @@ const ExtReloader = require('webpack-ext-reloader');
 
 const ASSET_PATH = process.env.ASSET_PATH || "/";
 
+const ICON_PATH = process.env.NODE_ENV === 'development' 
+    ? 'src/assets/dev/'
+    : 'src/assets/img/';
+
+console.log('ICON_PATH', ICON_PATH);
+
 var alias = {
   '@theme': path.resolve(__dirname, './src/theme/'),
   '@newcomponents': path.resolve(__dirname, './src/newcomponents/'),
@@ -120,6 +126,9 @@ var options = {
         test: new RegExp(".(" + fileExtensions.join("|") + ")$"),
         type: "asset/resource",
         exclude: /node_modules/,
+        generator: {
+          filename: `${ICON_PATH}[name][ext]`
+        },
         // loader: 'file-loader',
         // options: {
         //   name: '[name].[ext]',
@@ -212,7 +221,7 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/assets/img/icon-16.png",
+          from: path.join(__dirname, ICON_PATH, "icon-16.png"),
           to: path.join(__dirname, "build"),
           force: true,
         },
@@ -221,7 +230,7 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/assets/img/icon-32.png",
+          from: path.join(__dirname, ICON_PATH, "icon-32.png"),
           to: path.join(__dirname, "build"),
           force: true,
         },
@@ -230,7 +239,7 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/assets/img/icon-48.png",
+          from: path.join(__dirname, ICON_PATH, "icon-48.png"),
           to: path.join(__dirname, "build"),
           force: true,
         },

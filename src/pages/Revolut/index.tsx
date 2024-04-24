@@ -191,7 +191,7 @@ const Revolut: React.FC<RevolutProps> = ({
       setOriginalTabId(tab.id || null);
     }
 
-    chrome.tabs.create({
+    browser.tabs.create({
       url: actionSettings.action_url
     }).then(newTab => {
       dispatch(setActiveTab(newTab))
@@ -330,11 +330,11 @@ const Revolut: React.FC<RevolutProps> = ({
       metadata: metadataResp,
       originalTabId: originalTabId,
       requestType: requestLog.requestType,
-    };
+    } as RequestHistory;
 
 
     dispatch(
-      notarizeRequest(notarizeRequestParams),
+      notarizeRequest(notarizeRequestParams) as any,
     );
   };
 
