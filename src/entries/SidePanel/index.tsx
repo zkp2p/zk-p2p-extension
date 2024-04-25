@@ -12,16 +12,8 @@ const container = document.getElementById('app-container');
 const root = createRoot(container!); // createRoot(container!) if you use TypeScript
 
 chrome.runtime.onMessage.addListener((request) => {
-  switch (request.type) {
-    case BackgroundActiontype.push_action: {
-      if (
-        request.data.tabId === store.getState().requests.activeTab?.id ||
-        request.data.tabId === 'background'
-      ) {
-        store.dispatch(request.action);
-      }
-      break;
-    }
+  if (request.type === BackgroundActiontype.push_action) {
+    store.dispatch(request.action);
   }
 });
 
