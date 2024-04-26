@@ -25,7 +25,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://wise.com/*",
+        "https://app.revolut.com/*",
         "http://localhost:3000/*",
         "https://staging-testnet.zkp2p.xyz/*",
         "https://staging-app.zkp2p.xyz/*",
@@ -37,8 +37,14 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["content.styles.css", "icon-48.png", "icon-32.png"],
-      "matches": []
+      "resources": [
+        "content.styles.css",
+        "icon-48.png",
+        "icon-32.png"
+      ],
+      "matches": [
+        "https://app.revolut.com/*"
+      ]
     }
   ],
   "host_permissions": [
