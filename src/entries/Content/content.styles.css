@@ -1,3 +1,21 @@
-.test {
-  border: 2px solid red;  /* Adding a red border */
+.highlighted-row {
+  box-shadow: inset 0 0 0 2px red !important; /* !important */
+}
+
+.custom-tooltip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  background-color: #fff;
+  border-radius: 0 10px 10px 0;
+  position: absolute;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.custom-tooltip-icon {
+  width: 16px;
+  height: 16px;
 }
