@@ -6,6 +6,7 @@ import { colors } from '@theme/colors';
 
 interface RequestRowProps {
   subjectText: string;
+  dateText: string;
   isLastRow: boolean;
   onRowClick: () => void;
   isSelected: boolean;
@@ -14,6 +15,7 @@ interface RequestRowProps {
 
 export const RequestRow: React.FC<RequestRowProps> = ({
   subjectText,
+  dateText,
   isLastRow,
   onRowClick,
   isSelected,
@@ -22,6 +24,7 @@ export const RequestRow: React.FC<RequestRowProps> = ({
   RequestRow.displayName = 'RequestRow';
 
   const subjectLabel = `${subjectText}`;
+  const dateLabel = `${dateText}`;
 
   return (
     <Container
@@ -31,6 +34,7 @@ export const RequestRow: React.FC<RequestRowProps> = ({
     >
       <IndexLabel> {rowIndex} </IndexLabel>
       <SubjectLabel> {subjectLabel} </SubjectLabel>
+      <DateLabel> {dateLabel} </DateLabel>
     </Container>
   );
 };
