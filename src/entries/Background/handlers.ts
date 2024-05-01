@@ -1,11 +1,10 @@
 import browser from 'webextension-polyfill';
-
-import { getCacheByTabId } from './cache';
-import mutex from './mutex';
-import { BackgroundActiontype, RequestLog } from './rpc';
-import { addRequest } from '../../reducers/requests';
-import { RevolutRequest, RevolutRequestType } from '@utils/types';
+import { getCacheByTabId } from '@entries/Background/cache';
+import mutex from '@entries/Background/mutex';
+import { BackgroundActiontype, RequestLog } from '@entries/Background/rpc';
+import { addRequest } from '@reducers/requests';
 import { replayRequest } from '@utils/misc';
+import { RevolutRequest, RevolutRequestType } from '@utils/types';
 
 export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsType) => {
   return mutex.runExclusive(async () => {
@@ -117,7 +116,7 @@ export const onResponseStarted = (details: browser.WebRequest.OnResponseStartedD
     };
 
     const response = await replayRequest(newLog);
-    console.log('response', response);
+    // console.log('response', response);
 
     const newLogWithResponseBody: RequestLog = {
       ...newLog,

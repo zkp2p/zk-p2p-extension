@@ -91,7 +91,6 @@ export const RequestTable: React.FC<RequestTableProps> = ({
 
   useEffect(() => {
     const newRequests = requests.map((request) => {
-      console.log("JSON Response Body", JSON.parse(request.responseBody as string));
       let subject = '';
       let date = '';
       try {
