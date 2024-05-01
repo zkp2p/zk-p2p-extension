@@ -1,9 +1,10 @@
 import React, { ReactElement } from 'react';
 import { useNavigate } from 'react-router';
-import { UserPlus, FileText, Globe, DollarSign, Monitor } from 'react-feather';
+import { UserPlus, Tool, DollarSign } from 'react-feather';
 import styled from 'styled-components';
 
-import { useActiveTabUrl, useRequests } from '../../reducers/requests';
+import { Button } from '@newcomponents/common/Button';
+import { useActiveTabUrl, useRequests } from '@reducers/requests';
 import revolut from '../../../utils/bookmark/revolut.json';
 
 import { colors } from '@theme/colors';
@@ -41,8 +42,6 @@ export default function Home(): ReactElement {
         return <StyledUser />;
 
       case 1:
-        return <StyledDollarSign />;
-
       default:
         return <StyledDollarSign />;
     }
@@ -109,56 +108,33 @@ export default function Home(): ReactElement {
       </RevolutContainer>
 
       <ComingSoonContainer>
-        <ComingSoonTitle>
+        <RevolutTitle>
           <ThemedText.ModalHeadline textAlign="left">
-            Coming Soon!
+            Marketplace
           </ThemedText.ModalHeadline>
-        </ComingSoonTitle>
+        </RevolutTitle>
+        <ComingSoonModalContainer>
+          <ComingSoonTitle>
+            <ThemedText.ModalHeadline style={{ flex: '1', margin: 'auto', textAlign: 'center', fontSize: '15px' }}>
+              Coming Soon
+            </ThemedText.ModalHeadline>
+            <StyledTool />
+          </ComingSoonTitle>
 
-        <ComingSoonDescription>
-          <ThemedText.SubHeaderSmall textAlign="left">
-            More markets are coming soon. Let us know what platforms you would like to see supported in ZKP2P!
-          </ThemedText.SubHeaderSmall>
-        </ComingSoonDescription>
 
-        <ComingSoonGrid>
-          <ComingSoonCard
+          <ComingSoonDescription>
+            Please let us know the platforms you would like to see supported!
+          </ComingSoonDescription>
+
+          <Button
             onClick={() => window.open('https://forms.gle/UG699TVHmbdN9jN36', '_blank')}
+            width={164}
+            height={40}
+            fontSize={14}
           >
-            <StyledFileText />
-
-            <ActionTitle>
-              Tickets
-            </ActionTitle>
-          </ComingSoonCard>
-          <ComingSoonCard
-            onClick={() => window.open('https://forms.gle/UG699TVHmbdN9jN36', '_blank')}
-          >
-            <StyledDollarSign />
-
-            <ActionTitle>
-              UPI
-            </ActionTitle>
-          </ComingSoonCard>
-          <ComingSoonCard
-            onClick={() => window.open('https://forms.gle/UG699TVHmbdN9jN36', '_blank')}
-          >
-            <StyledGlobe />
-
-            <ActionTitle>
-              Domains
-            </ActionTitle>
-          </ComingSoonCard>
-          <ComingSoonCard
-            onClick={() => window.open('https://forms.gle/UG699TVHmbdN9jN36', '_blank')}
-          >
-            <StyledMonitor />
-
-            <ActionTitle>
-              Gaming
-            </ActionTitle>
-          </ComingSoonCard>
-        </ComingSoonGrid>
+            Give feedback ↗
+          </Button>
+        </ComingSoonModalContainer>
       </ComingSoonContainer>
     </PageWrapper>
   );
@@ -242,22 +218,11 @@ const StyledDollarSign = styled(DollarSign)`
   height: 20px;
 `;
 
-const StyledMonitor = styled(Monitor)`
+const StyledTool = styled(Tool)`
   color: ${colors.white};
   width: 20px;
   height: 20px;
-`;
-
-const StyledGlobe = styled(Globe)`
-  color: ${colors.white};
-  width: 20px;
-  height: 20px;
-`;
-
-const StyledFileText = styled(FileText)`
-  color: ${colors.white};
-  width: 20px;
-  height: 20px;
+  margin-left: 10px;
 `;
 
 const ActionTitle = styled.div`
@@ -274,38 +239,30 @@ const ComingSoonContainer = styled.div`
   gap: 0.75rem;
 `;
 
-const ComingSoonGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  gap: 0.5rem;
-`;
-
-const ComingSoonCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-
-  flex-wrap: nowrap;
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  gap: 0.75rem;
-  background-color: ${colors.selectorColor};
-
-  &:hover {
-    background-color: ${colors.selectorHover};
-    cursor: pointer;
-  }
-`;
-
 const ComingSoonTitle = styled.div`
-  padding-left: 0.75rem;
-  color: ${colors.white};
   display: flex;
+  padding-left: 0.75rem;
   align-items: center;
+  color: ${colors.white};
 `;
 
 const ComingSoonDescription = styled.div`
   padding-left: 0.75rem;
   color: ${colors.white};
+  font-size: 14px;
+`;
+
+const ComingSoonModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  margin: 0rem 0.5rem;
+  gap: 0.75rem;
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  background-color: ${colors.container};
+  align-items: center;
+  gap: 1.5rem;
+  justify-content: center;
+  top: 200px;
 `;
