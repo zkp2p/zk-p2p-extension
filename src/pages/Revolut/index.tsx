@@ -362,16 +362,16 @@ const Revolut: React.FC<RevolutProps> = ({
 
   const actionSettings = useMemo(() => {
     const settingsObject = {
-      navigate_title: 'Navigate to Revolut',
       review_title: 'Use Proofs',
     } as ActionSettings;
 
     switch (action) {
       case RevolutAction.REGISTRATION:
+        settingsObject.navigate_title = 'Navigate to Account';
         settingsObject.request_title = 'Prove RevTag';
         settingsObject.action_url = 'https://app.revolut.com/home';
         settingsObject.navigate_instruction = 'Go to the Account page on Revolut to load your account\'s RevTag';
-        settingsObject.request_instruction = 'Notarize the RevTag, this will take approximately 30 seconds';
+        settingsObject.request_instruction = 'Notarize the RevTag, this can take up to 30 seconds';
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to register';
 
         const registrationBookmark = bookmarks[0];
@@ -386,10 +386,11 @@ const Revolut: React.FC<RevolutProps> = ({
         break;
 
       case RevolutAction.TRANSFER:
-        settingsObject.request_title = 'Prove Payment Sent';
+        settingsObject.navigate_title = 'Navigate to Transactions';
+        settingsObject.request_title = 'Prove Completed Payment';
         settingsObject.action_url = 'https://app.revolut.com/home';
-        settingsObject.navigate_instruction = 'Go to the Transaction details page on Revolut to view the send payment'
-        settingsObject.request_instruction = 'Notarize the transaction, this will take approximately 20 seconds'
+        settingsObject.navigate_instruction = 'Open the Transaction for the completed payment'
+        settingsObject.request_instruction = 'Notarize the transaction, this can take up to 30 seconds'
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to on-ramp'
 
         const transferBookmark = bookmarks[1];
@@ -414,7 +415,7 @@ const Revolut: React.FC<RevolutProps> = ({
   return (
     <Container>
       <BodyContainer>
-        <BodyStepContainer>
+        <StepContainer>
           <InstructionTitle
             title={actionSettings.navigate_title}
             description={actionSettings.navigate_instruction}
@@ -431,9 +432,9 @@ const Revolut: React.FC<RevolutProps> = ({
               Go to Revolut
             </Button>
           </ButtonContainer>
-        </BodyStepContainer>
+        </StepContainer>
 
-        <BodyStepContainer>
+        <StepContainer>
           <InstructionTitle
             title={actionSettings.request_title}
             description={actionSettings.request_instruction}
@@ -460,9 +461,9 @@ const Revolut: React.FC<RevolutProps> = ({
               </Button>
             </ButtonContainer>
           </RequestTableAndButtonContainer>
-        </BodyStepContainer>
+        </StepContainer>
 
-        <BodyStepContainer>
+        <StepContainer>
           <InstructionTitle
             title={actionSettings.review_title}
             description={actionSettings.review_instruction}
@@ -482,10 +483,10 @@ const Revolut: React.FC<RevolutProps> = ({
               height={40}
               fontSize={14}
             >
-              Go to zkp2p.xyz
+              Back to ZKP2P
             </Button>
           </ButtonContainer>
-        </BodyStepContainer>
+        </StepContainer>
       </BodyContainer>
     </Container>
   );
@@ -499,16 +500,17 @@ const Container = styled.div`
 `;
 
 const BodyContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: .4fr 1fr 1fr;
+  min-height: 85vh;
   border-radius: 16px;
   gap: 1.5rem;
 `;
 
-const BodyStepContainer = styled.div`
+const StepContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 0.75rem;
 `;
 
@@ -519,7 +521,9 @@ const RequestTableAndButtonContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default Revolut;

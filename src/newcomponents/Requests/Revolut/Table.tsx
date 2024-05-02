@@ -9,7 +9,7 @@ import { RevolutAction, RevolutActionType } from '@utils/types';
 import { BackgroundActiontype, RequestLog } from '@entries/Background/rpc';
 
 
-const ROWS_PER_PAGE = 2;
+const ROWS_PER_PAGE = 1;
 
 type RequestRowData = {
   subject: string;
@@ -91,31 +91,36 @@ export const RequestTable: React.FC<RequestTableProps> = ({
 
   useEffect(() => {
     const newRequests = requests.map((request) => {
-      console.log("JSON Response Body", JSON.parse(request.responseBody as string));
       let subject = '';
+      let date = '';
       try {
         const jsonResponseBody = JSON.parse(request.responseBody as string);
         switch (action) {
           case RevolutAction.REGISTRATION:
             subject = `Detected: ${jsonResponseBody.user.username}`;
+            date = '';
             break;
   
           case RevolutAction.TRANSFER:
-            const transferDate = parseTimestamp(parseInt(jsonResponseBody[0].completedDate), true);
+            const transferDate = parseTimestamp(parseInt(jsonResponseBody[0].completedDate), false);
             const parsedAmount = jsonResponseBody[0].amount / 100 * -1;
-            subject = `Sent ${parsedAmount} ${jsonResponseBody[0].currency} ${transferDate}`;
+            console.log('jsonResponseBody', jsonResponseBody);
+            subject = `Sent ${parsedAmount} ${jsonResponseBody[0].currency} to ${jsonResponseBody[0].recipient.username}`;
+            date = transferDate;
             break;
   
           default:
             subject = '';
+            date = '';
         }
       } catch {
         subject = '';
+        date = '';
       }
 
       return {
         subject,
-        date: parseTimestamp(request.timestamp),
+        date,
       } as RequestRowData;
     });
 
@@ -157,6 +162,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
             <RequestRow
               key={index}
               subjectText={notarization.subject}
+              dateText={notarization.date}
               isSelected={selectedIndex === (index + currentPage * ROWS_PER_PAGE)}
               isLastRow={index === loadedRequests.length - 1}
               onRowClick={() => handleRowClick(index)}
@@ -238,7 +244,7 @@ const PaginationButton = styled.button`
   background-color: #131A2A;
   color: white;
   padding: 4px 12px;
-  margin: 0 16px;
+  margin: 4px 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;

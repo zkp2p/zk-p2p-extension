@@ -13,6 +13,9 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@fortawesome/fontawesome-free": "^6.4.2",
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/material": "^5.15.15",
     "@reduxjs/toolkit": "^2.2.3",
     "@types/rebass": "^4.0.14",

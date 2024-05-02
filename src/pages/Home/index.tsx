@@ -1,9 +1,12 @@
 import React, { ReactElement } from 'react';
 import { useNavigate } from 'react-router';
-import { UserPlus, Pocket, DollarSign } from 'react-feather';
+import { UserPlus, DollarSign } from 'react-feather';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStore } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 
-import { useActiveTabUrl, useRequests } from '../../reducers/requests';
+import { Button } from '@newcomponents/common/Button';
+import { useActiveTabUrl, useRequests } from '@reducers/requests';
 import revolut from '../../../utils/bookmark/revolut.json';
 
 import { colors } from '@theme/colors';
@@ -19,6 +22,10 @@ export default function Home(): ReactElement {
   /*
    * Handlers
    */
+
+  const handleReturnToTab = async () => {
+    chrome.tabs.create({ url: 'https://zkp2p.xyz' });
+  };
 
   const handleBookmarkPressedForIndex = (index: number) => {
     switch (index) {
@@ -41,9 +48,6 @@ export default function Home(): ReactElement {
         return <StyledUser />;
 
       case 1:
-        return <StyledPocket />;
-
-      case 2:
       default:
         return <StyledDollarSign />;
     }
@@ -56,89 +60,114 @@ export default function Home(): ReactElement {
   return (
     <PageWrapper>
       <IntroductionContainer>
-        <IntroductionTitle>
-          Welcome to ZKP2P
-        </IntroductionTitle>
-        
-        <IntroductionDescription>
-          This extension is meant to be used with the client: zkp2p.xyz
-        </IntroductionDescription>
+        <IntroductionTextContainer>
+          <IntroductionTitle>
+            Welcome to ZKP2P
+          </IntroductionTitle>
+          
+          <IntroductionDescription>
+            This browser assistant is meant to be used on zkp2p.xyz with Revolut
+          </IntroductionDescription>
+        </IntroductionTextContainer>
+
+        <ButtonContainer>
+          <Button
+            onClick={() => handleReturnToTab()}
+            width={164}
+            height={40}
+            fontSize={14}
+          >
+            Go to ZKP2P
+          </Button>
+        </ButtonContainer>
       </IntroductionContainer>
 
-        {/* <NavButton fa="fa-solid fa-table" onClick={() => navigate('/requests')}>
-          <span>Requests</span>
-          <span>{`(${requests.length})`}</span>
-        </NavButton>
-        <NavButton fa="fa-solid fa-magnifying-glass" onClick={() => navigate('/custom')}>
-          Custom
-        </NavButton>
-        <NavButton fa="fa-solid fa-magnifying-glass" onClick={() => navigate('/verify')}>
-          Verify
-        </NavButton>
-        <NavButton fa="fa-solid fa-list" onClick={() => navigate('/history')}>
-          History
-        </NavButton>
-        <NavButton fa="fa-solid fa-gear" onClick={() => navigate('/options')}>
-          Options
-        </NavButton> */}
+      <IntegrationsContainer>
+        <TitleContainer>
+          <IntroductionTitle>
+            Integrations
+          </IntroductionTitle>
+        </TitleContainer>
 
-      <RevolutContainer>
-        <RevolutTitle>
-          <ThemedText.ModalHeadline textAlign="left">
-            Revolut
-          </ThemedText.ModalHeadline>
-        </RevolutTitle>
+        <RevolutContainer>
+          <ThemedText.TableHeaderSmall textAlign="left">
+              Revolut
+          </ThemedText.TableHeaderSmall>
 
-        <ActionsGrid>
-          {revolut.map((bm, i) => {
-            return (
-              <ActionCard
-                key={i}
-                onClick={() => {
-                  handleBookmarkPressedForIndex(i)
-                }}
-              >
-                {iconForIndex(i)}
+          <ActionsGrid>
+            {revolut.map((bm, i) => {
+              return (
+                <ActionCard
+                  key={i}
+                  onClick={() => {
+                    handleBookmarkPressedForIndex(i)
+                  }}
+                >
+                  {iconForIndex(i)}
 
-                <ActionTitle>
-                  {bm.title}
-                </ActionTitle>
-              </ActionCard>
-            );
-          })}
-        </ActionsGrid>
-      </RevolutContainer>
+                  <ActionTitle>
+                    {bm.title}
+                  </ActionTitle>
+                </ActionCard>
+              );
+            })}
+          </ActionsGrid>
+        </RevolutContainer>
+      </IntegrationsContainer>
 
       <ComingSoonContainer>
-        <RevolutTitle>
+        <TitleContainer>
           <ThemedText.ModalHeadline textAlign="left">
             Coming Soon
           </ThemedText.ModalHeadline>
-        </RevolutTitle>
+        </TitleContainer>
 
-        <ComingSoonDescription>
-          <ThemedText.SubHeaderSmall textAlign="left">
-              Some copy about some really cool things coming soon to look forward to in future updates
+        <ComingSoongBodyContainer
+          onClick={() => {
+            chrome.tabs.create({ url: 'https://t.me/+XDj9FNnW-xs5ODNl' });
+          }}
+          >
+          <FontAwesomeIcon
+            icon={faStore}
+            style={{ color: colors.white, width: '28px', height: '28px'}}
+          />
+
+          <ThemedText.SubHeaderSmall textAlign="center" lineHeight={1.3}>
+            Have ideas for other assets you would like to see on ZKP2P?<br/>Let us know!
           </ThemedText.SubHeaderSmall>
-        </ComingSoonDescription>
+        </ComingSoongBodyContainer>
       </ComingSoonContainer>
     </PageWrapper>
   );
 }
 
 const PageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
+  grid-template-rows: .8fr 1fr 1fr;
+  min-height: 100vh;
+  grid-template-areas:
+    "intro"
+    "integrations"
+    "comingSoon";
+
+  padding-bottom: 4rem;
 `;
 
 const IntroductionContainer = styled.div`
+  grid-area: intro;
   display: flex;
   flex-direction: column;
-  padding: 0rem 2rem;
-  gap: 0.5rem;
+  padding: 1rem 2rem;
+  gap: 0.75rem;
   text-align: center;
   color: ${colors.white};
+`;
+
+const IntroductionTextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 0.25rem;
 `;
 
 const IntroductionTitle = styled.div`
@@ -152,7 +181,8 @@ const IntroductionDescription = styled.div`
   font-size: 15px;
 `;
 
-const RevolutContainer = styled.div`
+const IntegrationsContainer = styled.div`
+  grid-area: integrations;
   display: flex;
   flex-direction: column;
   padding: 1rem;
@@ -160,12 +190,17 @@ const RevolutContainer = styled.div`
   gap: 0.75rem;
 `;
 
-// border-radius: 12px;
-// border: 1px solid ${colors.defaultBorderColor};
-
-const RevolutTitle = styled.div`
+const TitleContainer = styled.div`
   padding-left: 0.75rem;
   color: ${colors.white};
+`;
+
+const RevolutContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-left: 0.75rem;
+  color: ${colors.white};
+  gap: 0.75rem;
 `;
 
 const ActionsGrid = styled.div`
@@ -198,12 +233,6 @@ const StyledUser = styled(UserPlus)`
   height: 20px;
 `;
 
-const StyledPocket = styled(Pocket)`
-  color: ${colors.white};
-  width: 20px;
-  height: 20px;
-`;
-
 const StyledDollarSign = styled(DollarSign)`
   color: ${colors.white};
   width: 20px;
@@ -217,6 +246,7 @@ const ActionTitle = styled.div`
 `;
 
 const ComingSoonContainer = styled.div`
+  grid-area: comingSoon;
   display: flex;
   flex-direction: column;
   padding: 1rem;
@@ -224,7 +254,28 @@ const ComingSoonContainer = styled.div`
   gap: 0.75rem;
 `;
 
-const ComingSoonDescription = styled.div`
-  padding-left: 0.75rem;
-  color: ${colors.white};
+const ComingSoongBodyContainer = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  margin: 0rem 0.5rem;
+  gap: 0.75rem;
+  border-radius: 16px;
+  background-color: ${colors.selectorColor};
+
+  color: #ffffff;
+
+  &:hover {
+    background-color: ${colors.selectorHover};
+    cursor: pointer;
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

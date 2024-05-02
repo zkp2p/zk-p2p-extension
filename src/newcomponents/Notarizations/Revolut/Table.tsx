@@ -11,7 +11,7 @@ import { BackgroundActiontype, RequestHistory } from '@entries/Background/rpc';
 import { deleteRequestHistory } from '@reducers/history';
 
 
-const ROWS_PER_PAGE = 2;
+const ROWS_PER_PAGE = 1;
 
 type NotarizationRowData = {
   requestHistoryId: string;
@@ -262,7 +262,7 @@ const PaginationButton = styled.button`
   background-color: #131A2A;
   color: white;
   padding: 4px 12px;
-  margin: 0 16px;
+  margin: 4px 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
