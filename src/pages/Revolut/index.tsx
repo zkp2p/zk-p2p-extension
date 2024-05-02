@@ -366,7 +366,7 @@ const Revolut: React.FC<RevolutProps> = ({
         settingsObject.request_title = 'Prove RevTag';
         settingsObject.action_url = 'https://app.revolut.com/home';
         settingsObject.navigate_instruction = 'Go to the Account page on Revolut to load your account\'s RevTag';
-        settingsObject.request_instruction = 'Notarize the RevTag, this will take approximately 30 seconds';
+        settingsObject.request_instruction = 'Notarize the RevTag, this can take up to 30 seconds';
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to register';
 
         const registrationBookmark = bookmarks[0];
@@ -381,11 +381,11 @@ const Revolut: React.FC<RevolutProps> = ({
         break;
 
       case RevolutAction.TRANSFER:
-        settingsObject.navigate_title = 'Navigate to Transaction';
-        settingsObject.request_title = 'Prove Payment Sent';
+        settingsObject.navigate_title = 'Navigate to Transactions';
+        settingsObject.request_title = 'Prove Completed Sent';
         settingsObject.action_url = 'https://app.revolut.com/home';
-        settingsObject.navigate_instruction = 'Go to the Transaction details page on Revolut to view the send payment'
-        settingsObject.request_instruction = 'Notarize the transaction, this will take approximately 20 seconds'
+        settingsObject.navigate_instruction = 'Open the Transaction for the completed payment'
+        settingsObject.request_instruction = 'Notarize the transaction, this can take up to 30 seconds'
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to on-ramp'
 
         const transferBookmark = bookmarks[1];
