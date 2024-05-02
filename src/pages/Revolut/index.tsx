@@ -234,7 +234,7 @@ const Revolut: React.FC<RevolutProps> = ({
 
     const secretResps = [] as string[];
 
-    console.log('secretHeaders', secretHeaders);
+    // console.log('secretHeaders', secretHeaders);
 
     // Add certain fields in the response to secretResps to redact them
     actionSettings.bookmark_data.secretResponseSelector.forEach((secretResponseSelector) => {
@@ -284,9 +284,8 @@ const Revolut: React.FC<RevolutProps> = ({
     headers['Accept-Encoding'] = 'identity';
     headers['Connection'] = 'close';
 
+    // Add filtered cookies to secretHeaders
     secretHeaders.push(`cookie: ${headers['Cookie'] || ''}`);
-
-    console.log('secretHeaders2', secretHeaders);
 
     // console.log('res', response);
     // Extract metadata to display in Web application
