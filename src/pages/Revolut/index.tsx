@@ -469,18 +469,6 @@ const Revolut: React.FC<RevolutProps> = ({
             action={action}
             notarizations={loadedNotarizations}
           />
-
-          <ButtonContainer>
-            <Button
-              onClick={() => handleReturnToTab()}
-              disabled={!validNotarizationExists}
-              width={164}
-              height={40}
-              fontSize={14}
-            >
-              Go to zkp2p.xyz
-            </Button>
-          </ButtonContainer>
         </StepContainer>
       </BodyContainer>
     </Container>
@@ -496,7 +484,7 @@ const Container = styled.div`
 
 const BodyContainer = styled.div`
   display: grid;
-  grid-template-rows: .5fr 1fr 1fr;
+  grid-template-rows: .4fr 1fr 1fr;
   min-height: 85vh;
   border-radius: 16px;
   gap: 1.5rem;
@@ -511,6 +499,7 @@ const StepContainer = styled.div`
 
 const RequestTableAndButtonContainer = styled.div`
   display: flex;
+  min-height: 200px;
   flex-direction: column;
   gap: 0.75rem;
 `;
