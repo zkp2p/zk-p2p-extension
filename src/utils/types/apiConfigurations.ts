@@ -89,6 +89,12 @@ export const API_CONFIGURATIONS = [
     proxy: 'wss://notary-ap-southeast-1.zkp2p.xyz/proxy',
     shouldPing: true,
   },
+  {
+    name: 'Tokyo',
+    notary: 'https://notary-ap-northeast-1.zkp2p.xyz',
+    proxy: 'wss://notary-ap-northeast-1.zkp2p.xyz/proxy',
+    shouldPing: true,
+  },
 ];
 
 export const StatusColors = {
