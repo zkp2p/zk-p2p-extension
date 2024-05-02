@@ -357,12 +357,12 @@ const Revolut: React.FC<RevolutProps> = ({
 
   const actionSettings = useMemo(() => {
     const settingsObject = {
-      navigate_title: 'Navigate to Revolut',
       review_title: 'Use Proofs',
     } as ActionSettings;
 
     switch (action) {
       case RevolutAction.REGISTRATION:
+        settingsObject.navigate_title = 'Navigate to Account';
         settingsObject.request_title = 'Prove RevTag';
         settingsObject.action_url = 'https://app.revolut.com/home';
         settingsObject.navigate_instruction = 'Go to the Account page on Revolut to load your account\'s RevTag';
@@ -381,6 +381,7 @@ const Revolut: React.FC<RevolutProps> = ({
         break;
 
       case RevolutAction.TRANSFER:
+        settingsObject.navigate_title = 'Navigate to Transaction';
         settingsObject.request_title = 'Prove Payment Sent';
         settingsObject.action_url = 'https://app.revolut.com/home';
         settingsObject.navigate_instruction = 'Go to the Transaction details page on Revolut to view the send payment'
@@ -409,7 +410,7 @@ const Revolut: React.FC<RevolutProps> = ({
   return (
     <Container>
       <BodyContainer>
-        <BodyStepContainer>
+        <StepContainer>
           <InstructionTitle
             title={actionSettings.navigate_title}
             description={actionSettings.navigate_instruction}
@@ -426,9 +427,9 @@ const Revolut: React.FC<RevolutProps> = ({
               Go to Revolut
             </Button>
           </ButtonContainer>
-        </BodyStepContainer>
+        </StepContainer>
 
-        <BodyStepContainer>
+        <StepContainer>
           <InstructionTitle
             title={actionSettings.request_title}
             description={actionSettings.request_instruction}
@@ -455,9 +456,9 @@ const Revolut: React.FC<RevolutProps> = ({
               </Button>
             </ButtonContainer>
           </RequestTableAndButtonContainer>
-        </BodyStepContainer>
+        </StepContainer>
 
-        <BodyStepContainer>
+        <StepContainer>
           <InstructionTitle
             title={actionSettings.review_title}
             description={actionSettings.review_instruction}
@@ -480,7 +481,7 @@ const Revolut: React.FC<RevolutProps> = ({
               Go to zkp2p.xyz
             </Button>
           </ButtonContainer>
-        </BodyStepContainer>
+        </StepContainer>
       </BodyContainer>
     </Container>
   );
@@ -494,13 +495,14 @@ const Container = styled.div`
 `;
 
 const BodyContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: .5fr 1fr 1fr;
+  min-height: 85vh;
   border-radius: 16px;
   gap: 1.5rem;
 `;
 
-const BodyStepContainer = styled.div`
+const StepContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -514,7 +516,9 @@ const RequestTableAndButtonContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default Revolut;
