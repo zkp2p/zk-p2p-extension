@@ -77,7 +77,7 @@ export default function Home(): ReactElement {
             height={40}
             fontSize={14}
           >
-            Go to zkp2p.xyz
+            Go to ZKP2P
           </Button>
         </ButtonContainer>
       </IntroductionContainer>
@@ -132,9 +132,9 @@ export default function Home(): ReactElement {
             style={{ color: colors.white, width: '28px', height: '28px'}}
           />
 
-          <ThemedText.TableDescriptionSmall textAlign="center" lineHeight={1.3}>
-            Have ideas for other assets you would like to see supported by ZKP2P?<br/>Let us know!
-          </ThemedText.TableDescriptionSmall>
+          <ThemedText.SubHeaderSmall textAlign="center" lineHeight={1.3}>
+            Have ideas for other assets you would like to see on ZKP2P?<br/>Let us know!
+          </ThemedText.SubHeaderSmall>
         </ComingSoongBodyContainer>
       </ComingSoonContainer>
     </PageWrapper>

@@ -382,7 +382,7 @@ const Revolut: React.FC<RevolutProps> = ({
 
       case RevolutAction.TRANSFER:
         settingsObject.navigate_title = 'Navigate to Transactions';
-        settingsObject.request_title = 'Prove Completed Sent';
+        settingsObject.request_title = 'Prove Completed Payment';
         settingsObject.action_url = 'https://app.revolut.com/home';
         settingsObject.navigate_instruction = 'Open the Transaction for the completed payment'
         settingsObject.request_instruction = 'Notarize the transaction, this can take up to 30 seconds'
@@ -469,6 +469,18 @@ const Revolut: React.FC<RevolutProps> = ({
             action={action}
             notarizations={loadedNotarizations}
           />
+
+          <ButtonContainer>
+            <Button
+              onClick={() => handleReturnToTab()}
+              disabled={!validNotarizationExists}
+              width={164}
+              height={40}
+              fontSize={14}
+            >
+              Back to ZKP2P
+            </Button>
+          </ButtonContainer>
         </StepContainer>
       </BodyContainer>
     </Container>
@@ -493,13 +505,12 @@ const BodyContainer = styled.div`
 const StepContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 0.75rem;
 `;
 
 const RequestTableAndButtonContainer = styled.div`
   display: flex;
-  min-height: 200px;
   flex-direction: column;
   gap: 0.75rem;
 `;
