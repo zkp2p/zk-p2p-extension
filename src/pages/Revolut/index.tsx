@@ -50,7 +50,7 @@ const Revolut: React.FC<RevolutProps> = ({
    * Contexts
    */
 
-  const requests = useRequests('descending'); // RequestLog
+  const requestsFromStorage = useRequests('descending'); // RequestLog
   const requestHistoryOrder = useHistoryOrder('descending'); // string[]
   const notarizations = useSelector((state: AppRootState) => {
     return requestHistoryOrder.map(id => state.history.map[id]);
@@ -66,7 +66,7 @@ const Revolut: React.FC<RevolutProps> = ({
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [validNotarizationExists, setValidNotarizationExists] = useState<boolean>(false);
 
-  const [loadedRequests, setLoadedRequests] = useState<RequestLog[]>([]);
+  const [filteredRequests, setFilteredRequests] = useState<RequestLog[]>([]);
   const [loadedNotarizations, setLoadedNotarizations] = useState<RequestHistory[]>([]);
 
   /*
@@ -74,13 +74,16 @@ const Revolut: React.FC<RevolutProps> = ({
    */
 
   useEffect(() => {
-    const requestsRetrieved = loadedRequests.length > 0;
+    const requestsRetrieved = filteredRequests.length > 0;
     const indexNotSelected = selectedIndex === null;
+
+    console.log('Requests retrieved:', requestsRetrieved);
+    console.log('Index not selected:', indexNotSelected);
 
     if (requestsRetrieved && indexNotSelected) {
       setSelectedIndex(0);
     }
-  }, [requests, selectedIndex]);
+  }, [filteredRequests, selectedIndex]);
 
   useEffect(() => {
     (async () => {
@@ -123,10 +126,10 @@ const Revolut: React.FC<RevolutProps> = ({
   }, [notarizations, action]);
 
   useEffect(() => {
-    console.log('Updating loaded requests: ', requests);
+    console.log('Updating loaded requests: ', requestsFromStorage);
   
-    if (requests) {
-      const filteredRequests = requests.filter(request => {
+    if (requestsFromStorage) {
+      const filteredRequests = requestsFromStorage.filter(request => {
         switch (action) {
           case RevolutAction.REGISTRATION:
             const jsonResponseBody = JSON.parse(request.responseBody as string);
@@ -164,12 +167,12 @@ const Revolut: React.FC<RevolutProps> = ({
             return false;
         }
       });
-  
-      setLoadedRequests(filteredRequests);
+
+      setFilteredRequests(filteredRequests);
     } else {
-      setLoadedRequests([]);
+      setFilteredRequests([]);
     }
-  }, [requests, action]);
+  }, [requestsFromStorage, action]);
 
   useEffect(() => {
     const validNotarizationExists = loadedNotarizations.some(notarization => notarization.status === 'success');
@@ -220,7 +223,7 @@ const Revolut: React.FC<RevolutProps> = ({
     console.log('Attempting to notarize', selectedIndex);
 
     // Replay request because we need to remove values from the response
-    const requestLog = requests[selectedIndex];
+    const requestLog = filteredRequests[selectedIndex];
     const responseBody = requestLog.responseBody;
     const responseHeaders = requestLog.responseHeaders;
     if (!responseBody || !responseHeaders) return;
@@ -444,14 +447,14 @@ const Revolut: React.FC<RevolutProps> = ({
           <RequestTableAndButtonContainer>
             <RequestTable
               action={action}
-              requests={loadedRequests}
+              requests={filteredRequests}
               setSelectedIndex={setSelectedIndex}
               selectedIndex={selectedIndex}
             />
 
             <ButtonContainer>
               <Button
-                disabled={loadedRequests.length === 0}
+                disabled={filteredRequests.length === 0}
                 onClick={() => handleNotarizePressed()}
                 width={164}
                 height={40}
