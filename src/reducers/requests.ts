@@ -62,7 +62,7 @@ export const notarizeRequest = (options: RequestHistory) => async () => {
   });
 };
 
-export const deleteRequestLog = (id: string) => {
+export const deletedSingleRequestLog = (id: string) => {
   chrome.runtime.sendMessage<any, string>({
     type: BackgroundActiontype.delete_request,
     data: id,
