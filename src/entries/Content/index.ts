@@ -35,10 +35,16 @@ window.addEventListener('message', function (event) {
     chrome.runtime.sendMessage({ action: 'request_transfer_history_background' });
   }
 
-  if (event.data.type && event.data.type == 'open_sidebar') {
-    // console.log('Content received open_sidebar');
+  if (event.data.type && event.data.type == 'open_sidebar_registration') {
+    // console.log('Content received open_sidebar_registration');
 
-    chrome.runtime.sendMessage({ action: 'open_sidebar_background' });
+    chrome.runtime.sendMessage({ action: 'open_sidebar_registration_background' });
+  }
+
+  if (event.data.type && event.data.type == 'open_sidebar_onramp') {
+    // console.log('Content received open_sidebar_onramp');
+
+    chrome.runtime.sendMessage({ action: 'open_sidebar_onramp_background' });
   }
 
   if (event.data.type && event.data.type == 'post_onramper_intent') {
@@ -54,11 +60,6 @@ window.addEventListener('message', function (event) {
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message.action === 'request_profile_history_response') {
-    // console.log(
-    //   new Date().toISOString(),
-    //   'Content received request_profile_history_response',
-    //   message.data,
-    // );
 
     let filteredResponse = [];
     if (message.data.notaryRequests && message.data.notaryRequests.length > 0) {
@@ -79,12 +80,6 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 
   if (message.action === 'request_transfer_history_response') {
-    // console.log(
-    //   new Date().toISOString(),
-    //   'Content received request_transfer_history_response',
-    //   message.data,
-    // );
-
     let filteredResponse = [];
     if (message.data.notaryRequests && message.data.notaryRequests.length > 0) {
       filteredResponse = message.data.notaryRequests.filter(

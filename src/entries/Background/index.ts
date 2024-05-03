@@ -82,6 +82,8 @@ async function createOffscreenDocument() {
  * Set panel behavior on action bar item click: https://developer.chrome.com/docs/extensions/reference/api/sidePanel
  */
 
+let pendingRoute: string | null = null;
+
 // @ts-ignore
 chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })
@@ -120,12 +122,50 @@ chrome.runtime.onMessage.addListener((message) => {
     });
   }
 
-  if (message.action === 'open_sidebar_background') {
+  // Opening sidebar from background and navigating to registration
+  if (message.action === 'open_sidebar_registration_background') {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       if (!tabs[0] || !tabs[0].id) return;
+      
       // @ts-ignore
-      chrome.sidePanel.open({ tabId: tabs[0].id });
+      chrome.sidePanel.open({ tabId: tabs[0].id }).then(() => {
+        pendingRoute = '/registration';
+
+        chrome.runtime.sendMessage({
+          action: 'navigate',
+          route: pendingRoute
+        });
+      }).catch((error: any) => console.error('Error opening side panel on registration:', error));
     });
+  }
+
+  // Opening sidebar from background and navigating to onramp
+  if (message.action === 'open_sidebar_onramp_background') {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (!tabs[0] || !tabs[0].id) return;
+      
+      // @ts-ignore
+      chrome.sidePanel.open({ tabId: tabs[0].id }).then(() => {
+        pendingRoute = '/onramp';
+
+        chrome.runtime.sendMessage({
+          action: 'navigate',
+          route: pendingRoute
+        });
+      }).catch((error: any) => console.error('Error opening side panel on onramp:', error));
+    });
+  }
+
+  // Messages content script to navigate to any previously requested routes
+  if (message.action === 'panel_ready_to_navigate') {
+    if (pendingRoute) {
+      chrome.runtime.sendMessage({
+        action: 'navigate',
+        route: pendingRoute
+      });
+
+      pendingRoute = null;
+    }
   }
 
   if (message.action === 'post_onramper_intent_background') {

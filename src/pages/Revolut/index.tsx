@@ -407,8 +407,8 @@ const Revolut: React.FC<RevolutProps> = ({
         settingsObject.navigate_title = 'Navigate to Transactions';
         settingsObject.request_title = 'Prove Completed Payment';
         settingsObject.action_url = 'https://app.revolut.com/home';
-        settingsObject.navigate_instruction = 'Open the Transaction for the completed payment'
-        settingsObject.request_instruction = 'Notarize the transaction, this can take up to 30 seconds'
+        settingsObject.navigate_instruction = 'Open the transaction details on Revolut for the completed payment'
+        settingsObject.request_instruction = 'Notarize the transaction details, this can take up to 30 seconds'
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to on-ramp'
 
         const transferBookmark = bookmarks[1];
