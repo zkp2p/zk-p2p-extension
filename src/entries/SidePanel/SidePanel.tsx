@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import browser from 'webextension-polyfill';
 import styled from 'styled-components';
 
-import { setActiveTab, setRequests, useActiveTab, useActiveTabUrl } from '../../reducers/requests';
+import { setActiveTab, setRequests } from '../../reducers/requests';
 import { fetchApiUrls, measureLatency, setApiUrls, useBestLatency } from '../../reducers/settings';
 import { API_CONFIGURATIONS } from '@utils/types';
 import { BackgroundActiontype } from '../Background/rpc';
@@ -23,16 +23,12 @@ import NotarySettings from '../../pages/NotarySettings';
 import { RevolutAction } from '@utils/types';
 import { AppRootState } from 'reducers';
 
-import logo from '../../assets/img/icon-48.png';
 import { TopNav } from '@newcomponents/TopNav/TopNav';
 import { colors } from '@theme/colors';
 
 
 const SidePanel = () => {
   const dispatch = useDispatch<any>();
-  const activeTab = useActiveTab();
-  const url = useActiveTabUrl();
-  const navigate = useNavigate();
   const bestLatency = useBestLatency();
   const { autoSelect } = useSelector((state: AppRootState) => state.settings);
 
@@ -74,20 +70,6 @@ const SidePanel = () => {
 
   return (
     <AppContainer>
-      {/* <div className="flex flex-nowrap flex-shrink-0 flex-row items-center relative gap-2 h-9 p-2 cursor-default justify-center bg-slate-300 w-full">
-        <img
-          className="absolute left-2 h-5 cursor-pointer"
-          src={logo}
-          alt="logo"
-          onClick={() => navigate('/')}
-        />
-        <div className="absolute right-2 flex flex-nowrap flex-row items-center gap-1 justify-center w-fit">
-          {!!activeTab?.favIconUrl && (
-            <img src={activeTab?.favIconUrl} className="h-5 rounded-full" alt="logo" />
-          )}
-          <div className="text-xs">{url?.hostname}</div>
-        </div>
-      </div> */}
       <TopNav />
       <Routes>
         <Route path="/requests/:requestId/*" element={<Request />} />

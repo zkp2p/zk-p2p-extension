@@ -44,7 +44,7 @@ const Revolut: React.FC<RevolutProps> = ({
   action
 }) => {
   const dispatch = useDispatch();
-  const url = useActiveTabUrl();
+  const activeTabUrl = useActiveTabUrl();
 
   /*
    * Contexts
@@ -349,6 +349,15 @@ const Revolut: React.FC<RevolutProps> = ({
   /*
    * Helpers
    */
+  
+  const shouldDisableRevolutButton = useMemo(() => {
+
+    if (activeTabUrl) {
+      const isValidRevolutURL = /^https:\/\/app\.revolut\.com\/home.*/.test(activeTabUrl.href);
+  
+      return isValidRevolutURL;
+    }
+  }, [activeTabUrl]);
 
   const urlForAction = useMemo(() => {
     switch (action) {
@@ -428,6 +437,7 @@ const Revolut: React.FC<RevolutProps> = ({
           <ButtonContainer>
             <Button
               onClick={() => handleCreateTab()}
+              disabled={shouldDisableRevolutButton}
               width={164}
               height={40}
               fontSize={14}
