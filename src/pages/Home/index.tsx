@@ -90,7 +90,7 @@ export default function Home(): ReactElement {
         </TitleContainer>
 
         <RevolutContainer>
-          <ThemedText.TableHeaderSmall textAlign="left">
+          <ThemedText.TableHeaderSmall textAlign="left" paddingLeft={"0.5rem"}>
               Revolut
           </ThemedText.TableHeaderSmall>
 
@@ -122,7 +122,7 @@ export default function Home(): ReactElement {
           </ThemedText.ModalHeadline>
         </TitleContainer>
 
-        <ComingSoongBodyContainer
+        <ComingSoonBodyContainer
           onClick={() => {
             chrome.tabs.create({ url: 'https://t.me/+XDj9FNnW-xs5ODNl' });
           }}
@@ -135,29 +135,28 @@ export default function Home(): ReactElement {
           <ThemedText.SubHeaderSmall textAlign="center" lineHeight={1.3}>
             Have ideas for other assets you would like to see on ZKP2P?<br/>Let us know!
           </ThemedText.SubHeaderSmall>
-        </ComingSoongBodyContainer>
+        </ComingSoonBodyContainer>
       </ComingSoonContainer>
     </PageWrapper>
   );
 }
 
 const PageWrapper = styled.div`
-  display: grid;
-  grid-template-rows: .8fr 1fr 1fr;
-  min-height: 100vh;
-  grid-template-areas:
-    "intro"
-    "integrations"
-    "comingSoon";
-
-  padding-bottom: 4rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: calc(100vh - 76px);
+  height: calc(100vh - 76px);
+  overflow: auto;
+  padding: 0 1.5rem 1rem;
+  box-sizing: border-box;
 `;
 
 const IntroductionContainer = styled.div`
-  grid-area: intro;
   display: flex;
+  max-height: 160px;
   flex-direction: column;
-  padding: 1rem 2rem;
+  padding: 1rem 0.5rem;
   gap: 0.75rem;
   text-align: center;
   color: ${colors.white};
@@ -182,23 +181,21 @@ const IntroductionDescription = styled.div`
 `;
 
 const IntegrationsContainer = styled.div`
-  grid-area: integrations;
   display: flex;
+  max-height: 196px;
   flex-direction: column;
-  padding: 1rem;
-  margin: 0rem 0.5rem;
+  padding: 1rem 0;
   gap: 0.75rem;
 `;
 
 const TitleContainer = styled.div`
-  padding-left: 0.75rem;
+  padding-left: 0.5rem;
   color: ${colors.white};
 `;
 
 const RevolutContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding-left: 0.75rem;
   color: ${colors.white};
   gap: 0.75rem;
 `;
@@ -206,7 +203,7 @@ const RevolutContainer = styled.div`
 const ActionsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 0.5rem;
+  gap: 0.75rem;
 `;
 
 const ActionCard = styled.div`
@@ -246,32 +243,32 @@ const ActionTitle = styled.div`
 `;
 
 const ComingSoonContainer = styled.div`
-  grid-area: comingSoon;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
-  margin: 0rem 0.5rem;
+  padding: 1rem 0;
   gap: 0.75rem;
+  flex-grow: 1;
+  overflow: hidden;
+  min-height: 200px;
 `;
 
-const ComingSoongBodyContainer = styled.div`
+const ComingSoonBodyContainer = styled.div`
   display: flex;
-  width: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 1.25rem 2rem;
-  margin: 0rem 0.5rem;
   gap: 0.75rem;
   border-radius: 16px;
   background-color: ${colors.selectorColor};
-
   color: #ffffff;
 
   &:hover {
     background-color: ${colors.selectorHover};
     cursor: pointer;
   }
+
+  flex-grow: 1;
 `;
 
 const ButtonContainer = styled.div`
