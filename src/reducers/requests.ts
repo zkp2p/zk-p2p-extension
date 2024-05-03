@@ -11,6 +11,7 @@ enum ActionType {
   '/requests/setRequests' = '/requests/setRequests',
   '/requests/addRequest' = '/requests/addRequest',
   '/requests/setActiveTab' = '/requests/setActiveTab',
+  '/requests/deleteRequest' = '/requests/deleteRequest',
 }
 
 type Action<payload> = {
@@ -61,6 +62,18 @@ export const notarizeRequest = (options: RequestHistory) => async () => {
   });
 };
 
+export const deleteRequestLog = (id: string) => {
+  chrome.runtime.sendMessage<any, string>({
+    type: BackgroundActiontype.delete_request,
+    data: id,
+  });
+
+  return {
+    type: ActionType['/requests/deleteRequest'],
+    payload: id,
+  };
+};
+
 export const setActiveTab = (
   activeTab: browser.Tabs.Tab | null,
 ): Action<browser.Tabs.Tab | null> => ({
@@ -90,11 +103,22 @@ export default function requests(state = initialState, action: Action<any>): Sta
           ),
         },
       };
+
     case ActionType['/requests/setActiveTab']:
       return {
         ...state,
         activeTab: action.payload,
       };
+
+    case ActionType['/requests/deleteRequest']:
+      const reqId: string = action.payload;
+      const newMap = { ...state.map };
+      delete newMap[reqId];
+      return {
+        ...state,
+        map: newMap,
+      };
+
     case ActionType['/requests/addRequest']:
       return {
         ...state,
@@ -103,6 +127,7 @@ export default function requests(state = initialState, action: Action<any>): Sta
           [action.payload.requestId]: action.payload,
         },
       };
+      
     default:
       return state;
   }

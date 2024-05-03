@@ -11,7 +11,7 @@ import { Button } from '@newcomponents/common/Button';
 import { InstructionTitle } from '@newcomponents/Instructions/Title';
 import NotarizationTable from '@newcomponents/Notarizations/Revolut/Table';
 import RequestTable from '@newcomponents/Requests/Revolut/Table';
-import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests } from '@reducers/requests';
+import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests, deleteRequestLog } from '@reducers/requests';
 import { useHistoryOrder } from '@reducers/history';
 import { urlify } from '@utils/misc';
 import { OnRamperIntent, RevolutAction, RevolutActionType, RevolutStep, RevolutRequest, REVOLUT_PLATFORM } from '@utils/types';
@@ -340,9 +340,15 @@ const Revolut: React.FC<RevolutProps> = ({
       requestType: requestLog.requestType,
     } as RequestHistory;
 
+    // Creates RequestHistory
 
     dispatch(
-      notarizeRequest(notarizeRequestParams) as any,
+      notarizeRequest(notarizeRequestParams) as any
+    );
+
+    // Deletes RequestLog
+    dispatch(
+      deleteRequestLog(requestLog.requestId) as any
     );
   };
 

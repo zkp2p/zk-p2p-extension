@@ -117,7 +117,7 @@ export const NotarizationTable: React.FC<NotarizationTableProps> = ({
           case RevolutRequest.PAYMENT_PROFILE:
             const [notarizationTimestampProfile, revTag] = notarization.metadata;
     
-            subject = `Revtag: ${revTag}`;
+            subject = `Proof of ${revTag}`;
             metadata = revTag;
             timestamp = notarizationTimestampProfile;
             break;
