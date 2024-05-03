@@ -11,7 +11,7 @@ import { Button } from '@newcomponents/common/Button';
 import { InstructionTitle } from '@newcomponents/Instructions/Title';
 import NotarizationTable from '@newcomponents/Notarizations/Revolut/Table';
 import RequestTable from '@newcomponents/Requests/Revolut/Table';
-import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests } from '@reducers/requests';
+import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests, deleteRequestLog } from '@reducers/requests';
 import { useHistoryOrder } from '@reducers/history';
 import { urlify } from '@utils/misc';
 import { OnRamperIntent, RevolutAction, RevolutActionType, RevolutStep, RevolutRequest, REVOLUT_PLATFORM } from '@utils/types';
@@ -44,7 +44,7 @@ const Revolut: React.FC<RevolutProps> = ({
   action
 }) => {
   const dispatch = useDispatch();
-  const url = useActiveTabUrl();
+  const activeTabUrl = useActiveTabUrl();
 
   /*
    * Contexts
@@ -340,15 +340,30 @@ const Revolut: React.FC<RevolutProps> = ({
       requestType: requestLog.requestType,
     } as RequestHistory;
 
+    // Creates RequestHistory
 
     dispatch(
-      notarizeRequest(notarizeRequestParams) as any,
+      notarizeRequest(notarizeRequestParams) as any
+    );
+
+    // Deletes RequestLog
+    dispatch(
+      deleteRequestLog(requestLog.requestId) as any
     );
   };
 
   /*
    * Helpers
    */
+  
+  const shouldDisableRevolutButton = useMemo(() => {
+
+    if (activeTabUrl) {
+      const isValidRevolutURL = /^https:\/\/app\.revolut\.com\/home.*/.test(activeTabUrl.href);
+  
+      return isValidRevolutURL;
+    }
+  }, [activeTabUrl]);
 
   const urlForAction = useMemo(() => {
     switch (action) {
@@ -428,6 +443,7 @@ const Revolut: React.FC<RevolutProps> = ({
           <ButtonContainer>
             <Button
               onClick={() => handleCreateTab()}
+              disabled={shouldDisableRevolutButton}
               width={164}
               height={40}
               fontSize={14}

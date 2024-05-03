@@ -134,7 +134,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
   const emptyRequestCopy = (): string => {
     switch (action) {
       case RevolutAction.REGISTRATION:
-        return 'No Revtags found. Open the Home page on Revolut.';
+        return 'No new Revtags found. Open the Account page on Revolut.';
 
       case RevolutAction.TRANSFER:
       default:

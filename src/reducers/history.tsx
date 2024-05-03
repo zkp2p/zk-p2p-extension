@@ -79,6 +79,7 @@ export default function history(state = initialState, action: Action<any>): Stat
         order: newOrder,
       };
     }
+    
     default:
       return state;
   }
