@@ -1,7 +1,9 @@
 import { useSelector } from 'react-redux';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+
 import { get, set, AUTOSELECT_LS_KEY, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../utils/storage';
 import { AppRootState } from './index';
+
 
 interface ApiUrlsState {
   notary: string;
@@ -23,6 +25,7 @@ export const fetchApiUrls = createAsyncThunk(
     const notary = await get(NOTARY_API_LS_KEY);
     const proxy = await get(PROXY_API_LS_KEY);
     const autoSelect = await get(AUTOSELECT_LS_KEY);
+
     return { notary, proxy, autoSelect };
   }
 );
@@ -33,6 +36,7 @@ export const setApiUrls = createAsyncThunk(
     await set(NOTARY_API_LS_KEY, notary);
     await set(PROXY_API_LS_KEY, proxy);
     await set(AUTOSELECT_LS_KEY, autoSelect);
+
     return { notary, proxy, autoSelect };
   }
 );
@@ -48,10 +52,12 @@ export const measureLatency = createAsyncThunk(
           throw new Error('Network response was not ok');
         }
         const endTime = performance.now();
-        const latency = (endTime - startTime).toFixed(2);
+        const latency = (endTime - startTime).toFixed(0);
+
         return { url, latency };
       } catch (error) {
         console.error(`Failed to measure latency for ${url}: ${error}`);
+
         return { url, latency: '-' };
       }
     };
@@ -60,6 +66,7 @@ export const measureLatency = createAsyncThunk(
       const results = await Promise.all(notaryUrls.map(notaryUrl => measureSingleLatency(notaryUrl)));
       return results.reduce((acc: { [key: string]: string }, result) => {
         acc[result.url] = result.latency;
+
         return acc;
       }, {});
     } catch (error) {
@@ -99,12 +106,14 @@ export const useBestLatency = () => {
   let bestUrl = '';
 
   Object.entries(latencies).forEach(([url, latency]) => {
+      const isLocalNotary = url === 'http://0.0.0.0:7047';
       const numericLatency = parseFloat(latency);
-      if (!isNaN(numericLatency) && numericLatency < bestLatency) {
+
+      if (!isLocalNotary && !isNaN(numericLatency) && numericLatency < bestLatency) {
           bestLatency = numericLatency;
           bestUrl = url;
       }
   });
 
-  return { url: bestUrl, latency: bestLatency === Infinity ? null : bestLatency.toFixed(2) };
+  return { url: bestUrl, latency: bestLatency === Infinity ? null : bestLatency.toFixed(0) };
 };

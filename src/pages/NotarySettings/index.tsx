@@ -1,20 +1,21 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { Check, RefreshCw } from 'react-feather';
+import { RefreshCw } from 'react-feather';
 import { useDispatch, useSelector } from 'react-redux';
+import { AppRootState } from 'reducers';
 import styled from 'styled-components';
+
 import { colors } from '@theme/colors';
-import { ThemedText } from '@theme/text';
 import { AppDispatch } from '@utils/store';
 import { API_CONFIGURATIONS } from '@utils/types';
-import { AppRootState } from 'reducers';
 import { setApiUrls, measureLatency, useBestLatency } from '../../reducers/settings';
-import { LabeledSwitch } from '@newcomponents/common/LabeledSwitch';
+import { CustomCheckbox } from '@newcomponents/common/Checkbox';
+
 
 const Settings: React.FC = () => {
-  
   /*
-  * Contexts
-  */
+   * Contexts
+   */
+
   const dispatch = useDispatch<AppDispatch>();
   const { notary, proxy, latencies, autoSelect } = useSelector((state: AppRootState) => state.settings);
   const bestLatency = useBestLatency();
@@ -22,6 +23,7 @@ const Settings: React.FC = () => {
   /*
    * State
    */
+
   const [loadingLatency, setLoadingLatency] = useState(false);
   const [shouldAutoselect, setShouldAutoselect] = useState<boolean>(false);
 
@@ -30,11 +32,7 @@ const Settings: React.FC = () => {
    */
 
   useEffect(() => {
-    if (autoSelect === "autoselect") {
-      setShouldAutoselect(true);
-    } else {
-      setShouldAutoselect(false);
-    }
+    setShouldAutoselect(autoSelect === "autoselect");
   }, [autoSelect]);
 
   /*
@@ -42,17 +40,22 @@ const Settings: React.FC = () => {
    */
 
   const handleApiChange = useCallback((newNotary: string, newProxy: string) => {
-    dispatch(setApiUrls({ notary: newNotary, proxy: newProxy, autoSelect: "manual" }));
+    dispatch(
+      setApiUrls({ notary: newNotary, proxy: newProxy, autoSelect: "manual" })
+    );
+
     setShouldAutoselect(false);
   }, [dispatch]);
 
   const handleRefreshClicked = useCallback(async () => {
     setLoadingLatency(true);
+
     try {
       await dispatch(measureLatency(API_CONFIGURATIONS.map(config => config.notary)));
     } catch (error) {
       console.error('Error measuring latency:', error);
     }
+
     setLoadingLatency(false);
   }, [dispatch, loadingLatency]);
 
@@ -65,10 +68,30 @@ const Settings: React.FC = () => {
         proxy: checked ? bestApiConfiguration.proxy : proxy,
         autoSelect: checked ? "autoselect" : "manual" 
       }));
+
       setShouldAutoselect(checked);
     }
-
   }, [dispatch, notary, proxy, autoSelect]);
+
+  const onCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    handleAutoselectChange(event.target.checked);
+  };
+
+  /*
+   * Helpers
+   */
+
+  const orderedNotaries = API_CONFIGURATIONS.sort((a, b) => {
+    if (latencies[a.notary] === '-' && latencies[b.notary] === '-') {
+      return 0;
+    } else if (latencies[a.notary] === '-') {
+      return 1;
+    } else if (latencies[b.notary] === '-') {
+      return -1;
+    } else {
+      return parseInt(latencies[a.notary]) - parseInt(latencies[b.notary]);
+    }
+  });
 
   /*
    * Component
@@ -77,55 +100,66 @@ const Settings: React.FC = () => {
   return (
     <Container>
       <BodyContainer>
-        <BodyStepContainer>
-          <NotarySettingContainer>
-            <SettingsLabelContainer>
-              <SettingsAndRefreshContainer>
-                <ThemedText.LabelSmall textAlign="left">
-                  Notary
-                </ThemedText.LabelSmall>
-                
-                <StyledRefresh onClick={handleRefreshClicked} />
-              </SettingsAndRefreshContainer>
+        <AutoSelectNotaryContainer>
+          <CustomCheckbox
+            checked={shouldAutoselect}
+            onChange={onCheckboxChange}
+          />
 
-              <LabeledSwitch
-                switchChecked={shouldAutoselect}
-                checkedLabel={"Auto"}
-                uncheckedLabel={"Manual"}
-                onSwitchChange={(checked: boolean) => handleAutoselectChange(checked)}
-              /> 
-            </SettingsLabelContainer>
+          <AutoSelectNotaryTitle>
+            Automatically select the best notary based on my location
+          </AutoSelectNotaryTitle>
+        </AutoSelectNotaryContainer>
 
-          </NotarySettingContainer>
+        <OrContainer>
+          Or
+        </OrContainer>
 
-          <NotaryTableContainer>
-            <NotaryHeaderRow>
-              <NotaryColumnHeader>Location</NotaryColumnHeader>
-              <NotaryColumnHeader>Latency</NotaryColumnHeader>
-            </NotaryHeaderRow>
-            
-            {API_CONFIGURATIONS.map((config, index) => (
-              <NotaryOptionRow
+        <SelectNotaryContainer>
+          <SelectLabel>
+            <AutoSelectNotaryTitle>
+              Select a notary. Notarization requires a reliable internet connection
+            </AutoSelectNotaryTitle>
+          </SelectLabel>
+        </SelectNotaryContainer>
+
+        <NotaryGrid>
+          {orderedNotaries.map((config, index) => {
+            return (
+              <NotaryCard
                 key={index}
-                lastRow={index === API_CONFIGURATIONS.length - 1}
                 onClick={() => handleApiChange(config.notary, config.proxy)}
               >
-                <NotaryOptionTitle>
-                  {`${config.name}`}
-                </NotaryOptionTitle>
+                <NotaryTitleContainer>
+                  <NotaryTItle>
+                    {config.name}
+                  </NotaryTItle>
 
-                <NotaryLatencySubtitle>
-                  {loadingLatency ?
-                    'Loading...' : 
-                    (config.shouldPing ? `${latencies[config.notary]} ms` : 'N/A')
-                  }
-                </NotaryLatencySubtitle>
+                  <NotarySubtitle>
+                    {loadingLatency ?
+                      'Loading...' : 
+                      (config.shouldPing ? `Ping: ${latencies[config.notary]}ms` : 'Ping: N/A')
+                    }
+                  </NotarySubtitle>
+                </NotaryTitleContainer>
 
-                <StyledCheck visibility={notary === config.notary ? 'visible' : 'hidden'} />
-              </NotaryOptionRow>
-            ))}
-          </NotaryTableContainer>
-        </BodyStepContainer>
+                <CustomCheckbox
+                  checked={notary === config.notary}
+                  onChange={() => handleApiChange(config.notary, config.proxy)}
+                />
+              </NotaryCard>
+            );
+          })}
+        </NotaryGrid>
+
+        <RefreshButtonContainer onClick={handleRefreshClicked}>
+          <StyledRefresh/>
+          Refresh Pings
+        </RefreshButtonContainer>
+
+        <DisclaimerLabel>
+          High latency may cause notarization to fail
+        </DisclaimerLabel>
       </BodyContainer>
     </Container>
   );
@@ -135,71 +169,63 @@ const Container = styled.div`
   width: 100%;
   justify-content: center;
   border-radius: 16px;
-  padding: 0rem 1.5rem;
-  color: #FFFFFF;
+  padding: 0rem 1.5rem 2rem;
+  overflow: auto;
 `;
 
 const BodyContainer = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 16px;
-  gap: 1.5rem;
-`;
-
-const BodyStepContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 0.75rem;
-`;
-
-const NotaryTableContainer = styled.div`
-  display: block;
-`;
-
-const NotarySettingContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0rem 1rem;
   gap: 0.5rem;
-  text-align: center;
+`;
+
+const AutoSelectNotaryContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 0.75rem;
+`;
+
+const OrContainer = styled.div`
+  padding: -0.75rem 0;
+  font-size: 15px;
   color: ${colors.white};
-  width: 100%;
+  text-align: center;
 `;
 
-const SettingsLabelContainer = styled.div`
+const AutoSelectNotaryTitle = styled.div`
   font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  justify-content: space-between;
+  color: ${colors.white};
 `;
 
-const SettingsAndRefreshContainer = styled.div`
+const SelectNotaryContainer = styled.div`
   display: flex;
-  align-items: center;
   gap: 1rem;
+  padding: 0 0.75rem;
 `;
 
-const NotaryOptionRow = styled.div<{ lastRow: boolean }>`
+const SelectLabel = styled.div`
+  font-size: 14px;
+  color: ${colors.white};
+`;
+
+const NotaryGrid = styled.div`
   display: grid;
-  grid-template-columns: 0.75fr 0.75fr 24px;
-  gap: 24px;
-  padding: 0.55rem 0.5rem;
+  padding-top: 0.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.5rem;
+`;
+
+const NotaryCard = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  flex-wrap: nowrap;
+  border-radius: 12px;
+  padding: 0.85rem 1.25rem;
   background-color: ${colors.selectorColor};
-
-  border-left: 1px solid ${colors.defaultBorderColor};
-  border-right: 1px solid ${colors.defaultBorderColor};
-  border-top: 1px solid ${colors.defaultBorderColor};
-  border-bottom: ${({ lastRow }) => lastRow ? '1px solid' : 'none'} ${colors.defaultBorderColor};
-
-  border-radius: ${({ lastRow }) => {
-    if (lastRow) {
-      return '0 0 8px 8px';
-    } else {
-      return '0';
-    }
-  }};
 
   &:hover {
     background-color: ${colors.selectorHover};
@@ -207,51 +233,51 @@ const NotaryOptionRow = styled.div<{ lastRow: boolean }>`
   }
 `;
 
-const NotaryOptionTitle = styled.div`
-  padding-left: 0.5rem;
+const NotaryTitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const NotaryTItle = styled.div`
   font-size: 13px;
-  color: #ffffff;
-`;
-
-const NotaryLatencySubtitle = styled.div`
-  padding-left: 0.5rem;
-  font-size: 13px;
-  color: #ffffff;
-`;
-
-const NotaryHeaderRow = styled.div`
-  display: grid;
-  grid-template-columns: 0.75fr 0.75fr 24px;
-  gap: 24px;
-  padding: 0.55rem 0.5rem;
-  background-color: ${colors.selectorColor};
-  border-left: 1px solid ${colors.defaultBorderColor};
-  border-right: 1px solid ${colors.defaultBorderColor};
-  border-top: 1px solid ${colors.defaultBorderColor};
-  border-radius: 8px 8px 0 0;
-`;
-
-const NotaryColumnHeader = styled.div`
-  padding-left: 0.5rem;
-  font-size: 12px;
-  opacity: 0.7;
-`;
-
-const StyledCheck = styled(Check)`
-  margin-right: 0.5rem;
+  font-weight: 600;
   color: ${colors.white};
-  height: 16px;
-  width: 16px;
 `;
 
-const StyledRefresh = styled(RefreshCw)`
-  height: 16px;
-  width: 16px;
+const NotarySubtitle = styled.div`
+  font-size: 12px;
+  color: #CED4DA;
+`;
+
+const RefreshButtonContainer = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1rem;
+
+  font-size: 15px;
+  font-weight: 600;
+  color: ${colors.white};
 
   &:hover:not([disabled]) {
     color: #495057;
   }
+  
   cursor: pointer;
+`;
+
+const StyledRefresh = styled(RefreshCw)`
+  padding-bottom: 2px;
+  height: 20px;
+  width: 20px;
+`;
+
+const DisclaimerLabel = styled.div`
+  font-size: 13px;
+  color: ${colors.warningRed};
+  padding: 0.25rem 0.75rem;
+  text-align: center;
 `;
 
 export default Settings;
