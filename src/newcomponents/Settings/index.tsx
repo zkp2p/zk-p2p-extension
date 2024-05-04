@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useReducer, useState } from 'react';
-import { Settings as SettingsIcon, Circle, Edit, Repeat } from 'react-feather';
+import { Settings as SettingsIcon, Circle, Wifi, Repeat } from 'react-feather';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
@@ -94,27 +94,28 @@ export const Settings = () => {
           <Overlay onClick={handleOverlayClick} />
 
           <DropdownContainer>
-            <ConnectedNotaryContainer>
-                <ConnectedLabel>
-                  Notary
-                </ConnectedLabel>
-
-              <CurrentNotaryContainer>
-              <ConnectedContainer>
-                {notaryName}
-                <StyledCircle connection={status} />
-              </ConnectedContainer>
-              </CurrentNotaryContainer>
-
-            </ConnectedNotaryContainer>
+            <TitleContainer>
+              Settings
+            </TitleContainer>
 
             <DropdownItemsContainer>
-              <ItemAndIconContainer onClick={handleUpdateNotaryClick}>
-                <StyledEdit />
-                <DropdownItem>
-                  Edit
-                </DropdownItem>
-              </ItemAndIconContainer>
+              <DropdownItemWithValueContainer>
+                <DropdownItemHeaderTitle>
+                  <StyledWifi />
+
+                  <StackedTitleWithValue onClick={handleUpdateNotaryClick}>
+                    <DropdownItem>
+                      Notary
+                    </DropdownItem>
+
+                    <NotaryNameContainer>
+                      {notaryName}
+                    </NotaryNameContainer>
+                  </StackedTitleWithValue>
+                </DropdownItemHeaderTitle>
+
+                <StyledCircle connection={status} />
+              </DropdownItemWithValueContainer>
 
               <ItemAndIconContainer onClick={() => window.open('https://zkp2p.xyz/', '_blank')}>
                 <StyledRepeat />
@@ -124,7 +125,7 @@ export const Settings = () => {
               </ItemAndIconContainer>
             </DropdownItemsContainer>
 
-            <IconRow>
+            <IconRowContainer>
               <Icon
                 icon={'twitter'}
                 onClick={() => jumpToMedia('https://twitter.com/zkp2p')}
@@ -140,7 +141,7 @@ export const Settings = () => {
               <VersionLabel>
                 v{CLIENT_VERSION}
               </VersionLabel>
-            </IconRow>
+            </IconRowContainer>
           </DropdownContainer>
         </DropdownAndOverlayContainer>
       )}
@@ -177,7 +178,7 @@ const DropdownAndOverlayContainer = styled.div`
 const DropdownContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 184px;
+  width: 176px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 1rem 1.25rem;
@@ -186,35 +187,26 @@ const DropdownContainer = styled.div`
   top: calc(100% + 20px);
   right: 0;
   z-index: 20;
-  gap: 1rem;
   color: #FFFFFF;
 `;
 
-const ConnectedNotaryContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  white-space: nowrap;
-  align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid ${colors.defaultBorderColor};
+const TitleContainer = styled.div`
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
 `;
 
-const ConnectedLabel = styled.div`
-  font-weight: 700;
-  font-size: 16px;
-`;
-
-const IconRow = styled.div`
+const IconRowContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1rem;
+  padding-top: 1rem;
   align-items: center;
 `;
 
 const Icon = styled(SVGIconThemed)`
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   cursor: pointer;
   transition: opacity 0.2s ease-in-out;
 
@@ -228,12 +220,63 @@ const DropdownItemsContainer = styled.div`
   flex-direction: column;
   white-space: nowrap;
   text-align: left;
-  font-size: 16px;
+  padding-top: 1rem;
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
-  padding: 0rem 0.25rem;
+  gap: 0.25rem;
   cursor: pointer;
   line-height: 1;
+`;
+
+const StyledWifi = styled(Wifi)`
+  color: ${colors.white};
+  height: 16px;
+  width: 16px;
+`;
+
+const StyledRepeat = styled(Repeat)`
+  color: ${colors.white};
+  height: 16px;
+  width: 16px;
+`;
+
+const DropdownItemWithValueContainer = styled.div`
+  display: flex;  
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: center;
+
+  &:hover {
+    color: #6C757D;
+    box-shadow: none;
+    ${StyledWifi} {
+      color: #6C757D;
+    }
+  }
+`;
+
+const DropdownItemHeaderTitle = styled.div`
+  display: flex;  
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const StackedTitleWithValue = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+`;
+
+const NotaryNameContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  font-size: 13px;
+  color: #6C757D;
 `;
 
 const StyledCircle = styled(Circle)<StyledCircleProps>`
@@ -267,34 +310,22 @@ const StyledCircle = styled(Circle)<StyledCircleProps>`
   }};
 `;
 
-const StyledEdit = styled(Edit)`
-  color: ${colors.white};
-  height: 16px;
-  width: 16px;
-`;
-
-const StyledRepeat = styled(Repeat)`
-  color: ${colors.white};
-  height: 16px;
-  width: 16px;
-`;
-
 const ItemAndIconContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   flex-direction: flex-start;
 
   &:hover {
     color: #6C757D;
     box-shadow: none;
     ${StyledRepeat},
-    ${StyledEdit} {
+    ${StyledWifi} {
       color: #6C757D;
     }
   }
 
-  padding: 16px 0px;
+  padding: 8px 0px;
 `;
 
 const DropdownItem = styled.div`
@@ -303,21 +334,8 @@ const DropdownItem = styled.div`
   padding-top: 2px;
 `;
 
-const CurrentNotaryContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
-`;
-
-const ConnectedContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
 const VersionLabel = styled.div`
-  font-size: 14px;
+  font-size: 13px;
   color: ${colors.white};
   opacity: 0.3;
   text-align: left;
