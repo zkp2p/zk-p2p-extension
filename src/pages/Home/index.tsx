@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import { Button } from '@newcomponents/common/Button';
 import { useActiveTabUrl, useRequests } from '@reducers/requests';
-import revolut from '../../../utils/bookmark/revolut.json';
+import revolutBookmarks from '../../../utils/bookmark/revolut.json';
 
 import { colors } from '@theme/colors';
 import { ThemedText } from '@theme/text';
@@ -95,19 +95,23 @@ export default function Home(): ReactElement {
           </ThemedText.TableHeaderSmall>
 
           <ActionsGrid>
-            {revolut.map((bm, i) => {
+            {revolutBookmarks.map((bookmark, index) => {
               return (
                 <ActionCard
-                  key={i}
+                  key={index}
                   onClick={() => {
-                    handleBookmarkPressedForIndex(i)
+                    handleBookmarkPressedForIndex(index)
                   }}
                 >
-                  {iconForIndex(i)}
+                  {iconForIndex(index)}
 
                   <ActionTitle>
-                    {bm.title}
+                    {bookmark.title}
                   </ActionTitle>
+
+                  <ActionSubtitle>
+                    {bookmark.description}
+                  </ActionSubtitle>
                 </ActionCard>
               );
             })}
@@ -215,7 +219,6 @@ const ActionCard = styled.div`
   flex-wrap: nowrap;
   border-radius: 12px;
   padding: 1rem 1.25rem;
-  gap: 0.75rem;
   background-color: ${colors.selectorColor};
 
   &:hover {
@@ -237,9 +240,15 @@ const StyledDollarSign = styled(DollarSign)`
 `;
 
 const ActionTitle = styled.div`
-  font-size: 15px;
+  padding-top: 1rem;
+  font-size: 14px;
   font-weight: 600;
-  color: ${colors.white};
+  color: ${colors.titleColor};
+`;
+
+const ActionSubtitle = styled.div`
+  font-size: 13px;
+  color: ${colors.subtitleColor};
 `;
 
 const ComingSoonContainer = styled.div`

@@ -1,6 +1,7 @@
 import React from 'react';
-
 import styled from "styled-components";
+
+import { colors } from "@theme/colors";
 
 
 export const InstructionStep: React.FC<{
@@ -24,7 +25,7 @@ const Container = styled.div`
   align-items: center;
   gap: 0.75rem;
   border-radius: 12px;
-  color: #CED4DA;
+  color: ${colors.subtitleColor};
   line-height: 1.35;
 `;
 

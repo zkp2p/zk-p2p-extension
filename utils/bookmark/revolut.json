@@ -5,7 +5,7 @@
     "method": "GET",
     "type": "xmlhttprequest",
     "title": "Registration",
-    "description": "Generate proof of a Revolut account required to complete registration",
+    "description": "Prove a Revtag",
     "skipRequestHeaders": [
       "sec-ch-ua",
       "pragma",
@@ -51,7 +51,7 @@
     "method": "GET",
     "type": "xmlhttprequest",
     "title": "On-Ramp",
-    "description": "Generate proof of your completed Revolut transfer to complete onramp",
+    "description": "Prove a payment",
     "skipRequestHeaders": [
       "sec-ch-ua",
       "pragma",

@@ -40,6 +40,9 @@ export const colors = {
   defaultBorderColor: '#98A1C03D',
   readOnlyBorderColor: '#98A1C03D',
 
+  titleColor: '#FFFFFF',
+  subtitleColor: '#CED4DA',
+
   defaultInputColor: '#131A2A',
   readOnlyInputColor: '#101A2A',
 
