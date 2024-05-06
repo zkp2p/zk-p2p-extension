@@ -42,10 +42,6 @@ export const notarizeRequest = (options: RequestHistory) => async () => {
   const notaryUrl = await get(NOTARY_API_LS_KEY);
   const websocketProxyUrl = await get(PROXY_API_LS_KEY);
 
-  console.log('Calling notarizeRequest with: ');
-  console.log('notaryUrl', notaryUrl);
-  console.log('websocketProxyUrl', websocketProxyUrl);
-
   chrome.runtime.sendMessage<any, string>({
     type: BackgroundActiontype.prove_request_start,
     data: {
@@ -67,11 +63,6 @@ export const notarizeRequest = (options: RequestHistory) => async () => {
 };
 
 export const deletedSingleRequestLog = (id: string) => {
-  chrome.runtime.sendMessage<any, string>({
-    type: BackgroundActiontype.delete_request,
-    data: id,
-  });
-
   return {
     type: ActionType['/requests/deleteRequest'],
     payload: id,
