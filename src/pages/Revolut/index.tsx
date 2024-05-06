@@ -347,9 +347,14 @@ const Revolut: React.FC<RevolutProps> = ({
     );
 
     // Deletes RequestLog
-    dispatch(
-      deletedSingleRequestLog(requestLog.requestId) as any
-    );
+    //
+    // Leaving this commented out for now. Keeping the request in the
+    // table in case notarization fails. User doesn't have to observe
+    // the request again.
+    //
+    // dispatch(
+    //   deletedSingleRequestLog(requestLog.requestId) as any
+    // );
   };
 
   /*
