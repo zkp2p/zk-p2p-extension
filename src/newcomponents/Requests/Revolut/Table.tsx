@@ -104,7 +104,9 @@ export const RequestTable: React.FC<RequestTableProps> = ({
           case RevolutAction.TRANSFER:
             const transferDate = parseTimestamp(parseInt(jsonResponseBody[0].completedDate), false);
             const parsedAmount = jsonResponseBody[0].amount / 100 * -1;
-            console.log('jsonResponseBody', jsonResponseBody);
+
+            // console.log('jsonResponseBody', jsonResponseBody);
+
             subject = `Sent ${parsedAmount} ${jsonResponseBody[0].currency} to ${jsonResponseBody[0].recipient.username}`;
             date = transferDate;
             break;

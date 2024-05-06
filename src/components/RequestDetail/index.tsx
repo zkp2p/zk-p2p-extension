@@ -20,6 +20,7 @@ export default function RequestDetail(props: Props): ReactElement {
     if (!request) return;
 
     console.log('/notary/' + props.requestId);
+    
     navigate('/notary/' + request.requestId);
   }, [request, props.requestId]);
 

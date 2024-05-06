@@ -12,12 +12,13 @@ import { CustomCheckbox } from '@newcomponents/common/Checkbox';
 
 
 const Settings: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { notary, proxy, latencies, autoSelect } = useSelector((state: AppRootState) => state.settings);
+  
   /*
    * Contexts
    */
 
-  const dispatch = useDispatch<AppDispatch>();
-  const { notary, proxy, latencies, autoSelect } = useSelector((state: AppRootState) => state.settings);
   const bestLatency = useBestLatency();
 
   /*

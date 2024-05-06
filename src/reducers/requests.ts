@@ -42,6 +42,10 @@ export const notarizeRequest = (options: RequestHistory) => async () => {
   const notaryUrl = await get(NOTARY_API_LS_KEY);
   const websocketProxyUrl = await get(PROXY_API_LS_KEY);
 
+  console.log('Calling notarizeRequest with: ');
+  console.log('notaryUrl', notaryUrl);
+  console.log('websocketProxyUrl', websocketProxyUrl);
+
   chrome.runtime.sendMessage<any, string>({
     type: BackgroundActiontype.prove_request_start,
     data: {
@@ -146,6 +150,7 @@ export const useRequests = (order: 'ascending' | 'descending' = 'ascending'): Re
 export const useRequest = (requestId?: string): RequestLog | null => {
   return useSelector((state: AppRootState) => {
     console.log('state.requests.map', state.requests.map);
+    
     return requestId ? state.requests.map[requestId] : null;
   }, deepEqual);
 };

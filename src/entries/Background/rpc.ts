@@ -154,13 +154,6 @@ async function handleFinishProveRequest(
       },
       action: addRequestHistory(await getNotaryRequest(id)),
     });
-
-    console.log('originalTabId', originalTabId);
-
-    // Close the active tab and switch back to the original tab
-    // if (originalTabId) {
-    //   await browser.tabs.update(originalTabId, { active: true });
-    // }
   }
 
   if (error) {

@@ -128,9 +128,11 @@ function RevealHeaderStep(props: {
       req.requestHeaders
         .map((h) => {
           console.log(h.name, !revealed[h.name]);
+
           if (!revealed[h.name]) {
             return `${h.name.toLowerCase()}: ${h.value || ''}` || '';
           }
+          
           return '';
         })
         .filter((d) => !!d),

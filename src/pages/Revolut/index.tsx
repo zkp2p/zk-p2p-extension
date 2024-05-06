@@ -11,11 +11,15 @@ import { Button } from '@newcomponents/common/Button';
 import { InstructionTitle } from '@newcomponents/Instructions/Title';
 import NotarizationTable from '@newcomponents/Notarizations/Revolut/Table';
 import RequestTable from '@newcomponents/Requests/Revolut/Table';
+import { SessionExpiredModal } from '../../pages/Revolut/SessionExpiredModal';
 import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests, deletedSingleRequestLog } from '@reducers/requests';
 import { useHistoryOrder } from '@reducers/history';
 import { urlify } from '@utils/misc';
 import { OnRamperIntent, RevolutAction, RevolutActionType, RevolutStep, RevolutRequest, REVOLUT_PLATFORM } from '@utils/types';
 import bookmarks from '../../../utils/bookmark/revolut.json';
+
+
+const REQUEST_LOG_EXPIRATION_MINUTES = 3;
 
 interface ActionSettings {
   action_url: string;
@@ -34,7 +38,6 @@ interface ActionSettings {
     maxRecvData: Number
   }
 }
-
 
 interface RevolutProps {
   action: RevolutActionType;
@@ -69,6 +72,8 @@ const Revolut: React.FC<RevolutProps> = ({
   const [filteredRequests, setFilteredRequests] = useState<RequestLog[]>([]);
   const [loadedNotarizations, setLoadedNotarizations] = useState<RequestHistory[]>([]);
 
+  const [shouldShowExpiredModal, setShouldShowExpiredModal] = useState<boolean>(false);
+
   /*
    * Hooks
    */
@@ -76,9 +81,6 @@ const Revolut: React.FC<RevolutProps> = ({
   useEffect(() => {
     const requestsRetrieved = filteredRequests.length > 0;
     const indexNotSelected = selectedIndex === null;
-
-    console.log('Requests retrieved:', requestsRetrieved);
-    console.log('Index not selected:', indexNotSelected);
 
     if (requestsRetrieved && indexNotSelected) {
       setSelectedIndex(0);
@@ -126,8 +128,6 @@ const Revolut: React.FC<RevolutProps> = ({
   }, [notarizations, action]);
 
   useEffect(() => {
-    console.log('Updating loaded requests: ', requestsFromStorage);
-  
     if (requestsFromStorage) {
       const filteredRequests = requestsFromStorage.filter(request => {
         switch (action) {
@@ -218,12 +218,25 @@ const Revolut: React.FC<RevolutProps> = ({
   const handleNotarizePressed = async() => {
     if (selectedIndex === null) {
       return;
-    }
+    };
 
-    console.log('Attempting to notarize', selectedIndex);
-
-    // Replay request because we need to remove values from the response
+    // Grab selected RequestLog
     const requestLog = filteredRequests[selectedIndex];
+
+    // Check for session expiration
+    const requestTimestamp = requestLog.timestamp;
+    const now = Date.now();
+    const timeDifference = now - requestTimestamp;
+    if (timeDifference > REQUEST_LOG_EXPIRATION_MINUTES * 60 * 1000) {
+      dispatch(
+        deletedSingleRequestLog(requestLog.requestId) as any
+      );
+
+      setShouldShowExpiredModal(true);
+      return;
+    };
+
+    // Build notarization parameters
     const responseBody = requestLog.responseBody;
     const responseHeaders = requestLog.responseHeaders;
     if (!responseBody || !responseHeaders) return;
@@ -264,8 +277,6 @@ const Revolut: React.FC<RevolutProps> = ({
     const filteredSecretResps = secretResps.filter((d) => !!d);
 
     const hostname = urlify(requestLog.url)?.hostname;
-    const notaryUrl = 'http://0.0.0.0:7047'; // 'https://notary-california.zkp2p.xyz' // await get(NOTARY_API_LS_KEY);
-    const websocketProxyUrl = 'ws://localhost:55688'; // 'wss://proxy-california.zkp2p.xyz' // await get(PROXY_API_LS_KEY);
 
     // Skip the headers to make the request in MPC-TLS lighter
     const headers: { [k: string]: string } = requestLog.requestHeaders.reduce(
@@ -283,6 +294,7 @@ const Revolut: React.FC<RevolutProps> = ({
     const filteredCookies = actionSettings.bookmark_data.includeRequestCookies.map(cookie => {
       return `${cookie}=${cookies[cookie]}`;
     }).join(`; `);
+
     headers['Cookie'] = filteredCookies;
     headers['Accept-Encoding'] = 'identity';
     headers['Connection'] = 'close';
@@ -323,7 +335,6 @@ const Revolut: React.FC<RevolutProps> = ({
     // console.log('Headers being sent for notarization', headers)
     // console.log('maxRecvData', maxRecvData)
 
-    
     const notarizeRequestParams = {
       url: requestLog.url,
       method: requestLog.method,
@@ -331,8 +342,6 @@ const Revolut: React.FC<RevolutProps> = ({
       body: requestLog.requestBody,
       maxSentData: actionSettings.bookmark_data.maxSentData,
       maxRecvData: actionSettings.bookmark_data.maxRecvData,
-      notaryUrl,
-      websocketProxyUrl,
       secretHeaders,
       secretResps: filteredSecretResps,
       metadata: metadataResp,
@@ -345,16 +354,6 @@ const Revolut: React.FC<RevolutProps> = ({
     dispatch(
       notarizeRequest(notarizeRequestParams) as any
     );
-
-    // Deletes RequestLog
-    //
-    // Leaving this commented out for now. Keeping the request in the
-    // table in case notarization fails. User doesn't have to observe
-    // the request again.
-    //
-    // dispatch(
-    //   deletedSingleRequestLog(requestLog.requestId) as any
-    // );
   };
 
   /*
@@ -437,6 +436,12 @@ const Revolut: React.FC<RevolutProps> = ({
 
   return (
     <Container>
+      {shouldShowExpiredModal && (
+        <SessionExpiredModal
+          onBackClick={() => setShouldShowExpiredModal(false)}
+        />
+      )}
+
       <BodyContainer>
         <StepContainer>
           <InstructionTitle
