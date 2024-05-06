@@ -9,9 +9,10 @@ import { colors } from '@theme/colors';
 import { SVGIconThemed } from '@newcomponents/SVGIcon/SVGIconThemed';
 import { Overlay } from '@newcomponents/common/Overlay';
 import { AppDispatch } from '@utils/store';
-import { API_CONFIGURATIONS, StatusColors, StatusColorsType } from '@utils/types';
+import { StatusColors, StatusColorsType } from '@utils/types';
 import { AppRootState } from '@reducers/index';
 import { fetchApiUrls } from '@reducers/settings';
+
 
 const CLIENT_VERSION = '0.0.1';
 
@@ -19,7 +20,13 @@ interface StyledCircleProps {
   connection: StatusColorsType | null;
 }
 
-export const Settings = () => {
+interface SettingsDropdownProps {
+  notaryList: any;
+}
+
+export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
+  notaryList
+}) => {
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
 
   const ref = useRef<HTMLDivElement>(null)
@@ -41,13 +48,14 @@ export const Settings = () => {
   useEffect(() => {
     dispatch(fetchApiUrls());
 
-    if (notary) {
-      const fetchNotaryName = API_CONFIGURATIONS.find((config) => config.notary === notary);
+    if (notary && notaryList) {
+      const fetchNotaryName = notaryList.find((config) => config.notary === notary);
+
       if (fetchNotaryName) {
         setNotaryName(fetchNotaryName.name);
       }
     }
-  }, [dispatch, notaryName, notary]);
+  }, [dispatch, notaryName, notary, notaryList]);
   
   useEffect(() => {
     if (latencies && latencies[notary]) {

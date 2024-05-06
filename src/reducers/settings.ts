@@ -24,7 +24,9 @@ export const fetchApiUrls = createAsyncThunk(
   async () => {
     const notary = await get(NOTARY_API_LS_KEY);
     const proxy = await get(PROXY_API_LS_KEY);
-    const autoSelect = await get(AUTOSELECT_LS_KEY);
+
+    const storedAutoSelect = await get(AUTOSELECT_LS_KEY);
+    const autoSelect = storedAutoSelect ?? 'autoselect';
 
     return { notary, proxy, autoSelect };
   }
@@ -42,15 +44,17 @@ export const setApiUrls = createAsyncThunk(
 );
 
 export const measureLatency = createAsyncThunk(
-  'settings/measureLatency',
+'settings/measureLatency',
   async (notaryUrls: string[], { rejectWithValue }) => {
     const measureSingleLatency = async (url: string) => {
       const startTime = performance.now();
       try {
         const response = await fetch(`${url}/info`);
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
+
         const endTime = performance.now();
         const latency = (endTime - startTime).toFixed(0);
 
@@ -64,6 +68,7 @@ export const measureLatency = createAsyncThunk(
 
     try {
       const results = await Promise.all(notaryUrls.map(notaryUrl => measureSingleLatency(notaryUrl)));
+
       return results.reduce((acc: { [key: string]: string }, result) => {
         acc[result.url] = result.latency;
 

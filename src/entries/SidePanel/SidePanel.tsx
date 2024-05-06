@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import browser from 'webextension-polyfill';
@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 import { setActiveTab, setRequests } from '../../reducers/requests';
 import { fetchApiUrls, measureLatency, setApiUrls, useBestLatency } from '../../reducers/settings';
-import { API_CONFIGURATIONS } from '@utils/types';
+import { DEFAULT_API_CONFIGURATIONS } from '@utils/types';
 import { BackgroundActiontype } from '../Background/rpc';
 import Home from '../../pages/Home';
 
@@ -17,13 +17,29 @@ import { AppRootState } from 'reducers';
 
 import { TopNav } from '@newcomponents/TopNav/TopNav';
 import { colors } from '@theme/colors';
+import useGithubClient, { NotaryConfiguration } from '@hooks/useFetchNotaryList';
 
 
 const SidePanel = () => {
+  /*
+   * Context
+   */
+
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const bestLatency = useBestLatency();
   const { autoSelect } = useSelector((state: AppRootState) => state.settings);
+  const { fetchData } = useGithubClient();
+
+  /*
+   * State
+   */
+
+  const [notaryList, setNotaryList] = useState<NotaryConfiguration[] | null>(null);
+
+  /*
+   * Hooks
+   */
 
   useEffect(() => {
     (async () => {
@@ -48,18 +64,42 @@ const SidePanel = () => {
 
       dispatch(fetchApiUrls());
 
-      dispatch(measureLatency(API_CONFIGURATIONS.map(config => config.notary)));
+      const fetchedNotaryList = await fetchData();
+      if (fetchedNotaryList) {
+        setNotaryList(fetchedNotaryList.notaryList);
+      } else {
+        setNotaryList(DEFAULT_API_CONFIGURATIONS);
+      }
     })();
   }, []);
 
   useEffect(() => {
-    if (bestLatency && autoSelect === "autoselect") {
-      const apiConfiguration = API_CONFIGURATIONS.find((config) => config.notary === bestLatency.url);
-      if (apiConfiguration) {
-        dispatch(setApiUrls({ notary: bestLatency.url, proxy: apiConfiguration.proxy, autoSelect: autoSelect }));
-      }
+    if (notaryList) {
+      dispatch(
+        measureLatency(notaryList.map(config => config.notary))
+      );
     }
-  }, [bestLatency, autoSelect]);
+  }, [notaryList]);
+
+  useEffect(() => {
+    if (notaryList) {
+      if (bestLatency && autoSelect === "autoselect") {
+        const apiConfiguration = notaryList.find((config) => config.notary === bestLatency.url);
+  
+        if (apiConfiguration) {
+          dispatch(
+            setApiUrls(
+              { notary: bestLatency.url, proxy: apiConfiguration.proxy, autoSelect: autoSelect }
+            )
+          );
+        }
+      } else {
+        console.log('Manual notary previously selected');
+      }
+    } else {
+      console.log('No notary list to choose from yet');
+    }
+  }, [notaryList, bestLatency, autoSelect]);
 
   useEffect(() => {
     // Adding listener for cues to navigate to a different page
@@ -82,14 +122,18 @@ const SidePanel = () => {
     };
   }, []);
 
+  /*
+   * Component
+   */
+
   return (
     <AppContainer>
-      <TopNav />
+      <TopNav notaryList={notaryList}/>
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/registration" element={<Revolut action={RevolutAction.REGISTRATION}/>} />
         <Route path="/onramp" element={<Revolut action={RevolutAction.TRANSFER}/>} />
-        <Route path="/settings" element={<NotarySettings/>} />
+        <Route path="/settings" element={<NotarySettings notaryList={notaryList}/>} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </AppContainer>

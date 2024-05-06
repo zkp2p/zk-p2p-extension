@@ -52,7 +52,7 @@ export const SessionExpiredModal: React.FC<SessionExpiredModalProps> = ({
 
         <InstructionsContainer>
           <InstructionsLabel>
-            The selected request has expired. Log in to Revolut again to generate a new request to prove
+            The request has expired. Refresh Revolut or log in to generate a new proof
           </InstructionsLabel>
         </InstructionsContainer>
 

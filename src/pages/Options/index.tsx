@@ -2,33 +2,6 @@ import React, { ReactElement, useState, useEffect, useCallback } from 'react';
 
 import { set, get, NOTARY_API_LS_KEY, PROXY_API_LS_KEY } from '../../utils/storage';
 
-const API_CONFIGURATIONS = [
-  {
-    name: 'Local',
-    notary: 'http://0.0.0.0:7047',
-    proxy: 'ws://localhost:55688',
-  },
-  {
-    name: 'Mumbai',
-    notary: 'https://notary-mumbai.zkp2p.xyz',
-    proxy: 'wss://proxy-mumbai.zkp2p.xyz',
-  },
-  {
-    name: 'Singapore',
-    notary: 'https://notary-singapore.zkp2p.xyz',
-    proxy: 'wss://proxy-singapore.zkp2p.xyz',
-  },
-  {
-    name: 'Ohio',
-    notary: 'https://notary-ohio.zkp2p.xyz',
-    proxy: 'wss://proxy-ohio.zkp2p.xyz',
-  },
-  {
-    name: 'California',
-    notary: 'https://notary-california.zkp2p.xyz',
-    proxy: 'wss://proxy-california.zkp2p.xyz',
-  },
-];
 
 export default function Options(): ReactElement {
   const [notary, setNotary] = useState('https://notary-california.zkp2p.xyz');
@@ -100,18 +73,6 @@ export default function Options(): ReactElement {
         >
           Save
         </button>
-      </div>
-
-      <div className="flex flex-col gap-2 w-full p-2">
-        {API_CONFIGURATIONS.map((config) => (
-          <button
-            key={config.name}
-            className="button w-full !bg-primary/[0.9] hover:bg-primary/[0.8] active:bg-primary !text-white"
-            onClick={() => handleApiChange(config.notary, config.proxy)}
-          >
-            {`${config.name} Proxy`}
-          </button>
-        ))}
       </div>
     </div>
   );

@@ -3,11 +3,17 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import logo from '../../assets/img/logo192.png';
-import { Settings } from '@newcomponents/Settings';
+import { SettingsDropdown } from '@newcomponents/Settings';
 import { colors } from '@theme/colors';
 
 
-export const TopNav: React.FC<{ withoutLinks?: boolean }> = ({ withoutLinks }) => {
+interface TopNavProps {
+  notaryList: any;
+}
+
+export const TopNav: React.FC<TopNavProps> = ({
+  notaryList
+}) => {
   const location = useLocation();
 
   const [selectedItem, setSelectedItem] = useState<string>('Home');
@@ -50,7 +56,9 @@ export const TopNav: React.FC<{ withoutLinks?: boolean }> = ({ withoutLinks }) =
         {selectedItem}
       </NavigationTitle>
 
-      <Settings />
+      <SettingsDropdown
+        notaryList={notaryList}
+      />
     </NavBar>
   );
 };
