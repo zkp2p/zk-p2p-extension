@@ -6,12 +6,16 @@ import styled from 'styled-components';
 
 import { colors } from '@theme/colors';
 import { AppDispatch } from '@utils/store';
-import { API_CONFIGURATIONS } from '@utils/types';
 import { setApiUrls, measureLatency, useBestLatency } from '../../reducers/settings';
 import { CustomCheckbox } from '@newcomponents/common/Checkbox';
 
+interface NotarySettingsProps {
+  notaryList: any;
+}
 
-const Settings: React.FC = () => {
+const NotarySettings: React.FC<NotarySettingsProps> = ({
+  notaryList
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const { notary, proxy, latencies, autoSelect } = useSelector((state: AppRootState) => state.settings);
   
@@ -25,7 +29,8 @@ const Settings: React.FC = () => {
    * State
    */
 
-  const [loadingLatency, setLoadingLatency] = useState(false);
+  const [loadingLatency, setLoadingLatency] = useState<boolean>(false);
+
   const [shouldAutoselect, setShouldAutoselect] = useState<boolean>(false);
 
   /*
@@ -42,7 +47,9 @@ const Settings: React.FC = () => {
 
   const handleApiChange = useCallback((newNotary: string, newProxy: string) => {
     dispatch(
-      setApiUrls({ notary: newNotary, proxy: newProxy, autoSelect: "manual" })
+      setApiUrls(
+        { notary: newNotary, proxy: newProxy, autoSelect: "manual" }
+      )
     );
 
     setShouldAutoselect(false);
@@ -52,16 +59,16 @@ const Settings: React.FC = () => {
     setLoadingLatency(true);
 
     try {
-      await dispatch(measureLatency(API_CONFIGURATIONS.map(config => config.notary)));
+      await dispatch(measureLatency(notaryList.map(config => config.notary)));
     } catch (error) {
       console.error('Error measuring latency:', error);
     }
 
     setLoadingLatency(false);
-  }, [dispatch, loadingLatency]);
+  }, [dispatch, loadingLatency, notaryList]);
 
   const handleAutoselectChange = useCallback((checked: boolean) => {
-    const bestApiConfiguration = API_CONFIGURATIONS.find((config) => config.notary === notary);
+    const bestApiConfiguration = notaryList.find((config) => config.notary === notary);
     
     if (bestApiConfiguration) {
       dispatch(setApiUrls({
@@ -72,7 +79,7 @@ const Settings: React.FC = () => {
 
       setShouldAutoselect(checked);
     }
-  }, [dispatch, notary, proxy, autoSelect]);
+  }, [dispatch, notary, proxy, autoSelect, notaryList]);
 
   const onCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleAutoselectChange(event.target.checked);
@@ -82,7 +89,7 @@ const Settings: React.FC = () => {
    * Helpers
    */
 
-  const orderedNotaries = API_CONFIGURATIONS.sort((a, b) => {
+  const orderedNotaries = notaryList.sort((a, b) => {
     if (latencies[a.notary] === '-' && latencies[b.notary] === '-') {
       return 0;
     } else if (latencies[a.notary] === '-') {
@@ -137,10 +144,7 @@ const Settings: React.FC = () => {
                   </NotaryTItle>
 
                   <NotarySubtitle>
-                    {loadingLatency ?
-                      'Loading...' : 
-                      (config.shouldPing ? `Ping: ${latencies[config.notary]}ms` : 'Ping: N/A')
-                    }
+                    {loadingLatency ? 'Loading...' : `Ping: ${latencies[config.notary]}ms`}
                   </NotarySubtitle>
                 </NotaryTitleContainer>
 
@@ -281,4 +285,4 @@ const DisclaimerLabel = styled.div`
   text-align: center;
 `;
 
-export default Settings;
+export default NotarySettings;
