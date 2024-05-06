@@ -63,11 +63,6 @@ export const notarizeRequest = (options: RequestHistory) => async () => {
 };
 
 export const deletedSingleRequestLog = (id: string) => {
-  chrome.runtime.sendMessage<any, string>({
-    type: BackgroundActiontype.delete_request,
-    data: id,
-  });
-
   return {
     type: ActionType['/requests/deleteRequest'],
     payload: id,
@@ -146,6 +141,7 @@ export const useRequests = (order: 'ascending' | 'descending' = 'ascending'): Re
 export const useRequest = (requestId?: string): RequestLog | null => {
   return useSelector((state: AppRootState) => {
     console.log('state.requests.map', state.requests.map);
+    
     return requestId ? state.requests.map[requestId] : null;
   }, deepEqual);
 };

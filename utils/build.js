@@ -32,6 +32,7 @@ var webpack = require('webpack'),
           return;
       }
       console.log("Webpack compilation successful.");
+      
       console.log(stats.toString({
           colors: true,
           modules: false,

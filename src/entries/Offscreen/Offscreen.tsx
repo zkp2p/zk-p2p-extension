@@ -52,8 +52,8 @@ const Offscreen = () => {
                 },
               });
             } catch (error) {
-              console.log('i caught an error');
-              console.error(error);
+              console.log('Error notarizing: ', error);
+
               browser.runtime.sendMessage({
                 type: BackgroundActiontype.finish_prove_request,
                 data: {
