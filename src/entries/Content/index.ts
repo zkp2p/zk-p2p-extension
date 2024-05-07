@@ -103,9 +103,7 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 
   if (message.action === 'highlight_transaction') {
-
-    // TODO: update to allow multiple currencies
-    highlightTransactionByAmount(message.data.fiatToSend);
+    highlightTransactionByAmountAndTimestamp(message.data.fiatToSend, message.data.intent.timestamp);
   }
 });
 
@@ -132,25 +130,23 @@ const transactionRowsSelector = '[aria-label="latest-transactions-block"]';
  * New
  */
 
-function highlightTransactionByAmount(amountText: string) {
-  console.log('highlightTransactionByAmount:', amountText);
-
+function highlightTransactionByAmountAndTimestamp(amountText: string, timestamp: string) {
   waitForElements(transactionRowsSelector, (transactionBlock: NodeListOf<Element>) => {
     const transactionRows = transactionBlock[0].querySelectorAll('div');
     transactionRows.forEach((transactionRow) => {
       const spanForTransactionAmount = transactionRow.querySelector('div + span + span > span > div > span');
+      const spanForTransactionTimestamp = transactionRow.querySelector('div + span > span + span > span > div');
       
-      if (spanForTransactionAmount) {
+      if (spanForTransactionAmount && spanForTransactionTimestamp) {
         const spanTextContent = spanForTransactionAmount.textContent;
-        console.log('spanTextContent:', spanTextContent);
+        const spanTimestampTextContent = spanForTransactionTimestamp.textContent;
 
-        if (spanTextContent) {
+        if (spanTextContent && spanTimestampTextContent) {
           const spanTextContentSubstring = spanTextContent.replace(/[^\d.]/g, '');
-          console.log('spanTextContentSubstring:', spanTextContentSubstring);
-          console.log('amountText:', amountText);
+          const paymentTimestamp = regexMatchTimestamp(spanTimestampTextContent);
           
-          if (spanTextContentSubstring === amountText) {
-            console.log('textMatches:', spanTextContent);
+          if (parseFloat(spanTextContentSubstring) >= parseFloat(amountText) && paymentTimestamp >= parseInt(timestamp)) {
+            // console.log('textMatches:', spanTextContent);
   
             const transactionRowButton = transactionRow.querySelector('button') as HTMLElement;
             if (transactionRowButton) {
@@ -162,18 +158,12 @@ function highlightTransactionByAmount(amountText: string) {
           
                 const tooltip = document.createElement('div');
                 tooltip.className = 'custom-tooltip';
-
-                const link = document.createElement('a');
-                link.href = "https://zkp2p.xyz";
-                link.target = "_blank";
-                link.rel = "noopener noreferrer";
                 
                 const icon = document.createElement('img');
                 icon.src = chrome.runtime.getURL('icon-48.png');
                 icon.alt = 'Icon';
                 icon.className = 'custom-tooltip-icon';
-                link.appendChild(icon);
-                tooltip.appendChild(link);
+                tooltip.appendChild(icon);
           
                 tooltip.style.position = 'absolute';
                 tooltip.style.left = `${transactionRowButton.offsetWidth}px`;
@@ -189,6 +179,43 @@ function highlightTransactionByAmount(amountText: string) {
     });
   });
 }
+
+function getUnixTimestampForToday(timeStr: string) { 
+  const now = new Date();
+  const [time, period] = timeStr.split(' ');
+  const [hours, minutes] = time.split(':');
+
+  // Convert hour to 24-hour format based on AM/PM
+  const hoursNumber = period.toLowerCase() === 'pm' ? (parseInt(hours) % 12) + 12 : parseInt(hours) % 12;
+
+  // Set hours and minutes to 'now' Date object
+  now.setHours(hoursNumber);
+  now.setMinutes(parseInt(minutes));
+  now.setSeconds(0); // Reset seconds to 0 for consistency
+
+  // Return Unix timestamp in seconds
+  return Math.floor(now.getTime() / 1000);
+}
+
+function regexMatchTimestamp(inputString: string) {
+  const timestampRecentRegex = /Moments ago/i;
+  const timestampOlderRegex = /(\d+\sminute(s)? ago)/i;
+  const timestampOldestRegex = /(\d{1,2}:\d{2}\s?(AM|PM))/i;
+  const matchRecent = inputString.match(timestampRecentRegex);
+  const matchOlder = inputString.match(timestampOlderRegex);
+  const matchOldest = inputString.match(timestampOldestRegex);
+
+  let timestamp = 0;
+  if (matchOldest) {
+    timestamp = getUnixTimestampForToday(matchOldest[0]);
+  } else if (matchOlder) {
+    timestamp = Date.now();
+  } else if (matchRecent) {
+    timestamp = Date.now();
+  }
+  return timestamp;
+}
+
 
 (async () => {
   console.log('Content script works!');
