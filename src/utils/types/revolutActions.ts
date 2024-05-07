@@ -47,4 +47,4 @@ export const RevolutAction = {
     fiatToSend: string;
   }
   
-  export const REVOLUT_PLATFORM = 'Revolut';
+  export const REVOLUT_PLATFORM = 'revolut';
