@@ -55,15 +55,6 @@ window.addEventListener('message', function (event) {
     console.log('Content received post_onramper_intent');
 
     chrome.runtime.sendMessage({ action: 'post_onramper_intent_background', data: event.data });
-
-    if (window.location.href.startsWith('https://app.revolut.com')) {
-      // const fiatAmount = event.data.fiatToSend
-      // const fiatAmountInTag = `- €{fiatAmount}`;
-
-      const fiatAmountInTag = '+ €1.00'; // Temp to test highlighting
-  
-      highlightTransactionByAmount(fiatAmountInTag);
-    }
   }
 });
 
@@ -110,6 +101,12 @@ chrome.runtime.onMessage.addListener((message) => {
       '*',
     );
   }
+
+  if (message.action === 'highlight_transaction') {
+
+    // TODO: update to allow multiple currencies
+    highlightTransactionByAmount(message.data.fiatToSend);
+  }
 });
 
 /*
@@ -138,41 +135,54 @@ const transactionRowsSelector = '[aria-label="latest-transactions-block"]';
 function highlightTransactionByAmount(amountText: string) {
   console.log('highlightTransactionByAmount:', amountText);
 
-  waitForElements(transactionRowsSelector, (transactionRows: NodeListOf<Element>) => {
+  waitForElements(transactionRowsSelector, (transactionBlock: NodeListOf<Element>) => {
+    const transactionRows = transactionBlock[0].querySelectorAll('div');
     transactionRows.forEach((transactionRow) => {
       const spanForTransactionAmount = transactionRow.querySelector('div + span + span > span > div > span');
       
       if (spanForTransactionAmount) {
         const spanTextContent = spanForTransactionAmount.textContent;
         console.log('spanTextContent:', spanTextContent);
-        
-        if (spanTextContent === amountText) {
-          console.log('textMatches:', spanTextContent);
 
-          const transactionRowButton = transactionRow.closest('div button') as HTMLElement;
-          if (transactionRowButton) {
-            transactionRowButton.classList.add('highlighted-row');
+        if (spanTextContent) {
+          const spanTextContentSubstring = spanTextContent.replace(/[^\d.]/g, '');
+          console.log('spanTextContentSubstring:', spanTextContentSubstring);
+          console.log('amountText:', amountText);
+          
+          if (spanTextContentSubstring === amountText) {
+            console.log('textMatches:', spanTextContent);
+  
+            const transactionRowButton = transactionRow.querySelector('button') as HTMLElement;
+            if (transactionRowButton) {
+              transactionRowButton.classList.add('highlighted-row');
+  
+              const parentDiv = transactionRowButton.parentElement;
+              if (parentDiv) {
+                parentDiv.style.position = 'relative';
+          
+                const tooltip = document.createElement('div');
+                tooltip.className = 'custom-tooltip';
 
-            const parentDiv = transactionRowButton.parentElement;
-            if (parentDiv) {
-              parentDiv.style.position = 'relative';
-        
-              const tooltip = document.createElement('div');
-              tooltip.className = 'custom-tooltip';
-        
-              const icon = document.createElement('img');
-              icon.src = chrome.runtime.getURL('icon-48.png');
-              icon.alt = 'Icon';
-              icon.className = 'custom-tooltip-icon';
-              tooltip.appendChild(icon);
-        
-              tooltip.style.position = 'absolute';
-              tooltip.style.left = `${transactionRowButton.offsetWidth}px`;
-              tooltip.style.top = '50%';
-              tooltip.style.transform = 'translateY(-50%)';
-        
-              parentDiv.appendChild(tooltip);
-            }        
+                const link = document.createElement('a');
+                link.href = "https://zkp2p.xyz";
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                
+                const icon = document.createElement('img');
+                icon.src = chrome.runtime.getURL('icon-48.png');
+                icon.alt = 'Icon';
+                icon.className = 'custom-tooltip-icon';
+                link.appendChild(icon);
+                tooltip.appendChild(link);
+          
+                tooltip.style.position = 'absolute';
+                tooltip.style.left = `${transactionRowButton.offsetWidth}px`;
+                tooltip.style.top = '50%';
+                tooltip.style.transform = 'translateY(-50%)';
+          
+                parentDiv.appendChild(tooltip);
+              }        
+            }
           }
         }
       }
