@@ -22,7 +22,7 @@ interface StyledCircleProps {
 }
 
 interface SettingsDropdownProps {
-  notaryList: NotaryConfiguration[];
+  notaryList: NotaryConfiguration[] | null;
 }
 
 export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
