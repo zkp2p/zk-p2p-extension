@@ -5,54 +5,9 @@ window.onerror = (error) => {
   // console.log(error);
 };
 
-function waitForElements(selector: any, callback: any) {
-  const interval = setInterval(() => {
-    const elements = document.querySelectorAll(selector);
-    if (elements.length) {
-      clearInterval(interval);
-      callback(elements);
-    }
-  }, 100);
-}
-
-function handleFoundElements(elements: any) {
-  const firstTransactionButton = elements[0].querySelector('[aria-label="latest-transactions-block"] div button');
-  if (firstTransactionButton) {
-    // Highlight the first row
-    firstTransactionButton.classList.add('highlighted-row');
-    
-    // Add zkp2p-logo on pill tooltip to the right of the row
-    const parentDiv = firstTransactionButton.parentElement;
-    if (parentDiv) {
-      parentDiv.style.position = 'relative';
-
-      const tooltip = document.createElement('div');
-      tooltip.className = 'custom-tooltip';
-
-      const icon = document.createElement('img');
-      icon.src = chrome.runtime.getURL('icon-48.png');
-      icon.alt = 'Icon';
-      icon.className = 'custom-tooltip-icon';
-      tooltip.appendChild(icon);
-
-      tooltip.style.position = 'absolute';
-      tooltip.style.left = `${firstTransactionButton.offsetWidth}px`;
-      tooltip.style.top = '50%';
-      tooltip.style.transform = 'translateY(-50%)';
-
-      parentDiv.appendChild(tooltip);
-    }
-  } else {
-    console.log("No button found in the first transaction.");
-  }
-}
-
-const selector = '[aria-label="latest-transactions-block"]';
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => waitForElements(selector, handleFoundElements));
-} else {
-  waitForElements(selector, handleFoundElements);
-}
+/*
+ * Listeners
+ */
 
 window.addEventListener('message', function (event) {
   if (event.source != window) {
@@ -97,9 +52,18 @@ window.addEventListener('message', function (event) {
   }
 
   if (event.data.type && event.data.type == 'post_onramper_intent') {
-    // console.log('Content received post_onramper_intent');
+    console.log('Content received post_onramper_intent');
 
     chrome.runtime.sendMessage({ action: 'post_onramper_intent_background', data: event.data });
+
+    if (window.location.href.startsWith('https://app.revolut.com')) {
+      // const fiatAmount = event.data.fiatToSend
+      // const fiatAmountInTag = `- €{fiatAmount}`;
+
+      const fiatAmountInTag = '+ €1.00'; // Temp to test highlighting
+  
+      highlightTransactionByAmount(fiatAmountInTag);
+    }
   }
 });
 
@@ -147,6 +111,74 @@ chrome.runtime.onMessage.addListener((message) => {
     );
   }
 });
+
+/*
+ * Revolut Transaction Highlighting
+ */
+
+function waitForElements(selector: any, callback: any) {
+  const interval = setInterval(() => {
+    console.log('Waiting for elements...');
+
+    const elements = document.querySelectorAll(selector);
+    if (elements.length) {
+      clearInterval(interval);
+
+      callback(elements);
+    }
+  }, 100);
+}
+
+const transactionRowsSelector = '[aria-label="latest-transactions-block"]';
+
+/*
+ * New
+ */
+
+function highlightTransactionByAmount(amountText: string) {
+  console.log('highlightTransactionByAmount:', amountText);
+
+  waitForElements(transactionRowsSelector, (transactionRows: NodeListOf<Element>) => {
+    transactionRows.forEach((transactionRow) => {
+      const spanForTransactionAmount = transactionRow.querySelector('div + span + span > span > div > span');
+      
+      if (spanForTransactionAmount) {
+        const spanTextContent = spanForTransactionAmount.textContent;
+        console.log('spanTextContent:', spanTextContent);
+        
+        if (spanTextContent === amountText) {
+          console.log('textMatches:', spanTextContent);
+
+          const transactionRowButton = transactionRow.closest('div button') as HTMLElement;
+          if (transactionRowButton) {
+            transactionRowButton.classList.add('highlighted-row');
+
+            const parentDiv = transactionRowButton.parentElement;
+            if (parentDiv) {
+              parentDiv.style.position = 'relative';
+        
+              const tooltip = document.createElement('div');
+              tooltip.className = 'custom-tooltip';
+        
+              const icon = document.createElement('img');
+              icon.src = chrome.runtime.getURL('icon-48.png');
+              icon.alt = 'Icon';
+              icon.className = 'custom-tooltip-icon';
+              tooltip.appendChild(icon);
+        
+              tooltip.style.position = 'absolute';
+              tooltip.style.left = `${transactionRowButton.offsetWidth}px`;
+              tooltip.style.top = '50%';
+              tooltip.style.transform = 'translateY(-50%)';
+        
+              parentDiv.appendChild(tooltip);
+            }        
+          }
+        }
+      }
+    });
+  });
+}
 
 (async () => {
   console.log('Content script works!');
