@@ -6,11 +6,12 @@ import styled from 'styled-components';
 
 import { colors } from '@theme/colors';
 import { AppDispatch } from '@utils/store';
-import { setApiUrls, measureLatency, useBestLatency } from '../../reducers/settings';
+import { setApiUrls, measureLatency, useBestLatency } from '@reducers/settings';
 import { CustomCheckbox } from '@newcomponents/common/Checkbox';
+import { NotaryConfiguration } from '@hooks/useFetchNotaryList';
 
 interface NotarySettingsProps {
-  notaryList: any;
+  notaryList: NotaryConfiguration[];
 }
 
 const NotarySettings: React.FC<NotarySettingsProps> = ({
@@ -68,7 +69,7 @@ const NotarySettings: React.FC<NotarySettingsProps> = ({
   }, [dispatch, loadingLatency, notaryList]);
 
   const handleAutoselectChange = useCallback((checked: boolean) => {
-    const bestApiConfiguration = notaryList.find((config) => config.notary === notary);
+    const bestApiConfiguration = notaryList.find(config => config.notary === notary);
     
     if (bestApiConfiguration) {
       dispatch(setApiUrls({

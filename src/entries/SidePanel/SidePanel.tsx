@@ -35,7 +35,7 @@ const SidePanel = () => {
    * State
    */
 
-  const [notaryList, setNotaryList] = useState<NotaryConfiguration[] | null>(null);
+  const [notaryList, setNotaryList] = useState<NotaryConfiguration[]>(DEFAULT_API_CONFIGURATIONS);
 
   /*
    * Hooks
