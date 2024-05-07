@@ -151,7 +151,8 @@ const Revolut: React.FC<RevolutProps> = ({
                   // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
                   return (
                     parseInt(jsonResponseBody[0].completedDate) / 1000 >= parseInt(onramperIntent.intent.timestamp) && // Adjust Revolut timestamp
-                    amountParsed >= parseInt(onramperIntent.fiatToSend) // TODO: we can filter revtag matches too if client sends this
+                    amountParsed >= parseInt(onramperIntent.fiatToSend) &&
+                    onramperIntent.depositorVenmoId === jsonResponseBody[0].recipient.username
                   )
                 }
                 // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users
