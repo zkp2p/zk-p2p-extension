@@ -148,7 +148,6 @@ const Revolut: React.FC<RevolutProps> = ({
               !jsonResponseBody[0].beneficiary // Filter bank withdrawals
             ) {
               if (onramperIntent) {
-                console.log('foudnOnramper intent', onramperIntent);
                 // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
                 return (
                   parseInt(jsonResponseBody[0].completedDate) / 1000 >= parseInt(onramperIntent.intent.timestamp) && // Adjust Revolut timestamp
