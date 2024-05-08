@@ -3,6 +3,7 @@ import browser from 'webextension-polyfill';
 import { deleteCacheByTabId, getCacheByPlatformType } from './cache';
 import { onBeforeRequest, onResponseStarted, onSendHeaders } from './handlers';
 import { getNotaryRequests } from './db';
+import { OnRamperIntent } from '@utils/types';
 
 
 (async () => {
@@ -177,11 +178,29 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 });
 
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (tab.url && tab.url.includes('https://app.revolut.com/home') && changeInfo.status === 'complete') {
+    console.log('Revolut tab updated and loaded:', tab.url);
+
+    const cache = getCacheByPlatformType('revolut');
+    const onramperIntent: OnRamperIntent = cache.get('revolut') as OnRamperIntent;
+
+    if (onramperIntent) {
+      console.log('sent onramperIntent', onramperIntent);
+      chrome.tabs.sendMessage(tabId, {
+        action: 'highlight_transaction',
+        data: onramperIntent
+      });
+    }
+  }
+});
+
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === "install") {
     // console.log("Extension just installed.");
 
     const urlPatterns = [
+      "https://app.revolut.com/*",
       "http://localhost:3000/*",
       "https://staging-testnet.zkp2p.xyz/*",
       "https://staging-app.zkp2p.xyz/*",

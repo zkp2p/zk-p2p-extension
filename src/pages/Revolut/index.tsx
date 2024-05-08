@@ -130,39 +130,35 @@ const Revolut: React.FC<RevolutProps> = ({
   useEffect(() => {
     if (requestsFromStorage) {
       const filteredRequests = requestsFromStorage.filter(request => {
+        const jsonResponseBody = JSON.parse(request.responseBody as string);
         switch (action) {
           case RevolutAction.REGISTRATION:
-            const jsonResponseBody = JSON.parse(request.responseBody as string);
             return (
               request.requestType === RevolutRequest.PAYMENT_PROFILE &&
               !jsonResponseBody.code
             );
 
           case RevolutAction.TRANSFER:
-            try {
-              const jsonResponseBody = JSON.parse(request.responseBody as string);
-              const amountParsed = jsonResponseBody[0].amount / 100 * -1;
-              if (
-                request.requestType === RevolutRequest.TRANSFER_DETAILS &&
-                amountParsed > 0 && // Filter receive funds
-                !jsonResponseBody[0].beneficiary // Filter bank withdrawals
-              ) {
-                if (onramperIntent) {
-                  // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
-                  return (
-                    parseInt(jsonResponseBody[0].completedDate) / 1000 >= parseInt(onramperIntent.intent.timestamp) && // Adjust Revolut timestamp
-                    amountParsed >= parseInt(onramperIntent.fiatToSend) &&
-                    onramperIntent.depositorVenmoId === jsonResponseBody[0].recipient.username
-                  )
-                }
-                // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users
-                return true;
+            if (!jsonResponseBody.length) return false; // Return false if not transfer format
+            
+            const amountParsed = jsonResponseBody[0].amount / 100 * -1;
+            if (
+              request.requestType === RevolutRequest.TRANSFER_DETAILS &&
+              amountParsed > 0 && // Filter receive funds
+              !jsonResponseBody[0].beneficiary // Filter bank withdrawals
+            ) {
+              if (onramperIntent) {
+                // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
+                return (
+                  parseInt(jsonResponseBody[0].completedDate) / 1000 >= parseInt(onramperIntent.intent.timestamp) && // Adjust Revolut timestamp
+                  amountParsed >= parseInt(onramperIntent.fiatToSend) &&
+                  onramperIntent.depositorVenmoId === jsonResponseBody[0].recipient.username
+                )
               }
-              return false;
-            } catch (e) {
-              console.error('Error parsing response body:', e);
-              return false;
+              // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users
+              return true;
             }
+            return false;
 
           default:
             return false;
