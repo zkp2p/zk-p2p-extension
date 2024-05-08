@@ -3,12 +3,13 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 import logo from '../../assets/img/logo192.png';
+import { NotaryConfiguration } from '@hooks/useFetchNotaryList';
 import { SettingsDropdown } from '@newcomponents/Settings';
 import { colors } from '@theme/colors';
 
 
 interface TopNavProps {
-  notaryList: any;
+  notaryList: NotaryConfiguration[] | null;
 }
 
 export const TopNav: React.FC<TopNavProps> = ({

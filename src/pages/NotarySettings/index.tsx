@@ -6,11 +6,12 @@ import styled from 'styled-components';
 
 import { colors } from '@theme/colors';
 import { AppDispatch } from '@utils/store';
-import { setApiUrls, measureLatency, useBestLatency } from '../../reducers/settings';
+import { setApiUrls, measureLatency, useBestLatency } from '@reducers/settings';
 import { CustomCheckbox } from '@newcomponents/common/Checkbox';
+import { NotaryConfiguration } from '@hooks/useFetchNotaryList';
 
 interface NotarySettingsProps {
-  notaryList: any;
+  notaryList: NotaryConfiguration[] | null;
 }
 
 const NotarySettings: React.FC<NotarySettingsProps> = ({
@@ -59,7 +60,9 @@ const NotarySettings: React.FC<NotarySettingsProps> = ({
     setLoadingLatency(true);
 
     try {
-      await dispatch(measureLatency(notaryList.map(config => config.notary)));
+      if (notaryList) {
+        await dispatch(measureLatency(notaryList.map(config => config.notary)));
+      }
     } catch (error) {
       console.error('Error measuring latency:', error);
     }
@@ -68,7 +71,9 @@ const NotarySettings: React.FC<NotarySettingsProps> = ({
   }, [dispatch, loadingLatency, notaryList]);
 
   const handleAutoselectChange = useCallback((checked: boolean) => {
-    const bestApiConfiguration = notaryList.find((config) => config.notary === notary);
+    if (!notaryList) return;
+
+    const bestApiConfiguration = notaryList.find(config => config.notary === notary);
     
     if (bestApiConfiguration) {
       dispatch(setApiUrls({
@@ -89,7 +94,7 @@ const NotarySettings: React.FC<NotarySettingsProps> = ({
    * Helpers
    */
 
-  const orderedNotaries = notaryList.sort((a, b) => {
+  const orderedNotaries = notaryList && notaryList.sort((a, b) => {
     if (latencies[a.notary] === '-' && latencies[b.notary] === '-') {
       return 0;
     } else if (latencies[a.notary] === '-') {
@@ -132,7 +137,7 @@ const NotarySettings: React.FC<NotarySettingsProps> = ({
         </SelectNotaryContainer>
 
         <NotaryGrid>
-          {orderedNotaries.map((config, index) => {
+          {orderedNotaries && orderedNotaries.map((config, index) => {
             return (
               <NotaryCard
                 key={index}

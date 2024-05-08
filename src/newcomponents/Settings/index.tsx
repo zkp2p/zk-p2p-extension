@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 
+import { NotaryConfiguration } from '@hooks/useFetchNotaryList';
 import { useOnClickOutside } from '@hooks/useOnClickOutside';
 import { colors } from '@theme/colors';
 import { SVGIconThemed } from '@newcomponents/SVGIcon/SVGIconThemed';
@@ -21,7 +22,7 @@ interface StyledCircleProps {
 }
 
 interface SettingsDropdownProps {
-  notaryList: any;
+  notaryList: NotaryConfiguration[] | null;
 }
 
 export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
@@ -49,7 +50,7 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
     dispatch(fetchApiUrls());
 
     if (notary && notaryList) {
-      const fetchNotaryName = notaryList.find((config) => config.notary === notary);
+      const fetchNotaryName = notaryList.find(config => config.notary === notary);
 
       if (fetchNotaryName) {
         setNotaryName(fetchNotaryName.name);
