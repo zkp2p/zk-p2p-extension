@@ -295,5 +295,7 @@ async function handleGetOnramperIntent(
   const cache = getCacheByPlatformType(platform);
   const onramperIntent: OnRamperIntent = cache.get(platform) as OnRamperIntent;
 
+  console.log('onramperIntentbackground', onramperIntent);
+
   return onramperIntent;
 }

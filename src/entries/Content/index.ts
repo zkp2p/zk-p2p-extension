@@ -55,15 +55,6 @@ window.addEventListener('message', function (event) {
     console.log('Content received post_onramper_intent');
 
     chrome.runtime.sendMessage({ action: 'post_onramper_intent_background', data: event.data });
-
-    if (window.location.href.startsWith('https://app.revolut.com')) {
-      // const fiatAmount = event.data.fiatToSend
-      // const fiatAmountInTag = `- €{fiatAmount}`;
-
-      const fiatAmountInTag = '+ €1.00'; // Temp to test highlighting
-  
-      highlightTransactionByAmount(fiatAmountInTag);
-    }
   }
 });
 
@@ -110,6 +101,10 @@ chrome.runtime.onMessage.addListener((message) => {
       '*',
     );
   }
+
+  if (message.action === 'highlight_transaction') {
+    highlightTransactionByAmountAndTimestamp(message.data.fiatToSend, message.data.intent.timestamp);
+  }
 });
 
 /*
@@ -135,50 +130,92 @@ const transactionRowsSelector = '[aria-label="latest-transactions-block"]';
  * New
  */
 
-function highlightTransactionByAmount(amountText: string) {
-  console.log('highlightTransactionByAmount:', amountText);
-
-  waitForElements(transactionRowsSelector, (transactionRows: NodeListOf<Element>) => {
+function highlightTransactionByAmountAndTimestamp(amountText: string, timestamp: string) {
+  waitForElements(transactionRowsSelector, (transactionBlock: NodeListOf<Element>) => {
+    const transactionRows = transactionBlock[0].querySelectorAll('div');
     transactionRows.forEach((transactionRow) => {
       const spanForTransactionAmount = transactionRow.querySelector('div + span + span > span > div > span');
+      const spanForTransactionTimestamp = transactionRow.querySelector('div + span > span + span > span > div');
       
-      if (spanForTransactionAmount) {
+      if (spanForTransactionAmount && spanForTransactionTimestamp) {
         const spanTextContent = spanForTransactionAmount.textContent;
-        console.log('spanTextContent:', spanTextContent);
-        
-        if (spanTextContent === amountText) {
-          console.log('textMatches:', spanTextContent);
+        const spanTimestampTextContent = spanForTransactionTimestamp.textContent;
 
-          const transactionRowButton = transactionRow.closest('div button') as HTMLElement;
-          if (transactionRowButton) {
-            transactionRowButton.classList.add('highlighted-row');
-
-            const parentDiv = transactionRowButton.parentElement;
-            if (parentDiv) {
-              parentDiv.style.position = 'relative';
-        
-              const tooltip = document.createElement('div');
-              tooltip.className = 'custom-tooltip';
-        
-              const icon = document.createElement('img');
-              icon.src = chrome.runtime.getURL('icon-48.png');
-              icon.alt = 'Icon';
-              icon.className = 'custom-tooltip-icon';
-              tooltip.appendChild(icon);
-        
-              tooltip.style.position = 'absolute';
-              tooltip.style.left = `${transactionRowButton.offsetWidth}px`;
-              tooltip.style.top = '50%';
-              tooltip.style.transform = 'translateY(-50%)';
-        
-              parentDiv.appendChild(tooltip);
-            }        
+        if (spanTextContent && spanTimestampTextContent) {
+          const spanTextContentSubstring = spanTextContent.replace(/[^\d.]/g, '');
+          const paymentTimestamp = regexMatchTimestamp(spanTimestampTextContent);
+          
+          if (parseFloat(spanTextContentSubstring) >= parseFloat(amountText) && paymentTimestamp >= parseInt(timestamp)) {
+            // console.log('textMatches:', spanTextContent);
+  
+            const transactionRowButton = transactionRow.querySelector('button') as HTMLElement;
+            if (transactionRowButton) {
+              transactionRowButton.classList.add('highlighted-row');
+  
+              const parentDiv = transactionRowButton.parentElement;
+              if (parentDiv) {
+                parentDiv.style.position = 'relative';
+          
+                const tooltip = document.createElement('div');
+                tooltip.className = 'custom-tooltip';
+                
+                const icon = document.createElement('img');
+                icon.src = chrome.runtime.getURL('icon-48.png');
+                icon.alt = 'Icon';
+                icon.className = 'custom-tooltip-icon';
+                tooltip.appendChild(icon);
+          
+                tooltip.style.position = 'absolute';
+                tooltip.style.left = `${transactionRowButton.offsetWidth}px`;
+                tooltip.style.top = '50%';
+                tooltip.style.transform = 'translateY(-50%)';
+          
+                parentDiv.appendChild(tooltip);
+              }        
+            }
           }
         }
       }
     });
   });
 }
+
+function getUnixTimestampForToday(timeStr: string) { 
+  const now = new Date();
+  const [time, period] = timeStr.split(' ');
+  const [hours, minutes] = time.split(':');
+
+  // Convert hour to 24-hour format based on AM/PM
+  const hoursNumber = period.toLowerCase() === 'pm' ? (parseInt(hours) % 12) + 12 : parseInt(hours) % 12;
+
+  // Set hours and minutes to 'now' Date object
+  now.setHours(hoursNumber);
+  now.setMinutes(parseInt(minutes));
+  now.setSeconds(0); // Reset seconds to 0 for consistency
+
+  // Return Unix timestamp in seconds
+  return Math.floor(now.getTime() / 1000);
+}
+
+function regexMatchTimestamp(inputString: string) {
+  const timestampRecentRegex = /Moments ago/i;
+  const timestampOlderRegex = /(\d+\sminute(s)? ago)/i;
+  const timestampOldestRegex = /(\d{1,2}:\d{2}\s?(AM|PM))/i;
+  const matchRecent = inputString.match(timestampRecentRegex);
+  const matchOlder = inputString.match(timestampOlderRegex);
+  const matchOldest = inputString.match(timestampOldestRegex);
+
+  let timestamp = 0;
+  if (matchOldest) {
+    timestamp = getUnixTimestampForToday(matchOldest[0]);
+  } else if (matchOlder) {
+    timestamp = Date.now();
+  } else if (matchRecent) {
+    timestamp = Date.now();
+  }
+  return timestamp;
+}
+
 
 (async () => {
   console.log('Content script works!');
