@@ -246,7 +246,7 @@ const Table = styled.div`
 `;
 
 const StyledSlash = styled(Slash)`
-  color: #fff;
+  color: ${colors.warningRed};
   width: 24px;
   height: 24px;
 `;

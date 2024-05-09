@@ -236,13 +236,13 @@ const Table = styled.div`
 `;
 
 const StyledUserX = styled(UserX)`
-  color: #fff;
+  color: ${colors.warningRed};
   width: 24px;
   height: 24px;
 `;
 
 const StyledSlash = styled(Slash)`
-  color: #fff;
+  color: ${colors.warningRed};
   width: 24px;
   height: 24px;
 `;
