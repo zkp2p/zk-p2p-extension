@@ -1,6 +1,6 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { UserX } from 'react-feather';
+import { UserX, Slash } from 'react-feather';
 
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
@@ -133,16 +133,22 @@ export const RequestTable: React.FC<RequestTableProps> = ({
    * Helpers
    */
 
-  const emptyRequestCopy = (): string => {
+  const emptyRequestSettings = useMemo(() => {
     switch (action) {
       case RevolutAction.REGISTRATION:
-        return 'No new Revtags found. Open the Account page on Revolut.';
+        return {
+          errorText: 'No new Revtags found. Open the Account page on Revolut.',
+          errorIcon: <StyledUserX />,
+        };
 
       case RevolutAction.TRANSFER:
       default:
-        return 'No payment found. Open the details for the Revolut transaction.';
+        return {
+          errorText: 'No payment found. Open the details for the Revolut transaction.',
+          errorIcon: <StyledSlash />,
+        }
     }
-  };
+  }, [action]);
 
   /*
    * Component
@@ -152,10 +158,10 @@ export const RequestTable: React.FC<RequestTableProps> = ({
     <Container>
       {loadedRequests.length === 0 ? (
         <EmptyRequestsContainer>
-          <StyledUserX />
+          { emptyRequestSettings.errorIcon }
 
           <ThemedText.TableDescriptionSmall textAlign="center" lineHeight={1.3}>
-            { emptyRequestCopy() }
+            { emptyRequestSettings.errorText }
           </ThemedText.TableDescriptionSmall>
         </EmptyRequestsContainer>
       ) : (
@@ -230,6 +236,12 @@ const Table = styled.div`
 `;
 
 const StyledUserX = styled(UserX)`
+  color: #fff;
+  width: 24px;
+  height: 24px;
+`;
+
+const StyledSlash = styled(Slash)`
   color: #fff;
   width: 24px;
   height: 24px;
