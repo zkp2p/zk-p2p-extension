@@ -129,30 +129,36 @@ const Revolut: React.FC<RevolutProps> = ({
 
   useEffect(() => {
     if (requestsFromStorage) {
+      // console.log('requestsFromStorage', requestsFromStorage);
       const filteredRequests = requestsFromStorage.filter(request => {
-        const jsonResponseBody = JSON.parse(request.responseBody as string);
         switch (action) {
           case RevolutAction.REGISTRATION:
+            const jsonRegistrationBody = JSON.parse(request.responseBody as string);
             return (
               request.requestType === RevolutRequest.PAYMENT_PROFILE &&
-              !jsonResponseBody.code
+              !jsonRegistrationBody.code
             );
 
           case RevolutAction.TRANSFER:
-            if (!jsonResponseBody.length) return false; // Return false if not transfer format
+            // console.log('request', request);
+            // console.log('onramperIntent', onramperIntent);
             
-            const amountParsed = jsonResponseBody[0].amount / 100 * -1;
+            const jsonTransferBody = JSON.parse(request.responseBody as string);
+            // console.log('jsonTransferBody', jsonTransferBody);
+            
+            const amountParsed = jsonTransferBody[0] ? jsonTransferBody[0].amount / 100 * -1 : 0;
             if (
               request.requestType === RevolutRequest.TRANSFER_DETAILS &&
               amountParsed > 0 && // Filter receive funds
-              !jsonResponseBody[0].beneficiary // Filter bank withdrawals
+              !jsonTransferBody[0].beneficiary && // Filter bank withdrawals
+              !jsonTransferBody.code
             ) {
               if (onramperIntent) {
                 // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
                 return (
-                  parseInt(jsonResponseBody[0].completedDate) / 1000 >= parseInt(onramperIntent.intent.timestamp) && // Adjust Revolut timestamp
+                  parseInt(jsonTransferBody[0].completedDate) / 1000 >= parseInt(onramperIntent.intent.timestamp) && // Adjust Revolut timestamp
                   amountParsed >= parseInt(onramperIntent.fiatToSend) &&
-                  onramperIntent.depositorVenmoId === jsonResponseBody[0].recipient.username
+                  onramperIntent.depositorVenmoId === jsonTransferBody[0].recipient.username
                 )
               }
               // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users

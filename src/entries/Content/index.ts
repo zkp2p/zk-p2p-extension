@@ -142,36 +142,39 @@ function highlightTransactionByAmountAndTimestamp(amountText: string, timestamp:
         const spanTimestampTextContent = spanForTransactionTimestamp.textContent;
 
         if (spanTextContent && spanTimestampTextContent) {
-          const spanTextContentSubstring = spanTextContent.replace(/[^\d.]/g, '');
+          console.log('spanTextContent', spanTextContent);
+          const spanTextContentSubstring = spanTextContent.match(/-\s?[^\d.]*?(\d+\.\d{2})/);
           const paymentTimestamp = regexMatchTimestamp(spanTimestampTextContent);
-          
-          if (parseFloat(spanTextContentSubstring) >= parseFloat(amountText) && paymentTimestamp >= parseInt(timestamp)) {
-            // console.log('textMatches:', spanTextContent);
-  
-            const transactionRowButton = transactionRow.querySelector('button') as HTMLElement;
-            if (transactionRowButton) {
-              transactionRowButton.classList.add('highlighted-row');
-  
-              const parentDiv = transactionRowButton.parentElement;
-              if (parentDiv) {
-                parentDiv.style.position = 'relative';
-          
-                const tooltip = document.createElement('div');
-                tooltip.className = 'custom-tooltip';
-                
-                const icon = document.createElement('img');
-                icon.src = chrome.runtime.getURL('icon-48.png');
-                icon.alt = 'Icon';
-                icon.className = 'custom-tooltip-icon';
-                tooltip.appendChild(icon);
-          
-                tooltip.style.position = 'absolute';
-                tooltip.style.left = `${transactionRowButton.offsetWidth}px`;
-                tooltip.style.top = '50%';
-                tooltip.style.transform = 'translateY(-50%)';
-          
-                parentDiv.appendChild(tooltip);
-              }        
+          console.log('spanTextContentSubstring', spanTextContentSubstring);
+          if (spanTextContentSubstring) {
+            if (parseFloat(spanTextContentSubstring[1]) >= parseFloat(amountText) && paymentTimestamp >= parseInt(timestamp)) {
+              // console.log('textMatches:', spanTextContent);
+    
+              const transactionRowButton = transactionRow.querySelector('button') as HTMLElement;
+              if (transactionRowButton) {
+                transactionRowButton.classList.add('highlighted-row');
+    
+                const parentDiv = transactionRowButton.parentElement;
+                if (parentDiv) {
+                  parentDiv.style.position = 'relative';
+            
+                  const tooltip = document.createElement('div');
+                  tooltip.className = 'custom-tooltip';
+                  
+                  const icon = document.createElement('img');
+                  icon.src = chrome.runtime.getURL('icon-48.png');
+                  icon.alt = 'Icon';
+                  icon.className = 'custom-tooltip-icon';
+                  tooltip.appendChild(icon);
+            
+                  tooltip.style.position = 'absolute';
+                  tooltip.style.left = `${transactionRowButton.offsetWidth}px`;
+                  tooltip.style.top = '50%';
+                  tooltip.style.transform = 'translateY(-50%)';
+            
+                  parentDiv.appendChild(tooltip);
+                }        
+              }
             }
           }
         }
