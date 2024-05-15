@@ -35,7 +35,7 @@
       "\"middleName\":\"[^\"]+",
       "\"phone\":\"[^\"]+",
       "\"email\":\"[^\"]+",
-      "\"ssn\":\"[^\"]+\"",
+      "\"ssn\":\"[^\"]+",
       "\"taxResidencies\":\\[[^\\]]+",
       "\"identificationNumbers\":\\[[^\\]]+"
     ],
