@@ -133,7 +133,7 @@ const transactionRowsSelector = '[aria-label="latest-transactions-block"]';
 function highlightTransactionByAmountAndTimestamp(amountText: string, timestamp: string) {
   waitForElements(transactionRowsSelector, (transactionBlock: NodeListOf<Element>) => {
     const transactionRows = transactionBlock[0].querySelectorAll('div');
-    transactionRows.forEach((transactionRow) => {
+    transactionRows.forEach((transactionRow, index) => {
       const spanForTransactionAmount = transactionRow.querySelector('div + span + span > span > div > span');
       const spanForTransactionTimestamp = transactionRow.querySelector('div + span > span + span > span > div');
       
@@ -142,7 +142,6 @@ function highlightTransactionByAmountAndTimestamp(amountText: string, timestamp:
         const spanTimestampTextContent = spanForTransactionTimestamp.textContent;
 
         if (spanTextContent && spanTimestampTextContent) {
-          console.log('spanTextContent', spanTextContent);
           const spanTextContentSubstring = spanTextContent.match(/-\s?[^\d.]*?(\d+\.\d{2})/);
           const paymentTimestamp = regexMatchTimestamp(spanTimestampTextContent);
           console.log('spanTextContentSubstring', spanTextContentSubstring);
@@ -156,24 +155,29 @@ function highlightTransactionByAmountAndTimestamp(amountText: string, timestamp:
     
                 const parentDiv = transactionRowButton.parentElement;
                 if (parentDiv) {
-                  parentDiv.style.position = 'relative';
-            
-                  const tooltip = document.createElement('div');
-                  tooltip.className = 'custom-tooltip';
+                  const uniqueTooltipId = `tooltip-${index}`;
                   
-                  const icon = document.createElement('img');
-                  icon.src = chrome.runtime.getURL('icon-48.png');
-                  icon.alt = 'Icon';
-                  icon.className = 'custom-tooltip-icon';
-                  tooltip.appendChild(icon);
-            
-                  tooltip.style.position = 'absolute';
-                  tooltip.style.left = `${transactionRowButton.offsetWidth}px`;
-                  tooltip.style.top = '50%';
-                  tooltip.style.transform = 'translateY(-50%)';
-            
-                  parentDiv.appendChild(tooltip);
-                }        
+                  if (!parentDiv.querySelector(`#${uniqueTooltipId}`)) {
+                    parentDiv.style.position = 'relative';
+
+                    const tooltip = document.createElement('div');
+                    tooltip.id = uniqueTooltipId;  // Set the unique ID
+                    tooltip.className = 'custom-tooltip';
+                    
+                    const icon = document.createElement('img');
+                    icon.src = chrome.runtime.getURL('icon-48.png');
+                    icon.alt = 'Icon';
+                    icon.className = 'custom-tooltip-icon';
+                    tooltip.appendChild(icon);
+              
+                    tooltip.style.position = 'absolute';
+                    tooltip.style.left = `${transactionRowButton.offsetWidth}px`;
+                    tooltip.style.top = '50%';
+                    tooltip.style.transform = 'translateY(-50%)';
+              
+                    parentDiv.appendChild(tooltip);
+                  }
+                }
               }
             }
           }
