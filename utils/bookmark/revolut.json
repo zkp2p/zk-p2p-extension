@@ -5,7 +5,7 @@
     "method": "GET",
     "type": "xmlhttprequest",
     "title": "Registration",
-    "description": "Prove a Revtag",
+    "description": "Prove account ID",
     "skipRequestHeaders": [
       "sec-ch-ua",
       "pragma",

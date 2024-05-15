@@ -62,11 +62,11 @@ export default function Home(): ReactElement {
       <IntroductionContainer>
         <IntroductionTextContainer>
           <IntroductionTitle>
-            Welcome to ZKP2P
+            Welcome to ZKP2P Peer
           </IntroductionTitle>
           
           <IntroductionDescription>
-            This browser assistant is meant to be used on zkp2p.xyz with Revolut
+            This browser assistant is meant to be used with zkp2p.xyz
           </IntroductionDescription>
         </IntroductionTextContainer>
 
