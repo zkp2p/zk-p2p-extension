@@ -393,10 +393,10 @@ const Revolut: React.FC<RevolutProps> = ({
     switch (action) {
       case RevolutAction.REGISTRATION:
         settingsObject.navigate_title = 'Navigate to Account';
-        settingsObject.request_title = 'Prove RevTag';
+        settingsObject.request_title = 'Prove Account Ownership';
         settingsObject.action_url = 'https://app.revolut.com/home';
-        settingsObject.navigate_instruction = 'Go to the Account page on Revolut to load your account\'s RevTag';
-        settingsObject.request_instruction = 'Notarize the RevTag, this can take up to 30 seconds';
+        settingsObject.navigate_instruction = 'Go to the Account page on Revolut to load your account\'s Revolut ID';
+        settingsObject.request_instruction = 'Notarize the Revolut ID, this can take up to 30 seconds';
         settingsObject.review_instruction = 'Successful notarizations can now be used in zkp2p.xyz to register';
 
         const registrationBookmark = bookmarks[0];

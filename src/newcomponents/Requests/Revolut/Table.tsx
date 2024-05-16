@@ -137,14 +137,14 @@ export const RequestTable: React.FC<RequestTableProps> = ({
     switch (action) {
       case RevolutAction.REGISTRATION:
         return {
-          errorText: 'No new Revtags found. Open the Account page on Revolut.',
+          errorText: 'No Revolut ID detected. Open the Account page on Revolut.',
           errorIcon: <StyledUserX />,
         };
 
       case RevolutAction.TRANSFER:
       default:
         return {
-          errorText: 'No payment found. Open the details for the Revolut transaction.',
+          errorText: 'No payment detected. Open the details for the Revolut transaction.',
           errorIcon: <StyledSlash />,
         }
     }

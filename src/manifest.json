@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "ZKP2P Extension",
-  "version": "0.0.3",
-  "description": "Extension for connecting off-chain platforms to ZKP2P",
+  "name": "Peer: A sidebar that connects off-chain platforms to ZKP2P",
+  "version": "0.0.4",
+  "description": "Preserve privacy while porting data from various platforms for use in ZKP2P",
   "icons": {
     "16": "icon-16.png",
     "32": "icon-32.png",
