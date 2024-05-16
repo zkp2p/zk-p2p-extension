@@ -28,16 +28,16 @@
       "refresh-token"
     ],
     "secretResponseSelector": [
-      "(?<=\"address\":{)[^}]+",
-      "(?<=\"birthDate\":\\[)[^\\]]+",
-      "(?<=\"firstName\":\")[^\"]+",
-      "(?<=\"lastName\":\")[^\"]+",
-      "(?<=\"middleName\":\")[^\"]+",
-      "(?<=\"phone\":\")[^\"]+",
-      "(?<=\"email\":\")[^\"]+",
-      "(?<=\"ssn\":\")[^\"]+",
-      "(?<=\"taxResidencies\":\\[)[^\\]]+",
-      "(?<=\"identificationNumbers\":\\[)[^\\]]+"
+      "\"address\":{[^}]+",
+      "\"birthDate\":\\[[^\\]]+",
+      "\"firstName\":\"[^\"]+",
+      "\"lastName\":\"[^\"]+",
+      "\"middleName\":\"[^\"]+",
+      "\"phone\":\"[^\"]+",
+      "\"email\":\"[^\"]+",
+      "\"ssn\":\"[^\"]+",
+      "\"taxResidencies\":\\[[^\\]]+",
+      "\"identificationNumbers\":\\[[^\\]]+"
     ],
     "metaDataSelector": [
       "(?<=\"username\":\")[^\"]+"
@@ -74,12 +74,12 @@
       "refresh-token"
     ],
     "secretResponseSelector": [
-      "(?<=\"balance\":)\\d+",
-      "(?<=\"description\":)[^,]+",
-      "(?<=\"firstName\":)[^,]+",
-      "(?<=\"lastName\":)[^,]+",
-      "(?<=\"country\":)[^,]+",
-      "(?<=\"params\":\\[)[^\\]]+"
+      "\"balance\":\\d+",
+      "\"description\":[^,]+",
+      "\"firstName\":[^,]+",
+      "\"lastName\":[^,]+",
+      "\"country\":[^,]+",
+      "\"params\":\\[[^\\]]+"
     ],
     "metaDataSelector": [
       "(?<=\"amount\":)([\\d.-]+)",
