@@ -1,5 +1,7 @@
 .highlighted-row {
-  box-shadow: inset 0 0 0 2px red !important; /* !important */
+  position: relative;
+  border-radius: 10px;
+  border: 2px solid red !important;
 }
 
 .custom-tooltip {
@@ -13,6 +15,28 @@
   position: absolute;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  font-size: 12px;
+}
+
+.custom-tooltip-hover {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  border-radius: 5px;
+  padding: 5px 10px;
+  position: absolute;
+  z-index: 2000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip-text {
+  margin-left: 5px;
 }
 
 .custom-tooltip-icon {
