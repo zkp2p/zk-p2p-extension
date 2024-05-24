@@ -1,5 +1,6 @@
 import { RevolutRequest } from '@utils/types';
 
+
 window.onerror = (error) => {
   // console.log('error');
   // console.log(error);
@@ -103,7 +104,7 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 
   if (message.action === 'highlight_transaction') {
-    highlightTransaction();
+    addZkp2pTooltip();
   }
 });
 
@@ -124,72 +125,74 @@ function waitForElements(selector: any, callback: any) {
   }, 100);
 }
 
-const transactionRowsSelector = '[aria-label="latest-transactions-block"]';
+const transactionBlockSelector = '[data-testid="homeWidget"] > div:nth-child(2)'; // Testing3
 
 /*
  * New
  */
 
-function highlightTransaction() {
-  waitForElements(transactionRowsSelector, (transactionBlock: NodeListOf<Element>) => {
-    const containerDiv = transactionBlock[0] as HTMLElement;
+function addZkp2pTooltip() {
+  waitForElements(transactionBlockSelector, (transactionBlock: NodeListOf<Element>) => {
+    const containerDiv = transactionBlock[0];
     const parentDiv = containerDiv.parentElement;
     if (containerDiv && parentDiv) {
-      containerDiv.classList.add('highlighted-row');
+      const spans = containerDiv.querySelectorAll('span');
+      if (spans.length > 1) {
+        const targetSpan = spans[1];
 
-      const uniqueTooltipId = `tooltip-1`;
-      const tooltipSelector = containerDiv.querySelector(`#${uniqueTooltipId}`);
+        const uniqueTooltipId = `tooltip-1`;
+        const tooltipSelector = targetSpan.querySelector(`#${uniqueTooltipId}`);
 
-      if (!tooltipSelector) {
-        parentDiv.style.position = 'relative';
+        if (!tooltipSelector) {
+          parentDiv.style.position = 'relative';
 
-        const tooltipHover = document.createElement('div');
-        tooltipHover.className = 'custom-tooltip-hover';
+          targetSpan.textContent = '';
 
-        const tooltipText = document.createElement('span');
-        tooltipText.className = 'tooltip-text';
-        tooltipText.textContent = 'Click on the matching transaction initiated from ZKP2P. You may need to navigate to a different currency account';
-        tooltipHover.appendChild(tooltipText);
+          const tooltipHover = document.createElement('div');
+          tooltipHover.className = 'custom-tooltip-hover';
 
-        document.body.appendChild(tooltipHover);
+          const tooltipText = document.createElement('span');
+          tooltipText.className = 'tooltip-text';
+          tooltipText.textContent = `Select the completed ZKP2P transaction and complete the flow in the sidebar.
+            You may need to change the currency account to see the transaction.`;
+          tooltipHover.appendChild(tooltipText);
 
-        
-        const tooltip = document.createElement('div');
-        tooltip.id = uniqueTooltipId;
-        tooltip.className = 'custom-tooltip';
-        
-        const icon = document.createElement('img');
-        icon.src = chrome.runtime.getURL('icon-48.png');
-        icon.alt = 'Icon';
-        icon.className = 'custom-tooltip-icon';
-        tooltip.appendChild(icon);
-        
-        tooltip.style.position = 'absolute';
-        tooltip.style.left = `${containerDiv.offsetWidth}px`;
-        tooltip.style.top = '50%';
-        tooltip.style.transform = 'translateY(-50%)';
+          document.body.appendChild(tooltipHover);
 
-        parentDiv.appendChild(tooltip);
+          const tooltip = document.createElement('div');
+          tooltip.id = uniqueTooltipId;
+          tooltip.className = 'custom-tooltip';
 
-        document.querySelectorAll('.custom-tooltip').forEach(element => {
-          element.addEventListener('mouseenter', function(this: HTMLElement) {
-            tooltipHover.style.opacity = "1";
-            tooltipHover.style.left = `${this.getBoundingClientRect().left + window.scrollX}px`;
-            tooltipHover.style.top = `${this.getBoundingClientRect().top + window.scrollY - tooltipHover.offsetHeight}px`;
+          const icon = document.createElement('img');
+          icon.src = chrome.runtime.getURL('icon-48.png');
+          icon.alt = 'Icon';
+          icon.className = 'custom-tooltip-icon';
+          tooltip.appendChild(icon);
+
+          targetSpan.style.display = 'flex';
+          targetSpan.style.alignItems = 'center';
+          targetSpan.appendChild(tooltip);
+
+          document.querySelectorAll('.custom-tooltip').forEach(element => {
+            element.addEventListener('mouseenter', function(this: HTMLElement) {
+              tooltipHover.style.opacity = '1';
+              tooltipHover.style.left = `${this.getBoundingClientRect().left + window.scrollX}px`;
+              tooltipHover.style.top = `${this.getBoundingClientRect().top + window.scrollY - tooltipHover.offsetHeight}px`;
+            });
+
+            element.addEventListener('mousemove', function(event) {
+              const mouseEvent = event as MouseEvent;
+              tooltipHover.style.left = `${mouseEvent.pageX + 10}px`;
+              tooltipHover.style.top = `${mouseEvent.pageY + 10}px`;
+            });
+
+            element.addEventListener('mouseleave', function() {
+              tooltipHover.style.opacity = '0';
+            });
           });
-    
-          element.addEventListener('mousemove', function(event: Event) {
-            const mouseEvent = event as MouseEvent;
-            tooltipHover.style.left = `${mouseEvent.pageX + 10}px`;
-            tooltipHover.style.top = `${mouseEvent.pageY + 10}px`;
-          });
-    
-          element.addEventListener('mouseleave', function() {
-            tooltipHover.style.opacity = "0";
-          });
-        });
+        }
       }
-    };
+    }
   });
 }
 
