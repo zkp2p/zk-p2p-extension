@@ -125,7 +125,7 @@ function waitForElements(selector: any, callback: any) {
   }, 100);
 }
 
-const transactionBlockSelector = '[data-testid="homeWidget"] > div:nth-child(2)'; // Testing3
+const transactionBlockSelector = '[data-testid="homeWidget"] > div:nth-child(2)'; // Testing4
 
 /*
  * New
@@ -176,14 +176,9 @@ function addZkp2pTooltip() {
           document.querySelectorAll('.custom-tooltip').forEach(element => {
             element.addEventListener('mouseenter', function(this: HTMLElement) {
               tooltipHover.style.opacity = '1';
-              tooltipHover.style.left = `${this.getBoundingClientRect().left + window.scrollX}px`;
-              tooltipHover.style.top = `${this.getBoundingClientRect().top + window.scrollY - tooltipHover.offsetHeight}px`;
-            });
-
-            element.addEventListener('mousemove', function(event) {
-              const mouseEvent = event as MouseEvent;
-              tooltipHover.style.left = `${mouseEvent.pageX + 10}px`;
-              tooltipHover.style.top = `${mouseEvent.pageY + 10}px`;
+              const rect = this.getBoundingClientRect();
+              tooltipHover.style.left = `${rect.left + window.scrollX + this.offsetWidth - 8}px`;
+              tooltipHover.style.top = `${rect.top + window.scrollY + this.offsetHeight - 8}px`;
             });
 
             element.addEventListener('mouseleave', function() {
