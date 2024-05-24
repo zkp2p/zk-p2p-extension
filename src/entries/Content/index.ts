@@ -1,5 +1,6 @@
 import { RevolutRequest } from '@utils/types';
 
+
 window.onerror = (error) => {
   // console.log('error');
   // console.log(error);
@@ -103,7 +104,7 @@ chrome.runtime.onMessage.addListener((message) => {
   }
 
   if (message.action === 'highlight_transaction') {
-    highlightTransactionByAmountAndTimestamp(message.data.fiatToSend, message.data.intent.timestamp);
+    addZkp2pTooltip();
   }
 });
 
@@ -124,105 +125,71 @@ function waitForElements(selector: any, callback: any) {
   }, 100);
 }
 
-const transactionRowsSelector = '[aria-label="latest-transactions-block"]';
+const transactionBlockSelector = '[data-testid="homeWidget"] > div:nth-child(2)'; // Testing4
 
 /*
  * New
  */
 
-function highlightTransactionByAmountAndTimestamp(amountText: string, timestamp: string) {
-  waitForElements(transactionRowsSelector, (transactionBlock: NodeListOf<Element>) => {
-    const transactionRows = transactionBlock[0].querySelectorAll('div');
-    transactionRows.forEach((transactionRow, index) => {
-      const spanForTransactionAmount = transactionRow.querySelector('div + span + span > span > div > span');
-      const spanForTransactionTimestamp = transactionRow.querySelector('div + span > span + span > span > div');
-      
-      if (spanForTransactionAmount && spanForTransactionTimestamp) {
-        const spanTextContent = spanForTransactionAmount.textContent;
-        const spanTimestampTextContent = spanForTransactionTimestamp.textContent;
+function addZkp2pTooltip() {
+  waitForElements(transactionBlockSelector, (transactionBlock: NodeListOf<Element>) => {
+    const containerDiv = transactionBlock[0];
+    const parentDiv = containerDiv.parentElement;
+    if (containerDiv && parentDiv) {
+      const spans = containerDiv.querySelectorAll('span');
+      if (spans.length > 1) {
+        const targetSpan = spans[1];
 
-        if (spanTextContent && spanTimestampTextContent) {
-          const spanTextContentSubstring = spanTextContent.match(/-\s?[^\d.]*?(\d+\.\d{2})/);
-          const paymentTimestamp = regexMatchTimestamp(spanTimestampTextContent);
-          console.log('spanTextContentSubstring', spanTextContentSubstring);
-          if (spanTextContentSubstring) {
-            if (parseFloat(spanTextContentSubstring[1]) >= parseFloat(amountText) && paymentTimestamp >= parseInt(timestamp)) {
-              // console.log('textMatches:', spanTextContent);
-    
-              const transactionRowButton = transactionRow.querySelector('button') as HTMLElement;
-              if (transactionRowButton) {
-                transactionRowButton.classList.add('highlighted-row');
-    
-                const parentDiv = transactionRowButton.parentElement;
-                if (parentDiv) {
-                  const uniqueTooltipId = `tooltip-${index}`;
-                  
-                  if (!parentDiv.querySelector(`#${uniqueTooltipId}`)) {
-                    parentDiv.style.position = 'relative';
+        const uniqueTooltipId = `tooltip-1`;
+        const tooltipSelector = targetSpan.querySelector(`#${uniqueTooltipId}`);
 
-                    const tooltip = document.createElement('div');
-                    tooltip.id = uniqueTooltipId;  // Set the unique ID
-                    tooltip.className = 'custom-tooltip';
-                    
-                    const icon = document.createElement('img');
-                    icon.src = chrome.runtime.getURL('icon-48.png');
-                    icon.alt = 'Icon';
-                    icon.className = 'custom-tooltip-icon';
-                    tooltip.appendChild(icon);
-              
-                    tooltip.style.position = 'absolute';
-                    tooltip.style.left = `${transactionRowButton.offsetWidth}px`;
-                    tooltip.style.top = '50%';
-                    tooltip.style.transform = 'translateY(-50%)';
-              
-                    parentDiv.appendChild(tooltip);
-                  }
-                }
-              }
-            }
-          }
+        if (!tooltipSelector) {
+          parentDiv.style.position = 'relative';
+
+          targetSpan.textContent = '';
+
+          const tooltipHover = document.createElement('div');
+          tooltipHover.className = 'custom-tooltip-hover';
+
+          const tooltipText = document.createElement('span');
+          tooltipText.className = 'tooltip-text';
+          tooltipText.textContent = `Select the completed ZKP2P transaction and complete the flow in the sidebar.
+            You may need to change the currency account to see the transaction.`;
+          tooltipHover.appendChild(tooltipText);
+
+          document.body.appendChild(tooltipHover);
+
+          const tooltip = document.createElement('div');
+          tooltip.id = uniqueTooltipId;
+          tooltip.className = 'custom-tooltip';
+
+          const icon = document.createElement('img');
+          icon.src = chrome.runtime.getURL('icon-48.png');
+          icon.alt = 'Icon';
+          icon.className = 'custom-tooltip-icon';
+          tooltip.appendChild(icon);
+
+          targetSpan.style.display = 'flex';
+          targetSpan.style.alignItems = 'center';
+          targetSpan.appendChild(tooltip);
+
+          document.querySelectorAll('.custom-tooltip').forEach(element => {
+            element.addEventListener('mouseenter', function(this: HTMLElement) {
+              tooltipHover.style.opacity = '1';
+              const rect = this.getBoundingClientRect();
+              tooltipHover.style.left = `${rect.left + window.scrollX + this.offsetWidth - 8}px`;
+              tooltipHover.style.top = `${rect.top + window.scrollY + this.offsetHeight - 8}px`;
+            });
+
+            element.addEventListener('mouseleave', function() {
+              tooltipHover.style.opacity = '0';
+            });
+          });
         }
       }
-    });
+    }
   });
 }
-
-function getUnixTimestampForToday(timeStr: string) { 
-  const now = new Date();
-  const [time, period] = timeStr.split(' ');
-  const [hours, minutes] = time.split(':');
-
-  // Convert hour to 24-hour format based on AM/PM
-  const hoursNumber = period.toLowerCase() === 'pm' ? (parseInt(hours) % 12) + 12 : parseInt(hours) % 12;
-
-  // Set hours and minutes to 'now' Date object
-  now.setHours(hoursNumber);
-  now.setMinutes(parseInt(minutes));
-  now.setSeconds(0); // Reset seconds to 0 for consistency
-
-  // Return Unix timestamp in seconds
-  return Math.floor(now.getTime() / 1000);
-}
-
-function regexMatchTimestamp(inputString: string) {
-  const timestampRecentRegex = /Moments ago/i;
-  const timestampOlderRegex = /(\d+\sminute(s)? ago)/i;
-  const timestampOldestRegex = /(\d{1,2}:\d{2}\s?(AM|PM))/i;
-  const matchRecent = inputString.match(timestampRecentRegex);
-  const matchOlder = inputString.match(timestampOlderRegex);
-  const matchOldest = inputString.match(timestampOldestRegex);
-
-  let timestamp = 0;
-  if (matchOldest) {
-    timestamp = getUnixTimestampForToday(matchOldest[0]);
-  } else if (matchOlder) {
-    timestamp = Date.now();
-  } else if (matchRecent) {
-    timestamp = Date.now();
-  }
-  return timestamp;
-}
-
 
 (async () => {
   console.log('Content script works!');
