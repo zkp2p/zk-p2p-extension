@@ -15,7 +15,7 @@ import { AppRootState } from '@reducers/index';
 import { fetchApiUrls } from '@reducers/settings';
 
 
-const CLIENT_VERSION = '0.0.5';
+const CLIENT_VERSION = '0.0.6';
 
 interface StyledCircleProps {
   connection: StatusColorsType | null;
