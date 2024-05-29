@@ -180,13 +180,14 @@ chrome.runtime.onMessage.addListener((message) => {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.url && tab.url.includes('https://app.revolut.com/home') && changeInfo.status === 'complete') {
-    console.log('Revolut tab updated and loaded:', tab.url);
+    // console.log('Revolut tab updated and loaded:', tab.url);
 
     const cache = getCacheByPlatformType('revolut');
     const onramperIntent: OnRamperIntent = cache.get('revolut') as OnRamperIntent;
 
     if (onramperIntent) {
-      console.log('sent onramperIntent', onramperIntent);
+      // console.log('Sent onramperIntent', onramperIntent);
+
       chrome.tabs.sendMessage(tabId, {
         action: 'highlight_transaction',
         data: onramperIntent

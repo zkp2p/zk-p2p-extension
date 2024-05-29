@@ -128,54 +128,65 @@ const Revolut: React.FC<RevolutProps> = ({
   }, [notarizations, action]);
 
   useEffect(() => {
+
     if (requestsFromStorage) {
-      // console.log('requestsFromStorage', requestsFromStorage);
       const filteredRequests = requestsFromStorage.filter(request => {
         switch (action) {
           case RevolutAction.REGISTRATION:
             const jsonRegistrationBody = JSON.parse(request.responseBody as string);
-            return (
-              request.requestType === RevolutRequest.PAYMENT_PROFILE &&
-              !jsonRegistrationBody.code
-            );
+
+            const isRequestTypeProfile = request.requestType === RevolutRequest.PAYMENT_PROFILE;
+            const isUserIdMissing = !jsonRegistrationBody.code;
+
+            return isRequestTypeProfile && isUserIdMissing;
 
           case RevolutAction.TRANSFER:
-            // console.log('request', request);
-            // console.log('onramperIntent', onramperIntent);
-            
             const jsonTransferBody = JSON.parse(request.responseBody as string);
-            // console.log('jsonTransferBody', jsonTransferBody);
+            const transferDetails = jsonTransferBody[0];
             
-            const amountParsed = jsonTransferBody[0] ? jsonTransferBody[0].amount / 100 * -1 : 0;
-            if (
-              request.requestType === RevolutRequest.TRANSFER_DETAILS &&
-              amountParsed > 0 && // Filter receive funds
-              !jsonTransferBody[0].beneficiary && // Filter bank withdrawals
-              !jsonTransferBody.code
-            ) {
+            const isRequestTypeTransfer = request.requestType === RevolutRequest.TRANSFER_DETAILS;
+
+            const amountParsed = transferDetails ? jsonTransferBody[0].amount / 100 * -1 : 0;
+            const isAmountParsedValid = amountParsed > 0;
+
+            const isNotBankWithdrawal = transferDetails ? !transferDetails.beneficiary : true;
+            const isUserCodeMissing = !jsonTransferBody.code;
+
+            if (isRequestTypeTransfer && isAmountParsedValid && isNotBankWithdrawal && isUserCodeMissing) {
               if (onramperIntent) {
                 // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
-                return (
-                  parseInt(jsonTransferBody[0].completedDate) / 1000 >= parseInt(onramperIntent.intent.timestamp) && // Adjust Revolut timestamp
-                  amountParsed >= parseInt(onramperIntent.fiatToSend) &&
-                  onramperIntent.depositorVenmoId === jsonTransferBody[0].recipient.username
-                )
+                const revolutPaymentCompletedDate = parseInt(transferDetails.completedDate) / 1000;
+                const onRamperIntentTimestamp = parseInt(onramperIntent.intent.timestamp);
+                const isPaymentAfterIntentTime = revolutPaymentCompletedDate >= onRamperIntentTimestamp;
+
+                const revolutPaymentAmount = parseInt(onramperIntent.fiatToSend);
+                const isPaymentAmountSufficient = amountParsed >= revolutPaymentAmount;
+
+                const recipientCode = transferDetails.recipient.code;
+                const isRecipientMatchingIntentDepositor = onramperIntent.depositorVenmoId === recipientCode;
+
+                return isPaymentAfterIntentTime && isPaymentAmountSufficient && isRecipientMatchingIntentDepositor;
+              } else {
+                // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users
+                return true;
               }
-              // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users
-              return true;
+            } else {
+              return false;
             }
-            return false;
 
           default:
             return false;
         }
       });
 
+      // console.log('Setting filtered requests', filteredRequests);
       setFilteredRequests(filteredRequests);
     } else {
+
+      // console.log('Setting empty filtered requests');
       setFilteredRequests([]);
     }
-  }, [requestsFromStorage, action]);
+  }, [requestsFromStorage, action, onramperIntent]);
 
   useEffect(() => {
     const validNotarizationExists = loadedNotarizations.some(notarization => notarization.status === 'success');
