@@ -176,10 +176,10 @@ const Revolut: React.FC<RevolutProps> = ({
                 const isPaymentAmountSufficient = amountParsed >= revolutPaymentAmount;
                 // console.log('isPaymentAmountSufficient: ', isPaymentAmountSufficient);
 
-                const recipientUsername = transferDetails.recipient.username;
-                const isRecipientMatchingIntentDepositor = onramperIntent.depositorVenmoId === recipientUsername;
+                const recipientCode = transferDetails.recipient.code;
+                const isRecipientMatchingIntentDepositor = onramperIntent.depositorVenmoId === recipientCode;
                 // console.log('onramperIntent.depositorVenmoId: ', onramperIntent.depositorVenmoId);
-                // console.log('recipientUsername: ', recipientUsername);
+                // console.log('recipientCode: ', recipientCode);
                 // console.log('isRecipientMatchingIntentDepositor: ', isRecipientMatchingIntentDepositor);
 
                 return isPaymentAfterIntentTime && isPaymentAmountSufficient && isRecipientMatchingIntentDepositor;
