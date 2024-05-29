@@ -128,54 +128,86 @@ const Revolut: React.FC<RevolutProps> = ({
   }, [notarizations, action]);
 
   useEffect(() => {
+    // console.log('Updated requestsFromStorage:', requestsFromStorage);
+
     if (requestsFromStorage) {
-      // console.log('requestsFromStorage', requestsFromStorage);
       const filteredRequests = requestsFromStorage.filter(request => {
         switch (action) {
           case RevolutAction.REGISTRATION:
             const jsonRegistrationBody = JSON.parse(request.responseBody as string);
-            return (
-              request.requestType === RevolutRequest.PAYMENT_PROFILE &&
-              !jsonRegistrationBody.code
-            );
+
+            const isRequestTypeProfile = request.requestType === RevolutRequest.PAYMENT_PROFILE;
+            // console.log('isRequestTypeProfile: ', isRequestTypeProfile);
+
+            const isUserIdMissing = !jsonRegistrationBody.code;
+
+            return isRequestTypeProfile && isUserIdMissing;
 
           case RevolutAction.TRANSFER:
-            // console.log('request', request);
-            // console.log('onramperIntent', onramperIntent);
+            // console.log('Filtering single request from storage', request);
             
             const jsonTransferBody = JSON.parse(request.responseBody as string);
-            // console.log('jsonTransferBody', jsonTransferBody);
+            const transferDetails = jsonTransferBody[0];
             
-            const amountParsed = jsonTransferBody[0] ? jsonTransferBody[0].amount / 100 * -1 : 0;
-            if (
-              request.requestType === RevolutRequest.TRANSFER_DETAILS &&
-              amountParsed > 0 && // Filter receive funds
-              !jsonTransferBody[0].beneficiary && // Filter bank withdrawals
-              !jsonTransferBody.code
-            ) {
+            const isRequestTypeTransfer = request.requestType === RevolutRequest.TRANSFER_DETAILS;
+            // console.log('isRequestTypeTransfer: ', isRequestTypeTransfer);
+
+            const amountParsed = transferDetails ? jsonTransferBody[0].amount / 100 * -1 : 0;
+            const isAmountParsedValid = amountParsed > 0;
+            // console.log('isAmountParsedValid: ', isAmountParsedValid);
+
+            const isNotBankWithdrawal = transferDetails ? !transferDetails.beneficiary : true;
+            // console.log('isNotBankWithdrawal: ', isNotBankWithdrawal);
+
+            const isUserCodeMissing = !jsonTransferBody.code;
+            // console.log('isUserCodeMissing: ', isUserCodeMissing);
+
+            if (isRequestTypeTransfer && isAmountParsedValid && isNotBankWithdrawal && isUserCodeMissing) {
               if (onramperIntent) {
                 // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
-                return (
-                  parseInt(jsonTransferBody[0].completedDate) / 1000 >= parseInt(onramperIntent.intent.timestamp) && // Adjust Revolut timestamp
-                  amountParsed >= parseInt(onramperIntent.fiatToSend) &&
-                  onramperIntent.depositorVenmoId === jsonTransferBody[0].recipient.username
-                )
+                // console.log('Applying filter');
+
+                const revolutPaymentCompletedDate = parseInt(transferDetails.completedDate) / 1000;
+                const onRamperIntentTimestamp = parseInt(onramperIntent.intent.timestamp);
+                const isPaymentAfterIntentTime = revolutPaymentCompletedDate >= onRamperIntentTimestamp;
+                // console.log('isPaymentAfterIntentTime: ', isPaymentAfterIntentTime);
+
+                const revolutPaymentAmount = parseInt(onramperIntent.fiatToSend);
+                const isPaymentAmountSufficient = amountParsed >= revolutPaymentAmount;
+                // console.log('isPaymentAmountSufficient: ', isPaymentAmountSufficient);
+
+                const recipientUsername = transferDetails.recipient.username;
+                const isRecipientMatchingIntentDepositor = onramperIntent.depositorVenmoId === recipientUsername;
+                // console.log('onramperIntent.depositorVenmoId: ', onramperIntent.depositorVenmoId);
+                // console.log('recipientUsername: ', recipientUsername);
+                // console.log('isRecipientMatchingIntentDepositor: ', isRecipientMatchingIntentDepositor);
+
+                return isPaymentAfterIntentTime && isPaymentAmountSufficient && isRecipientMatchingIntentDepositor;
+              } else {
+                // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users
+                // console.log('No intent, passes filtering');
+
+                return true;
               }
-              // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users
-              return true;
+            } else {
+              // console.log('Failed checks, request is filtered');
+
+              return false;
             }
-            return false;
 
           default:
             return false;
         }
       });
 
+      // console.log('Setting filtered requests', filteredRequests);
       setFilteredRequests(filteredRequests);
     } else {
+
+      // console.log('Setting empty filtered requests');
       setFilteredRequests([]);
     }
-  }, [requestsFromStorage, action]);
+  }, [requestsFromStorage, action, onramperIntent]);
 
   useEffect(() => {
     const validNotarizationExists = loadedNotarizations.some(notarization => notarization.status === 'success');
