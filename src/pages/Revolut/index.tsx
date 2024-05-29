@@ -128,7 +128,6 @@ const Revolut: React.FC<RevolutProps> = ({
   }, [notarizations, action]);
 
   useEffect(() => {
-    // console.log('Updated requestsFromStorage:', requestsFromStorage);
 
     if (requestsFromStorage) {
       const filteredRequests = requestsFromStorage.filter(request => {
@@ -137,61 +136,41 @@ const Revolut: React.FC<RevolutProps> = ({
             const jsonRegistrationBody = JSON.parse(request.responseBody as string);
 
             const isRequestTypeProfile = request.requestType === RevolutRequest.PAYMENT_PROFILE;
-            // console.log('isRequestTypeProfile: ', isRequestTypeProfile);
-
             const isUserIdMissing = !jsonRegistrationBody.code;
 
             return isRequestTypeProfile && isUserIdMissing;
 
           case RevolutAction.TRANSFER:
-            // console.log('Filtering single request from storage', request);
-            
             const jsonTransferBody = JSON.parse(request.responseBody as string);
             const transferDetails = jsonTransferBody[0];
             
             const isRequestTypeTransfer = request.requestType === RevolutRequest.TRANSFER_DETAILS;
-            // console.log('isRequestTypeTransfer: ', isRequestTypeTransfer);
 
             const amountParsed = transferDetails ? jsonTransferBody[0].amount / 100 * -1 : 0;
             const isAmountParsedValid = amountParsed > 0;
-            // console.log('isAmountParsedValid: ', isAmountParsedValid);
 
             const isNotBankWithdrawal = transferDetails ? !transferDetails.beneficiary : true;
-            // console.log('isNotBankWithdrawal: ', isNotBankWithdrawal);
-
             const isUserCodeMissing = !jsonTransferBody.code;
-            // console.log('isUserCodeMissing: ', isUserCodeMissing);
 
             if (isRequestTypeTransfer && isAmountParsedValid && isNotBankWithdrawal && isUserCodeMissing) {
               if (onramperIntent) {
                 // If navigating from ZKP2P, then onramperIntent is populated. Therefore, we apply the filter
-                // console.log('Applying filter');
-
                 const revolutPaymentCompletedDate = parseInt(transferDetails.completedDate) / 1000;
                 const onRamperIntentTimestamp = parseInt(onramperIntent.intent.timestamp);
                 const isPaymentAfterIntentTime = revolutPaymentCompletedDate >= onRamperIntentTimestamp;
-                // console.log('isPaymentAfterIntentTime: ', isPaymentAfterIntentTime);
 
                 const revolutPaymentAmount = parseInt(onramperIntent.fiatToSend);
                 const isPaymentAmountSufficient = amountParsed >= revolutPaymentAmount;
-                // console.log('isPaymentAmountSufficient: ', isPaymentAmountSufficient);
 
                 const recipientCode = transferDetails.recipient.code;
                 const isRecipientMatchingIntentDepositor = onramperIntent.depositorVenmoId === recipientCode;
-                // console.log('onramperIntent.depositorVenmoId: ', onramperIntent.depositorVenmoId);
-                // console.log('recipientCode: ', recipientCode);
-                // console.log('isRecipientMatchingIntentDepositor: ', isRecipientMatchingIntentDepositor);
 
                 return isPaymentAfterIntentTime && isPaymentAmountSufficient && isRecipientMatchingIntentDepositor;
               } else {
                 // If not navigating from ZKP2P, onramperIntent is empty. Therefore, we don't filter for users
-                // console.log('No intent, passes filtering');
-
                 return true;
               }
             } else {
-              // console.log('Failed checks, request is filtered');
-
               return false;
             }
 
