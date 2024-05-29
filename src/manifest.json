@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Peer: A sidebar that connects off-chain platforms to ZKP2P",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Preserve privacy while porting data from various platforms for use in ZKP2P",
   "icons": {
     "16": "icon-16.png",
