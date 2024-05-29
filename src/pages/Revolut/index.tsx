@@ -526,9 +526,12 @@ const Revolut: React.FC<RevolutProps> = ({
 
 const Container = styled.div`
   width: 100%;
+  height: 100%;
   justify-content: center;
   border-radius: 16px;
   padding: 0rem 1.5rem;
+  
+  overflow: auto;
 `;
 
 const BodyContainer = styled.div`

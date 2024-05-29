@@ -160,7 +160,7 @@ const IntroductionContainer = styled.div`
   display: flex;
   max-height: 160px;
   flex-direction: column;
-  padding: 1rem 0.5rem;
+  padding: 0rem 0.5rem 1rem 0.5rem;
   gap: 0.75rem;
   text-align: center;
   color: ${colors.white};

@@ -46,29 +46,55 @@ export const TopNav: React.FC<TopNavProps> = ({
   }, [location]);
 
   return (
-    <NavBar>
-      <LogoAndNavItems>
-        <Logo to="/" onClick={() => setSelectedItem('Home')}>
-          <img src={logo} alt="logo" />
-        </Logo>
-      </LogoAndNavItems>
+    <Container>
+      <NavBar>
+        <LogoAndNavItems>
+          <Logo to="/" onClick={() => setSelectedItem('Home')}>
+            <img src={logo} alt="logo" />
+          </Logo>
+        </LogoAndNavItems>
 
-      <NavigationTitle>
-        {selectedItem}
-      </NavigationTitle>
+        <NavigationTitle>
+          {selectedItem}
+        </NavigationTitle>
 
-      <SettingsDropdown
-        notaryList={notaryList}
-      />
-    </NavBar>
+        <SettingsDropdown
+          notaryList={notaryList}
+        />
+      </NavBar>
+
+      <Divider />
+
+      <Spacer/>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const NavBar = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem;
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${colors.defaultBorderColor};
+  margin: 0 1rem;
+`;
+
+const Spacer = styled.div`
+  width: 100%;
+  height: 1.25rem;
 `;
 
 const Logo = styled(Link)<{ size?: number }>`
