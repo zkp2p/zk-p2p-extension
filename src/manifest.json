@@ -26,9 +26,6 @@
     {
       "matches": [
         "https://app.revolut.com/*",
-        "http://localhost:3000/*",
-        "https://staging-testnet.zkp2p.xyz/*",
-        "https://staging-app.zkp2p.xyz/*",
         "https://zkp2p.xyz/*"
       ],
       "js": ["contentScript.bundle.js"],
@@ -49,9 +46,6 @@
   ],
   "host_permissions": [
     "https://app.revolut.com/*",
-    "http://localhost:3000/*",
-    "https://staging-testnet.zkp2p.xyz/*",
-    "https://staging-app.zkp2p.xyz/*",
     "https://zkp2p.xyz/*"
   ],
   "permissions": [
