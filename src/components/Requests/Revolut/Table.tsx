@@ -97,7 +97,7 @@ export const RequestTable: React.FC<RequestTableProps> = ({
         const jsonResponseBody = JSON.parse(request.responseBody as string);
         switch (action) {
           case RevolutAction.REGISTRATION:
-            subject = `Detected: ${jsonResponseBody.user.username}`;
+            subject = `Detected: ${jsonResponseBody.user.code}`;
             date = '';
             break;
   
