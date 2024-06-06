@@ -4,7 +4,7 @@ import { UserX, Slash } from 'react-feather';
 
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
-import { RequestRow } from '@newcomponents/Requests/Row';
+import { RequestRow } from '@components/Requests/Row';
 import { RevolutAction, RevolutActionType } from '@utils/types';
 import { BackgroundActiontype, RequestLog } from '@entries/Background/rpc';
 

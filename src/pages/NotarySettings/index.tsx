@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { colors } from '@theme/colors';
 import { AppDispatch } from '@utils/store';
 import { setApiUrls, measureLatency, useBestLatency } from '@reducers/settings';
-import { CustomCheckbox } from '@newcomponents/common/Checkbox';
+import { CustomCheckbox } from '@components/common/Checkbox';
 import { NotaryConfiguration } from '@hooks/useFetchNotaryList';
 
 interface NotarySettingsProps {

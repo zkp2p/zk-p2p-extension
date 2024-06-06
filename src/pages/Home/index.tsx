@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStore } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 
-import { Button } from '@newcomponents/common/Button';
+import { Button } from '@components/common/Button';
 import { useActiveTabUrl, useRequests } from '@reducers/requests';
 import revolutBookmarks from '../../../utils/bookmark/revolut.json';
 

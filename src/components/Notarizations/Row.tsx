@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Trash2, X, Check, Download } from 'react-feather';
 
 import { colors } from '@theme/colors';
-import Spinner from '@newcomponents/common/Spinner';
+import Spinner from '@components/common/Spinner';
 import { download } from '@utils/misc';
 
 interface NotarizationRowProps {

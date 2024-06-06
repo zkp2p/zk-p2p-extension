@@ -15,7 +15,7 @@ import NotarySettings from '../../pages/NotarySettings';
 import { RevolutAction } from '@utils/types';
 import { AppRootState } from 'reducers';
 
-import { TopNav } from '@newcomponents/TopNav/TopNav';
+import { TopNav } from '@components/TopNav/TopNav';
 import { colors } from '@theme/colors';
 import useGithubClient, { NotaryConfiguration } from '@hooks/useFetchNotaryList';
 

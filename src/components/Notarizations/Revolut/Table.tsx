@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 
 import { ThemedText } from '@theme/text';
 import { colors } from '@theme/colors';
-import { NotarizationRow } from '@newcomponents/Notarizations/Row';
+import { NotarizationRow } from '@components/Notarizations/Row';
 import { RevolutAction, RevolutActionType, RevolutRequest } from '@utils/types';
 import { BackgroundActiontype, RequestHistory } from '@entries/Background/rpc';
 import { deleteRequestHistory } from '@reducers/history';

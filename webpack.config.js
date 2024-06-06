@@ -20,7 +20,7 @@ console.log('ICON_PATH', ICON_PATH);
 
 var alias = {
   '@theme': path.resolve(__dirname, './src/theme/'),
-  '@newcomponents': path.resolve(__dirname, './src/newcomponents/'),
+  '@components': path.resolve(__dirname, './src/components/'),
   '@utils': path.resolve(__dirname, './src/utils/'),
   '@hooks': path.resolve(__dirname, './src/hooks/'),
   '@reducers': path.resolve(__dirname, './src/reducers/'),
