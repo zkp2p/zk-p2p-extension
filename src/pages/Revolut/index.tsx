@@ -7,10 +7,10 @@ import { AppRootState } from 'reducers';
 import browser from 'webextension-polyfill';
 
 import { BackgroundActiontype, RequestHistory, RequestLog } from '@entries/Background/rpc';
-import { Button } from '@newcomponents/common/Button';
-import { InstructionTitle } from '@newcomponents/Instructions/Title';
-import NotarizationTable from '@newcomponents/Notarizations/Revolut/Table';
-import RequestTable from '@newcomponents/Requests/Revolut/Table';
+import { Button } from '@components/common/Button';
+import { InstructionTitle } from '@components/Instructions/Title';
+import NotarizationTable from '@components/Notarizations/Revolut/Table';
+import RequestTable from '@components/Requests/Revolut/Table';
 import { SessionExpiredModal } from '../../pages/Revolut/SessionExpiredModal';
 import { notarizeRequest, setActiveTab, useActiveTabUrl, useRequests, deletedSingleRequestLog } from '@reducers/requests';
 import { useHistoryOrder } from '@reducers/history';

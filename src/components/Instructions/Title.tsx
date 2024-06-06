@@ -5,7 +5,7 @@ import { Cpu, Globe, ArrowLeftCircle } from 'react-feather';
 import { colors } from '@theme/colors';
 import { ThemedText } from '@theme/text';
 import { RevolutStep, RevolutStepType } from '@utils/types';
-import { InstructionStep } from '@newcomponents/Instructions/Step';
+import { InstructionStep } from '@components/Instructions/Step';
 
 
 interface InstructionTitleProps {

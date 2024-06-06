@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import logo from '../../assets/img/logo192.png';
 import { NotaryConfiguration } from '@hooks/useFetchNotaryList';
-import { SettingsDropdown } from '@newcomponents/Settings';
+import { SettingsDropdown } from '@components/Settings';
 import { colors } from '@theme/colors';
 
 

@@ -2,8 +2,8 @@ import React from "react";
 import styled from 'styled-components';
 import { X, AlertTriangle } from 'react-feather';
 
-import { Overlay } from '@newcomponents/common/Overlay';
-import { Button } from '@newcomponents/common/Button';
+import { Overlay } from '@components/common/Overlay';
+import { Button } from '@components/common/Button';
 import { ThemedText } from '@theme/text'
 import { colors } from '@theme/colors';
 
