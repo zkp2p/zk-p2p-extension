@@ -40,7 +40,7 @@
       "\"identificationNumbers\":\\[[^\\]]+"
     ],
     "metaDataSelector": [
-      "(?<=\"username\":\")[^\"]+"
+      "(?<=\"code\":\")[^\"]+"
     ],
     "maxSentData": 750,
     "maxRecvData": 3700
