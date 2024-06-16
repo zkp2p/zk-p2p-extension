@@ -11,7 +11,7 @@ import revolutBookmarks from '../../../utils/bookmark/revolut.json';
 
 import { colors } from '@theme/colors';
 import { ThemedText } from '@theme/text';
-
+import { makeTLSClient, uint8ArrayToStr } from '../../../utils/tls/';
 
 export default function Home(): ReactElement {
   const navigate = useNavigate();
@@ -36,6 +36,71 @@ export default function Home(): ReactElement {
       default:
         return navigate(`/onramp`);
     }
+  };
+
+  const handleTLSPPressed = () => {
+    const host = '127.0.0.1';
+    const port = 8000;
+    const ws = new WebSocket(`ws://127.0.0.1:55688`);
+
+    ws.binaryType = 'arraybuffer'; // Ensure binary data is treated as ArrayBuffers
+
+    const write = async ({ header, content }: { header: Buffer; content: Buffer }) => {
+      const headerArray = new Uint8Array(header);
+      const contentArray = new Uint8Array(content);
+  
+      // Concatenate header and content into a single Uint8Array
+      const dataToSend = new Uint8Array(headerArray.length + contentArray.length);
+      dataToSend.set(headerArray);
+      dataToSend.set(contentArray, headerArray.length);
+  
+      // Sending the concatenated data via WebSocket
+      if (ws.readyState === WebSocket.OPEN) {
+          ws.send(dataToSend.buffer); // Ensure to send ArrayBuffer
+      } else {
+          console.error('WebSocket is not open');
+      }
+    };
+
+    const tls = makeTLSClient({
+        host,
+        verifyServerCertificate: false,
+        cipherSuites: [
+          'TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256'
+        ],
+        namedCurves: ['SECP256R1', 'SECP384R1'], // Browser does not support x25519
+        write, // Pass the updated write function that uses WebSocket
+        onHandshake() {
+          console.log('handshake completed successfully')
+          const getReq = `GET / HTTP/1.1\r\nHost: ${host}\r\n\r\n` // TODO: hardcoded get request
+          tls.write(Buffer.from(getReq))
+        },
+        onApplicationData(plaintext) {
+            const str = new TextDecoder().decode(plaintext);
+            console.log('received application data: ', str);
+        },
+        onTlsEnd(error) {
+            console.error('TLS connection ended: ', error);
+        }
+    });
+
+    ws.onopen = () => {
+        console.log('WebSocket connection established');
+        tls.startHandshake(); // Start the TLS handshake once the WebSocket is open
+    };
+
+    ws.onmessage = (event) => {
+        const data = new Uint8Array(event.data);
+        tls.handleReceivedBytes(data);
+    };
+
+    ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+    };
+
+    ws.onclose = () => {
+        console.log('WebSocket closed');
+    };
   };
 
   /*
@@ -117,9 +182,30 @@ export default function Home(): ReactElement {
             })}
           </ActionsGrid>
         </RevolutContainer>
+        <RevolutContainer>
+          <ThemedText.TableHeaderSmall textAlign="left" paddingLeft={"0.5rem"}>
+              Revolut TLSP
+          </ThemedText.TableHeaderSmall>
+
+          <ActionsGrid>
+            <ActionCard
+                onClick={handleTLSPPressed}
+              >
+                {iconForIndex(0)}
+
+                <ActionTitle>
+                  Revolut TLSP
+                </ActionTitle>
+
+                <ActionSubtitle>
+                  Register using Proxy
+                </ActionSubtitle>
+              </ActionCard>
+            </ActionsGrid>
+        </RevolutContainer>
       </IntegrationsContainer>
 
-      <ComingSoonContainer>
+      {/* <ComingSoonContainer>
         <TitleContainer>
           <ThemedText.ModalHeadline textAlign="left">
             Coming Soon
@@ -140,7 +226,7 @@ export default function Home(): ReactElement {
             Have ideas for other assets you would like to see on ZKP2P?<br/>Let us know!
           </ThemedText.SubHeaderSmall>
         </ComingSoonBodyContainer>
-      </ComingSoonContainer>
+      </ComingSoonContainer> */}
     </PageWrapper>
   );
 }
