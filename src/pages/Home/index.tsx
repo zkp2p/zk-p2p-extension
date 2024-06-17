@@ -12,6 +12,24 @@ import revolutBookmarks from '../../../utils/bookmark/revolut.json';
 import { colors } from '@theme/colors';
 import { ThemedText } from '@theme/text';
 import { makeTLSClient, uint8ArrayToStr } from '../../../utils/tls/';
+import { generateProof, encryptData } from '../../../utils/zkp';
+
+function hexToBuffer(hexString: string): Buffer {
+    // Ensure the hex string has an even length (required for valid byte conversion)
+    if (hexString.length % 2 !== 0) {
+        throw new Error("Invalid hex string: length must be even");
+    }
+
+    // Create a Buffer from the hex string
+    const buffer = Buffer.from(hexString, 'hex');
+
+    return buffer;
+}
+
+function uint8ArrayToHex(array: Uint8Array): string {
+    // Convert each byte in the array to a hexadecimal string and concatenate them
+    return Array.from(array).map(byte => byte.toString(16).padStart(2, '0')).join('');
+}
 
 export default function Home(): ReactElement {
   const navigate = useNavigate();
@@ -38,9 +56,9 @@ export default function Home(): ReactElement {
     }
   };
 
-  const handleTLSPPressed = () => {
-    const host = '127.0.0.1';
-    const port = 8000;
+  const handleTLSPPressed = async () => {
+    const host = '127.0.0.1'; // TODO: hardcoded to local server
+    // const port = 8000;
     const ws = new WebSocket(`ws://127.0.0.1:55688`);
 
     ws.binaryType = 'arraybuffer'; // Ensure binary data is treated as ArrayBuffers
@@ -101,6 +119,33 @@ export default function Home(): ReactElement {
     ws.onclose = () => {
         console.log('WebSocket closed');
     };
+  };
+
+  const handleTLSPProofGen = async () => {
+    // TODO: get key and iv from TLS client
+		const key = hexToBuffer('7f01bd270dd298efc3df260c63296def172a3b49780df066aed81e3a3b137890')
+		const iv = hexToBuffer('d546e650406bd9a5df6f523d')
+		const ciphertextWithMac = hexToBuffer('1619961131ae66450ced7ef9a906649e6b61729f61a04bc57d817352f7fc0c9a4e8e2385')
+		const ciphertext = ciphertextWithMac.subarray(0, ciphertextWithMac.length - 16);
+
+		// Redact first 4 bytes with `X` = 58
+		// const redactedPlaintext = '585858586f2c2073656375726520776f726c6421'
+		// const redactedCiphertext = encryptData('chacha20', hexToBuffer(redactedPlaintext), key, iv)
+
+		const proof = await generateProof({
+			algorithm: 'chacha20',
+			privateInput: {
+				key,
+				iv,
+				offset: 0 // This will always be zero. We will update our nonce / IV with the counter for new encryption blocks
+			},
+			publicInput: { ciphertext: ciphertext },
+		})
+
+		console.log('Proof:', proof.proofJson)
+		console.log('Redacted Plaintext:', uint8ArrayToHex(proof.plaintext.slice(0, ciphertext.length)))
+		console.log('Original Ciphertext', uint8ArrayToHex(ciphertext))
+		// console.log('Redacted Ciphertext', uint8ArrayToHex(redactedCiphertext))
   };
 
   /*
@@ -190,15 +235,28 @@ export default function Home(): ReactElement {
           <ActionsGrid>
             <ActionCard
                 onClick={handleTLSPPressed}
+            >
+              {iconForIndex(0)}
+
+              <ActionTitle>
+                TLSP Client
+              </ActionTitle>
+
+              <ActionSubtitle>
+                Extract key and nonce
+              </ActionSubtitle>
+            </ActionCard>
+            <ActionCard
+                onClick={handleTLSPProofGen}
               >
                 {iconForIndex(0)}
 
                 <ActionTitle>
-                  Revolut TLSP
+                  TLSP Proof
                 </ActionTitle>
 
                 <ActionSubtitle>
-                  Register using Proxy
+                  Generate Chacha20 ZKP
                 </ActionSubtitle>
               </ActionCard>
             </ActionsGrid>

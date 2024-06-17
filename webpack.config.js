@@ -183,7 +183,22 @@ var options = {
     fallback: {
       "crypto": require.resolve("crypto-browserify"),
       "stream": require.resolve("stream-browserify"),
-      "vm": require.resolve("vm-browserify")
+      "vm": require.resolve("vm-browserify"),
+      "assert": require.resolve("assert"),
+      "buffer": require.resolve("buffer"),
+      "process/browser": require.resolve("process/browser"),
+      "stream": require.resolve("stream-browserify"),
+      "url": require.resolve("url"),
+      "os": false,
+      "fs": false,
+      "dns": false,
+      "timers": false,
+      "tls": false,
+      "net": false,
+      "path": false,
+      "zlib": false,
+      "http": false,
+      "https": false,
     }
   },
   plugins: [
@@ -279,6 +294,33 @@ var options = {
         },
       ],
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "utils/zkp/circuit.wasm",
+          to: path.join(__dirname, "build"),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "utils/zkp/circuit_final.zkey",
+          to: path.join(__dirname, "build"),
+          force: true,
+        },
+      ],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "utils/zkp/circuit.r1cs",
+          to: path.join(__dirname, "build"),
+          force: true,
+        },
+      ],
+    }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "entries", "Options", "index.html"),
       filename: "options.html",
@@ -299,6 +341,9 @@ var options = {
     }),
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
     }),
   ].filter(Boolean),
   infrastructureLogging: {
