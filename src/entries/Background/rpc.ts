@@ -49,7 +49,7 @@ export type RequestLog = {
   };
   responseHeaders?: browser.WebRequest.HttpHeaders;
   timestamp: number;
-  requestType: RevolutRequestType;
+  requestType: RevolutRequestType | "TRONSCAN_TRANSFER";
   responseBody?: string;
 };
 

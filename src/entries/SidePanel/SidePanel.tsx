@@ -11,6 +11,7 @@ import { BackgroundActiontype } from '../Background/rpc';
 import Home from '../../pages/Home';
 
 import Revolut from '../../pages/Revolut';
+import TronScan from '../../pages/TronScan';
 import NotarySettings from '../../pages/NotarySettings';
 import { RevolutAction } from '@utils/types';
 import { AppRootState } from 'reducers';
@@ -133,6 +134,7 @@ const SidePanel = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/registration" element={<Revolut action={RevolutAction.REGISTRATION}/>} />
         <Route path="/onramp" element={<Revolut action={RevolutAction.TRANSFER}/>} />
+        <Route path="/tron-bridge" element={<TronScan action={"TRONSCAN_TRANSFER"}/>} />
         <Route path="/settings" element={<NotarySettings notaryList={notaryList}/>} />
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>

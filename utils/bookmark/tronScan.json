@@ -1,0 +1,29 @@
+[
+    {
+      "url": "https://apilist.tronscanapi.com/api/",
+      "targetUrl": "https://tronscan.org/",
+      "method": "GET",
+      "type": "xmlhttprequest",
+      "title": "Transfer",
+      "description": "Prove TronScan transfer",
+      "skipRequestHeaders": [
+        "Accept",
+        "sec-ch-ua",
+        "sec-ch-ua-mobile",
+        "sec-ch-ua-platform",
+        "Sec-Fetch-Site",
+        "Sec-Fetch-Mode",
+        "Sec-Fetch-Dest",
+        "Referer",
+        "Accept-Encoding",
+        "Accept-Language"
+      ],
+      "includeRequestCookies": [],
+      "secretResponseSelector": [],
+      "metaDataSelector": [
+        "(?<=\"from_address\":\")[^\"]+"
+      ],
+      "maxSentData": 750,
+      "maxRecvData": 3700
+    }
+  ]

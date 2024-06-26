@@ -12,7 +12,8 @@ import { OnRamperIntent } from '@utils/types';
     {
       urls: [
         'https://app.revolut.com/api/retail/user/current',
-        'https://app.revolut.com/api/retail/transaction/*' 
+        'https://app.revolut.com/api/retail/transaction/*',
+        'https://apilist.tronscanapi.com/api/transaction-info?hash=ac709f57d3b3bf649e091c8220a14f075021bb1417d79d055f758959207e9de8'
       ],
     },
     ['requestHeaders', 'extraHeaders'],
@@ -23,7 +24,8 @@ import { OnRamperIntent } from '@utils/types';
     {
       urls: [
         'https://app.revolut.com/api/retail/user/current',
-        'https://app.revolut.com/api/retail/transaction/*' 
+        'https://app.revolut.com/api/retail/transaction/*',
+        'https://apilist.tronscanapi.com/api/transaction-info?hash=ac709f57d3b3bf649e091c8220a14f075021bb1417d79d055f758959207e9de8'
       ],
     },
     ['requestBody'],
@@ -34,7 +36,8 @@ import { OnRamperIntent } from '@utils/types';
     {
       urls: [
         'https://app.revolut.com/api/retail/user/current',
-        'https://app.revolut.com/api/retail/transaction/*' 
+        'https://app.revolut.com/api/retail/transaction/*',
+        'https://apilist.tronscanapi.com/api/transaction-info?hash=ac709f57d3b3bf649e091c8220a14f075021bb1417d79d055f758959207e9de8'
       ],
     },
     ['responseHeaders', 'extraHeaders'],

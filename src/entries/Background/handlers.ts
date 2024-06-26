@@ -9,6 +9,7 @@ import { RevolutRequest, RevolutRequestType } from '@utils/types';
 export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsType) => {
   return mutex.runExclusive(async () => {
     const { method, tabId, requestId } = details;
+    console.log('onSendHeaders', details);
 
     const fetchUrl = new URL(details.url);
     if (fetchUrl.searchParams.has('replay_request')) return; // Skip processing for replay requests
@@ -21,12 +22,15 @@ export const onSendHeaders = (details: browser.WebRequest.OnSendHeadersDetailsTy
       const notarizationUrlString = details.url;
       const revolutTagEndpointRegex = new RegExp('https://app.revolut.com/api/retail/user/current');
       const revolutTransactionEndpointRegex = new RegExp('https://app.revolut.com/api/retail/transaction/\\S+');
+      const tronScanEndpointRegex = new RegExp('https://apilist.tronscanapi.com/api/transaction-info?hash=\\S+');
 
-      let requestType: RevolutRequestType = "";
+      let requestType: RevolutRequestType | "TRONSCAN_TRANSFER" = "";
       if (revolutTagEndpointRegex.test(notarizationUrlString)) { 
         requestType = RevolutRequest.PAYMENT_PROFILE;
       } else if (revolutTransactionEndpointRegex.test(notarizationUrlString)) {
         requestType = RevolutRequest.TRANSFER_DETAILS;
+      } else if (tronScanEndpointRegex.test(notarizationUrlString)) {
+        requestType = "TRONSCAN_TRANSFER";
       }
 
       cache.set(requestId, {

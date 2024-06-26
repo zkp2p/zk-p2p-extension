@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { Button } from '@components/common/Button';
 import { useActiveTabUrl, useRequests } from '@reducers/requests';
 import revolutBookmarks from '../../../utils/bookmark/revolut.json';
+import tronScanBookmarks from '../../../utils/bookmark/tronScan.json';
 
 import { colors } from '@theme/colors';
 import { ThemedText } from '@theme/text';
@@ -117,9 +118,37 @@ export default function Home(): ReactElement {
             })}
           </ActionsGrid>
         </RevolutContainer>
+        <RevolutContainer>
+          <ThemedText.TableHeaderSmall textAlign="left" paddingLeft={"0.5rem"}>
+              TronScan Bridge
+          </ThemedText.TableHeaderSmall>
+
+          <ActionsGrid>
+            {tronScanBookmarks.map((bookmark, index) => {
+              return (
+                <ActionCard
+                  key={index}
+                  onClick={() => {
+                    navigate(`/tron-bridge`)
+                  }}
+                >
+                  {iconForIndex(index)}
+
+                  <ActionTitle>
+                    {bookmark.title}
+                  </ActionTitle>
+
+                  <ActionSubtitle>
+                    {bookmark.description}
+                  </ActionSubtitle>
+                </ActionCard>
+              );
+            })}
+          </ActionsGrid>
+        </RevolutContainer>
       </IntegrationsContainer>
 
-      <ComingSoonContainer>
+      {/* <ComingSoonContainer>
         <TitleContainer>
           <ThemedText.ModalHeadline textAlign="left">
             Coming Soon
@@ -140,7 +169,7 @@ export default function Home(): ReactElement {
             Have ideas for other assets you would like to see on ZKP2P?<br/>Let us know!
           </ThemedText.SubHeaderSmall>
         </ComingSoonBodyContainer>
-      </ComingSoonContainer>
+      </ComingSoonContainer> */}
     </PageWrapper>
   );
 }

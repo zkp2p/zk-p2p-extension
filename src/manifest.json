@@ -26,7 +26,8 @@
     {
       "matches": [
         "https://app.revolut.com/*",
-        "https://zkp2p.xyz/*"
+        "https://zkp2p.xyz/*",
+        "https://apilist.tronscanapi.com/*"
       ],
       "js": ["contentScript.bundle.js"],
       "css": ["content.styles.css"]
@@ -40,13 +41,15 @@
         "icon-32.png"
       ],
       "matches": [
-        "https://app.revolut.com/*"
+        "https://app.revolut.com/*",
+        "https://apilist.tronscanapi.com/*"
       ]
     }
   ],
   "host_permissions": [
     "https://app.revolut.com/*",
-    "https://zkp2p.xyz/*"
+    "https://zkp2p.xyz/*",
+    "https://apilist.tronscanapi.com/*"
   ],
   "permissions": [
     "offscreen",
